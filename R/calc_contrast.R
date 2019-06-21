@@ -1,31 +1,31 @@
 #' Calculate contrast analysis for factorial designs
 #'
 #' @param variable The dependent variable. This must be numeric.
-#' @param between The independent variable which cut yout data into
+#' @param between The independent variable that divides the data into
 #' independent groups. This must be a factor.
-#' @param between_levels The names of the between groups. The
-#' sqequence of between_levels must correspondent to the sequence
-#' of  between_lambda. This must be a character
-#' @param lambda_between The Contrastweights. This must be numeric and
-#' correspondent to the sequence of between_levels. If
-#' lambda_between not sum up to zero, this will be done automatically
-#' @param within The independent variable which cut yout data into
+#' @param between_levels The names between the groups. The order of
+#' between levels must match the order of between_lambda.
+#' This must be a character
+#' @param lambda_between The contrast weights must be numeric and
+#' correspond to the order between  between_levels. If lambda_between
+#' does not sum to zero, this will be done automatically.
+#' @param within The independent variable which divides the data into
 #' dependent groups. This must be a factor.
 #' @param within_levels The names of the within groups. The
-#' sqequence of within_levels must correspondent to the sequence
-#' of  within_lambda. This must be a character
-#' @param lambda_within The Contrastweights. This must be numeric and
-#' correspondent to the sequence of within_levels. If
-#' lambda_within not sum up to zero, this will be done automatically
-#' @param ID The cases / subjects connectet to within.
+#' order of within_levels must match the order of  within_lambda.
+#' This must be a character
+#' @param lambda_within The contrast weights must be numeric and
+#' correspond to the order between within_levels. If lambda_within
+#' does not sum to zero, this will be done automatically.
+#' @param ID The indentifire for cases or subjects. This is needed
+#' for within-analysis.
 #' @param data Optional argument for a data.frame containing variable
-#' and group.
-#' @details For more than one wihtin or between variable,
-#' contrastweights have to be connected See example 4 or 5
-#' correspondent to the expected multifactorial effect.
+#' and groups.
+#' @details For multi-factorial designs, the lambdaweights of
+#' the factors must be connected.
 #' @return Calculates the significance of the contrast analysis.
-#  The contrastweights corresponding group and an effectsize are
-#' given to evaluate the analysis.
+#  The contrastweights, the corresponding group and an effectsize are
+#' given.
 #' @references Rosenthal, R., Rosnow, R.L., & Rubin, D.B. (2000).
 #' Contrasts and effect sizes in behavioral research:
 #' A correlational approach. New York: Cambridge University Press.
@@ -66,7 +66,7 @@
 #'    data=sedlmeier537
 #'  )
 #' contr_wi
-#' summary(conr_wi, ci=.90)
+#' summary(contr_wi, ci=.90)
 #'
 #' # Exampel for mixed-designs Table 5.3 from
 #' # Rosenthal, Rosnow and Rubin (2001)
@@ -143,6 +143,38 @@ calc_contrast <- function(variable,
       case == "Mixed-Analysis: between and within factors") {
     stop("Missing arguments")
   }
+  if (anyNA(variable)) {
+    indexNA <- which(is.na(variable))
+    variable <- variable[-indexNA]
+    between <- between[-indexNA]
+    within <- within[-indexNA]
+    ID <- ID[-indexNA]
+    warning("NAs in variable are omitted")
+  }
+  if (anyNA(between)) {
+    indexNA <- which(is.na(between))
+    variable <- variable[-indexNA]
+    between <- between[-indexNA]
+    within <- within[-indexNA]
+    ID <- ID[-indexNA]
+    warning("NAs in between are omitted")
+  }
+  if (anyNA(within)) {
+    indexNA <- which(is.na(within))
+    variable <- variable[-indexNA]
+    between <- between[-indexNA]
+    within <- within[-indexNA]
+    ID <- ID[-indexNA]
+    warning("NAs in within are omitted")
+  }
+  if (anyNA(ID)) {
+    indexNA <- which(is.na(ID))
+    variable <- variable[-indexNA]
+    between <- between[-indexNA]
+    within <- within[-indexNA]
+    ID <- ID[-indexNA]
+    warning("NAs in ID are omitted")
+  }
   if (case == "Analysis between groups"){
     lambda_between <- (lambda_between[order(between_levels)])
     ni <- table(between)
@@ -198,8 +230,9 @@ calc_contrast <- function(variable,
     names(lambda_within) <- within_levels
     L <- tapply(variable, ID, FUN = function(x) sum(x * lambda_within))
     S2 <- var(L)
+    df_within <- length(L)-1
     harm_mean <- k_within / sum(1 / ni_within)
-    t_value <- mean(L) / sqrt( (1 / (k_group * harm_mean)) * S2)
+    t_value <- mean(L) / sqrt( (1 / (k_within * harm_mean)) * S2)
     F_contrast <- t_value ** 2
     SS_total <- sum( ( (variable - mean(variable)) ** 2))
     p_contrast <- pt(t_value, df_id, lower.tail = F)
