@@ -21,7 +21,7 @@ print.cofad_bw <- function(x, ...) {
   cat("\nContrast Analysis for between factor design\n\n")
   cat(p, contr_1, r_effect_1, sep = "\n" )
 }
-print.cofad_wi <- function(x) {
+print.cofad_wi <- function(x, ...) {
   L_val <- paste("L-Values: Mean = ", round(x[[2]][1], 3),
                  " ; SD = ", round(x[[2]][3], 3) )
   p_value <- round(x[[1]][2], 3)
@@ -40,7 +40,7 @@ print.cofad_wi <- function(x) {
   cat("\nContrast Analysis for within factor design\n\n")
   cat(L_val, p, contr_1, g_effect_1, sep = "\n" )
 }
-print.cofad_mx <- function(x) {
+print.cofad_mx <- function(x, ...) {
   p_value <- round(x[[1]][2], 3)
   p_value <- ifelse (p_value < .001,
                      paste("; p < .001", sep = ""),

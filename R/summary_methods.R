@@ -1,4 +1,4 @@
-summary.cofad_bw <- function(x){
+summary.cofad_bw <- function(x, ...){
   #Zeilenweise
   f_tab <- matrix(c(
     round(x[[1]][1] * x[[1]][5], 3), round(x[[1]][3]),
@@ -18,7 +18,7 @@ summary.cofad_bw <- function(x){
   names(out) <- c("F-Table", "Effects")
   return(out)
 }
-summary.cofad_wi <- function(x, ci = .95){
+summary.cofad_wi <- function(x, ci = .95, ...){
   L_M <- x[[2]][[1]]
   L_SE <- x[[2]][2]
   L_df <- x[[1]][3]
@@ -36,7 +36,7 @@ summary.cofad_wi <- function(x, ci = .95){
   names(out) <- c("L-Statistics", "Effects")
   return(out)
 }
-summary.cofad_mx <- function(x){
+summary.cofad_mx <- function(x, ...){
   all_L <- as.vector(x[[6]])
   all_L <- all_L[which(!is.na(all_L))]
   SS_total <- sum(
