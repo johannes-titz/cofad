@@ -70,6 +70,29 @@
 #'
 #' # Exampel for mixed-designs Table 5.3 from
 #' # Rosenthal, Rosnow and Rubin (2001)
+#' tab53 <- data.frame(
+#'    Var = c(3, 1, 4, 4, 5, 5, 6, 5, 7, 2, 2, 5,
+#'            5, 6, 7, 6, 6, 8, 3, 1, 5, 4, 5, 6,
+#'            7, 6, 8, 3, 2, 5, 6, 6, 7, 8, 8, 9),
+#'            bw = as.factor(rep(rep(LETTERS[1:3], c(3, 3, 3)), 4)),
+#'            wi = as.factor(rep(1:4, c(9, 9, 9, 9))),
+#'            ID = as.factor(rep(1:9, 4 ))
+#'    )
+#'    between_levels <- as.character(1:3)
+#'    ID <- as.factor(rep(1:9, 4))
+#'    within <- as.factor(rep(1:4, c(9,9,9,9)))
+#'    within_levels <- c("1","2","3","4")
+#'    lambda_within <- c(-3,-1,1,3)
+#'    lambda_between <-c(-1,0,1)
+#'
+#' contr_mx <- calc_contrast(variable = Var, between = bw,
+#'               between_levels = between_levels,
+#'               within = wi, within_levels = within_levels,
+#'               ID = ID, data = tab53,
+#'               lambda_within = lambda_within,
+#'               lambda_between = lambda_between)
+#' contr_mx
+#' summary(contr_mx)
 #'
 calc_contrast <- function(variable,
                           between = NULL, between_levels = NULL,
