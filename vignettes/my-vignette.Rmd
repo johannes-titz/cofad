@@ -53,9 +53,9 @@ Furr states three hypotheses:
 These hypotheses are only mean comparisons, but this is a good way to start. Let's use cofad to conduct the contrast analysis:
 
 ```{r}
-ca <- calc_contrast(variable = empathy, between = major,
-              between_levels = c("psychology", "education", "business", "chemistry"),
-              lambda_between = c(1, -1, 0, 0), data = d)
+ca <- calc_contrast(dv = empathy, between = major,
+              lambda_between = c("psychology" = 1, "education" = -1, 
+                                "business" = 0, "chemistry" = 0), data = d)
 ca
 ```
 
@@ -74,22 +74,23 @@ cor(d$empathy, lambdas)
 The other two hypotheses can be tested accordingly:
 
 ```{r}
-ca <- calc_contrast(variable = empathy, between = major,
-              between_levels = c("psychology", "education", "business", "chemistry"),
-              lambda_between = c(0, 0, 1, -1), data = d)
+ca <- calc_contrast(dv = empathy, between = major,
+              lambda_between = c("psychology" = 0, "education" = 0, 
+                                "business" = 1, "chemistry" = -1), data = d)
 ca
-ca <- calc_contrast(variable = empathy, between = major,
-              between_levels = c("psychology", "education", "business", "chemistry"),
-              lambda_between = c(1, 1, -1, -1), data = d)
+ca <- calc_contrast(dv = empathy, between = major,
+              lambda_between = c("psychology" = 1, "education" = 1, 
+                                "business" = -1, "chemistry" = -1), data = d)
 ca
 ```
 
 You will find that the numbers are identical to the ones presented in @furr2004. Now, imagine we have a more fun hypothesis and not just mean differences. From an elaborate theory we could derive that the means should be 73, 61, 51 and 38. We can test this with cofad directly because cofad will transfer the chosen lambdas into proper lambdas (the mean of the lambdas has to be 0):
 
 ```{r}
-ca <- calc_contrast(variable = empathy, between = major,
-              between_levels = c("psychology", "education", "business", "chemistry"),
-              lambda_between = c(73, 61, 51, 38), data = d)
+ca <- calc_contrast(dv = empathy, between = major,
+              lambda_between = c("psychology" = 73, "education" = 51, 
+                                "business" = 51, "chemistry" = 38),
+              data = d)
 ca
 ```
 
@@ -114,9 +115,10 @@ d <- data.frame(reading_test = c(27, 25, 30, 29, 30, 33, 31, 35,
                 participant = as.factor(rep(1:8, 4)),
                 music = rep(c("without music", "white noise", "classic", "jazz"), each = 8))
 head(d)
-calc_contrast(variable = reading_test, within = music,
-              within_levels = c("without music", "white noise", "classic", "jazz"),
-              lambda_within = c(1.25, 0.25, -0.75, -0.75), ID = participant, data = d)
+calc_contrast(dv = reading_test, within = music,
+              lambda_within = c("without music" = 1.25, 
+                                "white noise" = 0.25, "classic" = -0.75, "jazz" = -0.75),
+             ID = participant, data = d)
 ```
 
 You can see that the siginifance test is just a t test and the reported effect size is also for a mean comparison ($g$). When conducting the analysis manually, we can see why:
