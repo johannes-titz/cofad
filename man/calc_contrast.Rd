@@ -4,51 +4,42 @@
 \alias{calc_contrast}
 \title{Calculate contrast analysis for factorial designs}
 \usage{
-calc_contrast(variable, between = NULL, between_levels = NULL,
-  lambda_between = NULL, within = NULL, within_levels = NULL,
-  lambda_within = NULL, ID = NULL, data = NULL)
+calc_contrast(dv, between = NULL, lambda_between = NULL,
+  within = NULL, lambda_within = NULL, ID = NULL, data = NULL)
 }
 \arguments{
-\item{variable}{The dependent variable. This must be numeric.}
+\item{dv}{dependent variable. Values must be numeric.}
 
-\item{between}{The independent variable which cut yout data into
-independent groups. This must be a factor.}
+\item{between}{independent variable that divides the data into
+independent groups. Vector must be a factor.}
 
-\item{between_levels}{The names of the between groups. The
-sqequence of between_levels must correspondent to the sequence
-of  between_lambda. This must be a character}
+\item{lambda_between}{contrast weights must be a named numeric.
+Names must match the levels of between. If lambda_between
+does not sum up to zero, this will be done automatically.}
 
-\item{lambda_between}{The Contrastweights. This must be numeric and
-correspondent to the sequence of between_levels. If
-lambda_between not sum up to zero, this will be done automatically}
-
-\item{within}{The independent variable which cut yout data into
+\item{within}{independent variable which divides the data into
 dependent groups. This must be a factor.}
 
-\item{within_levels}{The names of the within groups. The
-sqequence of within_levels must correspondent to the sequence
-of  within_lambda. This must be a character}
+\item{lambda_within}{contrast must be a named numeric.
+Names must match the levels of between. If lambda_between
+does not sum up to zero, this will be done automatically.}
 
-\item{lambda_within}{The Contrastweights. This must be numeric and
-correspondent to the sequence of within_levels. If
-lambda_within not sum up to zero, this will be done automatically}
+\item{ID}{indentifier for cases or subjects is needed
+for within- and mixed contrastanalysis.}
 
-\item{ID}{The cases / subjects connectet to within.}
-
-\item{data}{Optional argument for a data.frame containing variable
-and group.}
+\item{data}{optional argument for the data.frame containing dv
+and groups.}
 }
 \value{
 Calculates the significance of the contrast analysis.
-given to evaluate the analysis.
+given.
 }
 \description{
 Calculate contrast analysis for factorial designs
 }
 \details{
-For more than one wihtin or between variable,
-contrastweights have to be connected See example 4 or 5
-correspondent to the expected multifactorial effect.
+For multi-factorial designs, the lambdaweights of
+the factors must be connected.
 }
 \examples{
 # Exampel for between-subjects-design Table 3.1 from
@@ -59,11 +50,11 @@ tab31 <- data.frame(
     16, 10, 14, 12, 12,  18, 14, 20, 16),
   Let = rep(c("A", "B", "C", "D"), c(5, 5, 5, 5))
   )
-contr_bw <- calc_contrast(variable = Val,
-                 between = Let,
-                 between_levels = c("A", "B", "C", "D"),
-                 lambda_between = c(-3, -1, 1, 3),
-                 data = tab31)
+contr_bw <- calc_contrast(
+   dv = Val,
+   between = Let,
+   lambda_between = c("A" = -3, "B" = -1, "C" = 1, "D" = 3),
+   data = tab31)
 contr_bw
 summary(contr_bw)
 
@@ -72,26 +63,42 @@ summary(contr_bw)
 
 sedlmeier537 <- data.frame(
    Var = c(27, 25, 30, 29, 30, 33, 31, 35,
-            25, 26, 32, 29, 28, 30, 32, 34,
-            21, 25, 23, 26, 27, 26, 29, 31,
-            23, 24, 24, 28, 24, 26, 27, 32),
+           25, 26, 32, 29, 28, 30, 32, 34,
+           21, 25, 23, 26, 27, 26, 29, 31,
+           23, 24, 24, 28, 24, 26, 27, 32),
    within = as.factor(rep(1:4,c(8,8,8,8))),
-   ID = as.factor(rep(1:8,4))
- )
+   ID = as.factor(rep(1:8,4)))
 contr_wi <- calc_contrast(
-   variable = Var,
+   dv = Var,
    within = within,
-   within_levels = as.character(c(2,3,1,4)),
    ID = ID,
-   lambda_within = c(0.25,-.75,1.25,-.75),
+   lambda_within = c("1" = 0.25, "2" = -.75, "3" = 1.25, "4" = -.75),
    data=sedlmeier537
  )
 contr_wi
-summary(conr_wi, ci=.90)
+summary(contr_wi, ci=.90)
 
 # Exampel for mixed-designs Table 5.3 from
 # Rosenthal, Rosnow and Rubin (2001)
+tab53 <- data.frame(
+   Var = c(3, 1, 4, 4, 5, 5, 6, 5, 7, 2, 2, 5,
+           5, 6, 7, 6, 6, 8, 3, 1, 5, 4, 5, 6,
+           7, 6, 8, 3, 2, 5, 6, 6, 7, 8, 8, 9),
+           bw = as.factor(rep(rep(LETTERS[1:3], c(3, 3, 3)), 4)),
+           wi = as.factor(rep(1:4, c(9, 9, 9, 9))),
+           ID = as.factor(rep(1:9, 4 ))
+   )
+   lambda_within <- c("1" = -3, "2" = -1, "3" = 1, "4" = 3)
+   lambda_between <-c("A" = -1, "B" = 0, "C" = 1)
 
+contr_mx <- calc_contrast(dv = Var, between = bw,
+              lambda_between = lambda_between,
+              within = wi,
+               lambda_within = lambda_within,
+              ID = ID, data = tab53
+              )
+contr_mx
+summary(contr_mx)
 }
 \references{
 Rosenthal, R., Rosnow, R.L., & Rubin, D.B. (2000).
