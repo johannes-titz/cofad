@@ -1,1 +1,7 @@
 exportPattern("^[[:alpha:]]+")
+S3method(print, cofad_bw)
+S3method(print, cofad_wi)
+S3method(print, cofad_mx)
+S3method(summary, cofad_bw)
+S3method(summary, cofad_wi)
+S3method(summary, cofad_mx)
