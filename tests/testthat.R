@@ -1,66 +1,62 @@
 library(testthat)
 library(cofad)
-
-test_check("cofad")
-
 expect_error(
-  calc_contrast(variable = NULL, lambda_between = c(1)),
+  calc_contrast(dv = NULL, lambda_between = c(1)),
   "variable must be numeric"
 )
 expect_error(
-  calc_contrast(variable = 1:8,
+  calc_contrast(dv = 1:8,
                 between = as.factor(rep(1:2,4)),
                 lambda_between = NULL,
-                within = NULL, within_levels = NULL,
+                within = NULL,
                 lambda_within = NULL, ID = NULL,
                 data = NULL),
   "lambda is missing"
 )
 expect_error(
-  calc_contrast(variable = 1:8,
-                between = as.factor(rep(1:2,4)),
-                between_levels = NULL,
+  calc_contrast(dv = 1:8,
                 lambda_between = 1:2,
-                within = NULL, within_levels = NULL,
+                within = NULL,
+                lambda_within = NULL, ID = NULL,
+                data = NULL),
+  "lambda must be a named numeric"
+)
+expect_error(
+  calc_contrast(dv = 1:8,
+                lambda_between = c("1" = 1, "foo" = 2),
+                within = NULL,
                 lambda_within = NULL, ID = NULL,
                 data = NULL),
   "Missing arguments"
 )
 expect_error(
-  calc_contrast(variable = 1:8,
-                between = as.factor(rep(1:2,4)),
-                between_levels = NULL,
-                lambda_between = 1:2,
-                within = as.factor(rep(1:4,2)),
-                within_levels = NULL,
+  calc_contrast(dv = 1:8,
+                lambda_between =  c("1" = 1, "foo" = 2),
+                between = 1:2,
+                within = NULL,
                 lambda_within = NULL,
                 ID = NULL,
                 data = NULL),
-  "Missing arguments"
+  "between must be a factor"
 )
-expect_error(
-  calc_contrast(variable = 1:8,
+expect_warning(
+  calc_contrast(dv = 1:8,
                 between = as.factor(rep(1:2,4)),
-                between_levels = c("1", "2"),
-                lambda_between = 1:2,
+                lambda_between =  c("1" = 1, "2" = 2),
                 within = as.factor(rep(1:4,2)),
-                within_levels = as.character(1:4),
-                lambda_within = 1:4,
-                ID = NULL,
-                data = NULL),
-  "Missing arguments"
-)
-expect_error(
-  calc_contrast(variable = c(1:7, NA),
-                between = as.factor(rep(1:2, 4)),
-                between_levels = c("1", "2"),
-                lambda_between = 1:2,
-                within = as.factor(rep(1:4,2)),
-                within_levels = NULL,
                 lambda_within = NULL,
                 ID = NULL,
                 data = NULL),
-  "Missing arguments"
+  "lambdas are centered"
+)
+expect_warning(
+  calc_contrast(dv = c(1:7, NA),
+                between = as.factor(rep(1:2,4)),
+                lambda_between =  c("1" = 1, "2" = 2),
+                within = as.factor(rep(1:4,2)),
+                ID = NULL,
+                data = NULL),
+  "SD of groupmeans is zero"
 )
 ###### Test between
 # Table 3.1 from Rosenthal Chapter 3
@@ -69,7 +65,7 @@ tab3_1 <- data.frame(
           16, 10, 14, 12, 12, 18, 14, 20, 16),
   Let = rep(c("A", "B", "C", "D"), c(5, 5, 5, 5)))
 tab3_1 <- tab3_1[sample(1:20, 20, F ),]
-t31 <- calc_contrast(variable = Val,
+t31 <- calc_contrast(dv = Val,
                     between = Let,
                     lambda_between = sample(
                       c("A" = -3, "B" = -1,
@@ -83,7 +79,7 @@ tab16_2 <- data.frame(
   lambda = rep(c(-2, 3, -1 ), c(5, 5, 5))
 )
 tab16_2 <- tab16_2[sample(1:15, 15, F), ]
-t16_2 <- calc_contrast(variable = lsg,
+t16_2 <- calc_contrast(dv = lsg,
               between = between,
               lambda_between = sample(
                 c("KT" = -2, "JT" = 3, "MT" = -1), 3, F),
@@ -106,7 +102,7 @@ tab16_6 <- data.frame(
 tab16_6 <- tab16_6[sample(1:32, 32, F), ]
 
 t16_6<- calc_contrast(
-  variable = Var,
+  dv = Var,
   within = within,
   ID = ID,
   lambda_within = sample(c("wr" = 0.25, "kl" = -.75,
@@ -119,8 +115,6 @@ expect_equal(
 )
 
 ######## Test wtihin + between (no between Lambda)
-
-
 tab59b <- data.frame(
   ID=as.factor(rep(1:7, 2)),
   var = c(0,1,0,0,0,0,1,
@@ -129,7 +123,7 @@ tab59b <- data.frame(
   bw = as.factor(rep(rep(c("A", "B", "C"), c(2,1,4)),2))
 )
 tab59b <- tab59b[sample(1:14, 14, F),]
-t_59b <- calc_contrast(variable = var,
+t_59b <- calc_contrast(dv = var,
               within = med,
               between = bw,
               ID = ID,
@@ -155,7 +149,7 @@ tab53_raw <- data.frame(
   within = as.factor(rep(1:4, c(9, 9, 9, 9)))
 )
 tab53_raw <- tab53_raw[sample(1:36, 36, F), ]
-t_53 <- calc_contrast(variable = var, between = between,
+t_53 <- calc_contrast(dv = var, between = between,
               within = within,
               ID = ID,
               lambda_within = sample(c("1" = -3, "2" = -1,
@@ -176,7 +170,7 @@ chap5_Exercise2 <- data.frame(
   )
 )
 c5_e2 <- calc_contrast(
-  variable = var,
+  dv = var,
   within = within,
   ID = ID,
   lambda_within = c("L" = -1, "M" = 0,  "H" = 1),
@@ -194,7 +188,7 @@ tab59 <- data.frame(
   pt = as.factor( rep(rep(c("PT", "PP"), c(3,3)),2))
 )
 tab59 <- tab59[sample(1:12, 12, F), ]
-t59 <- calc_contrast(variable = var,
+t59 <- calc_contrast(dv = var,
               within = med,
               between = pt,
               ID=ID,
@@ -202,7 +196,3 @@ t59 <- calc_contrast(variable = var,
               data=tab59
 )
 expect_equal(round(t59$sig, 3)[1], 2.449)
-
-
-
-
