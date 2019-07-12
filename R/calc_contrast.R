@@ -1,25 +1,19 @@
 #' Calculate contrast analysis for factorial designs
 #'
-#' @param variable The dependent variable. This must be numeric.
-#' @param between The independent variable that divides the data into
-#' independent groups. This must be a factor.
-#' @param between_levels The names between the groups. The order of
-#' between levels must match the order of between_lambda.
-#' This must be a character
-#' @param lambda_between The contrast weights must be numeric and
-#' correspond to the order between  between_levels. If lambda_between
-#' does not sum to zero, this will be done automatically.
-#' @param within The independent variable which divides the data into
+#' @param dv dependent variable. Values must be numeric.
+#' @param between independent variable that divides the data into
+#' independent groups. Vector must be a factor.
+#' @param lambda_between contrast weights must be a named numeric.
+#' Names must match the levels of between. If lambda_between
+#' does not sum up to zero, this will be done automatically.
+#' @param within independent variable which divides the data into
 #' dependent groups. This must be a factor.
-#' @param within_levels The names of the within groups. The
-#' order of within_levels must match the order of  within_lambda.
-#' This must be a character
-#' @param lambda_within The contrast weights must be numeric and
-#' correspond to the order between within_levels. If lambda_within
-#' does not sum to zero, this will be done automatically.
-#' @param ID The indentifire for cases or subjects. This is needed
-#' for within-analysis.
-#' @param data Optional argument for a data.frame containing variable
+#' @param lambda_within contrast must be a named numeric.
+#' Names must match the levels of between. If lambda_between
+#' does not sum up to zero, this will be done automatically.
+#' @param ID indentifier for cases or subjects is needed
+#' for within- and mixed contrastanalysis.
+#' @param data optional argument for the data.frame containing dv
 #' and groups.
 #' @details For multi-factorial designs, the lambdaweights of
 #' the factors must be connected.
@@ -38,11 +32,11 @@
 #'     16, 10, 14, 12, 12,  18, 14, 20, 16),
 #'   Let = rep(c("A", "B", "C", "D"), c(5, 5, 5, 5))
 #'   )
-#' contr_bw <- calc_contrast(variable = Val,
-#'                  between = Let,
-#'                  between_levels = c("A", "B", "C", "D"),
-#'                  lambda_between = c(-3, -1, 1, 3),
-#'                  data = tab31)
+#' contr_bw <- calc_contrast(
+#'    dv = Val,
+#'    between = Let,
+#'    lambda_between = c("A" = -3, "B" = -1, "C" = 1, "D" = 3),
+#'    data = tab31)
 #' contr_bw
 #' summary(contr_bw)
 #'
@@ -51,18 +45,16 @@
 #'
 #' sedlmeier537 <- data.frame(
 #'    Var = c(27, 25, 30, 29, 30, 33, 31, 35,
-#'             25, 26, 32, 29, 28, 30, 32, 34,
-#'             21, 25, 23, 26, 27, 26, 29, 31,
-#'             23, 24, 24, 28, 24, 26, 27, 32),
+#'            25, 26, 32, 29, 28, 30, 32, 34,
+#'            21, 25, 23, 26, 27, 26, 29, 31,
+#'            23, 24, 24, 28, 24, 26, 27, 32),
 #'    within = as.factor(rep(1:4,c(8,8,8,8))),
-#'    ID = as.factor(rep(1:8,4))
-#'  )
+#'    ID = as.factor(rep(1:8,4)))
 #' contr_wi <- calc_contrast(
-#'    variable = Var,
+#'    dv = Var,
 #'    within = within,
-#'    within_levels = as.character(c(2,3,1,4)),
 #'    ID = ID,
-#'    lambda_within = c(0.25,-.75,1.25,-.75),
+#'    lambda_within = c("1" = 0.25, "2" = -.75, "3" = 1.25, "4" = -.75),
 #'    data=sedlmeier537
 #'  )
 #' contr_wi
@@ -78,31 +70,26 @@
 #'            wi = as.factor(rep(1:4, c(9, 9, 9, 9))),
 #'            ID = as.factor(rep(1:9, 4 ))
 #'    )
-#'    between_levels <- as.character(1:3)
-#'    ID <- as.factor(rep(1:9, 4))
-#'    within <- as.factor(rep(1:4, c(9,9,9,9)))
-#'    within_levels <- c("1","2","3","4")
-#'    lambda_within <- c(-3,-1,1,3)
-#'    lambda_between <-c(-1,0,1)
+#'    lambda_within <- c("1" = -3, "2" = -1, "3" = 1, "4" = 3)
+#'    lambda_between <-c("A" = -1, "B" = 0, "C" = 1)
 #'
-#' contr_mx <- calc_contrast(variable = Var, between = bw,
-#'               between_levels = between_levels,
-#'               within = wi, within_levels = within_levels,
-#'               ID = ID, data = tab53,
-#'               lambda_within = lambda_within,
-#'               lambda_between = lambda_between)
+#' contr_mx <- calc_contrast(dv = Var, between = bw,
+#'               lambda_between = lambda_between,
+#'               within = wi,
+#'                lambda_within = lambda_within,
+#'               ID = ID, data = tab53
+#'               )
 #' contr_mx
 #' summary(contr_mx)
-#'
-calc_contrast <- function(variable,
-                          between = NULL, between_levels = NULL,
+calc_contrast <- function(dv,
+                          between = NULL,
                           lambda_between = NULL,
-                          within = NULL, within_levels = NULL,
+                          within = NULL,
                           lambda_within = NULL, ID = NULL,
                           data = NULL){
   if (!is.null(data) & is.data.frame(data)) {
     arguments <- as.list(match.call())
-    variable <- eval(arguments$variable, data)
+    dv <- eval(arguments$dv, data)
     between <- eval(arguments$between, data)
     within <- eval(arguments$within, data)
     ID <- eval(arguments$ID, data)
@@ -112,32 +99,47 @@ calc_contrast <- function(variable,
   if (is.null(lambda_between) & is.null(lambda_within)) {
     stop("lambda is missing")
   }
-  if (!is.numeric(variable)){
+  if (!is.numeric(dv)){
     stop("variable must be numeric")
   }
   if (!is.factor(between) & !is.null(between)){
     stop("between must be a factor")
   }
-    if (!is.character(between_levels) & !is.null(between_levels)){
-    stop("between_levels must be a character")
+  if (!is.null(lambda_between)){
+    if (!is.numeric(lambda_between)){
+      stop("lambda must be a named numeric")
+    }
+    if (is.null(names(lambda_between))){
+      stop("lambda must be a named numeric")
+    }
+    if (anyNA(lambda_between)){
+      stop("NA in lambda is not allowed")
+    }
+  }
+  if (!is.null(lambda_within)){
+    if (!is.numeric(lambda_within)){
+      stop("lambda must be a named numeric")
+    }
+    if (is.null(names(lambda_within))){
+      stop("lambda must be a named numeric")
+    }
+    if (anyNA(lambda_within)){
+      stop("NA in lambda is not allowed")
+    }
   }
   if (!is.factor(within) & !is.null(within)){
     stop("within must be a factor")
   }
-  if (!is.character(within_levels) & !is.null(within_levels)){
-    stop("within_levels must be a character")
-  }
-  if (sum(lambda_between) != 0) {
-    lambda_between <- lambda_between - mean(lambda_between)
-  }
-  if (sum(lambda_within) != 0) {
-    lambda_within <- lambda_within - mean(lambda_within)
-  }
-    if (!all(names(table(between)) == sort(between_levels))) {
-    stop("between_levels doesn't match all between labels")
+
+    if (!is.null(between) & !is.null(lambda_between)) {
+      if (anyNA(match(levels(between),names(lambda_between)))) {
+        stop("lambda names doesn't match all between labels")
+      }
     }
-  if (!all(names(table(within)) == sort(within_levels))) {
-    stop("within_levels doesn't match all within labels")
+  if (!is.null(within) & !is.null(lambda_within)){
+    if (anyNA(match(levels(within),names(lambda_within)))) {
+      stop("lambda names doesn't match all within labels")
+    }
   }
   if (!is.null(lambda_between) & is.null(lambda_within)) {
     case <- "Analysis between groups"
@@ -148,35 +150,40 @@ calc_contrast <- function(variable,
   if (!is.null(lambda_between) & !is.null(lambda_within)) {
     case <- "Mixed-Analysis: between and within factors"
   }
-  if (any(is.null(between), is.null(lambda_between),
-          is.null(between_levels)) &
+  if (any(is.null(between), is.null(lambda_between)) &
       case == "Analysis between groups") {
     stop("Missing arguments")
   }
   if (any(is.null(within), is.null(lambda_within),
-          is.null(within_levels), is.null(ID)) &
-    case == "Analysis within cases") {
+          is.null(ID)) & case == "Analysis within cases") {
     stop("Missing arguments")
   }
   if (any(
     is.null(between), is.null(lambda_between),
-    is.null(between_levels),
     is.null(within), is.null(lambda_within),
-          is.null(within_levels), is.null(ID)) &
-      case == "Mixed-Analysis: between and within factors") {
+    is.null(ID)) &
+    case == "Mixed-Analysis: between and within factors") {
     stop("Missing arguments")
   }
-  if (anyNA(variable)) {
-    indexNA <- which(is.na(variable))
-    variable <- variable[-indexNA]
+  if (sum(lambda_between) != 0) {
+    lambda_between <- lambda_between - mean(lambda_between)
+    warning("lambdas are centered")
+  }
+  if (sum(lambda_within) != 0) {
+    lambda_within <- lambda_within - mean(lambda_within)
+    warning("lambdas are centered")
+  }
+  if (anyNA(dv)) {
+    indexNA <- which(is.na(dv))
+    dv <- dv[-indexNA]
     between <- between[-indexNA]
     within <- within[-indexNA]
     ID <- ID[-indexNA]
-    warning("NAs in variable are omitted")
+    warning("NAs in dependent variable are omitted")
   }
   if (anyNA(between)) {
     indexNA <- which(is.na(between))
-    variable <- variable[-indexNA]
+    dv <- dv[-indexNA]
     between <- between[-indexNA]
     within <- within[-indexNA]
     ID <- ID[-indexNA]
@@ -184,57 +191,64 @@ calc_contrast <- function(variable,
   }
   if (anyNA(within)) {
     indexNA <- which(is.na(within))
-    variable <- variable[-indexNA]
+    dv <- dv[-indexNA]
     between <- between[-indexNA]
     within <- within[-indexNA]
     ID <- ID[-indexNA]
     warning("NAs in within are omitted")
+
   }
   if (anyNA(ID)) {
     indexNA <- which(is.na(ID))
-    variable <- variable[-indexNA]
+    dv <- dv[-indexNA]
     between <- between[-indexNA]
     within <- within[-indexNA]
     ID <- ID[-indexNA]
     warning("NAs in ID are omitted")
   }
   if (case == "Analysis between groups"){
-    lambda_between <- (lambda_between[order(between_levels)])
+    lambda_between <- lambda_between[order(names(lambda_between))]
     ni <- table(between)
-    N <- sum(table(variable))
+    N <- sum(table(dv))
     k <- length(ni)
     df_inn <- N - k
     df_contrast <- 1
     lambda_between_row <- rep(NA, sum(ni))
-    for (i in 1:length(between)){
+    for (i in 1:length(names(lambda_between))) {
       lambda_between_row <- replace(
         x = lambda_between_row,
-        list = which(between == between_levels[i]),
+        list = which(between == names(lambda_between)[i]),
         lambda_between[i]
-        )
+      )
     }
-    var_within <- tapply(X = variable, INDEX = between,
+    var_within <- tapply(X = dv, INDEX = between,
                          FUN = var)
     MS_within <- mean(var_within, na.rm = T)
-    Mi <- tapply(X = variable, INDEX = between, FUN = mean)
-    SEi <- tapply(X = variable, INDEX = between, FUN = sd) / sqrt(ni)
+    Mi <- tapply(X = dv, INDEX = between, FUN = mean)
+    SEi <- tapply(X = dv, INDEX = between, FUN = sd) / sqrt(ni)
     L <- sum(Mi * lambda_between)
     SS_total <- sum(
-      (variable - mean(variable)) ** 2)
+      (dv - mean(dv)) ** 2)
     SS_between <- sum(ni * (Mi - mean(Mi) ** 2))
     F_contrast <- ( (L ** 2) / (MS_within)) *
       (1 / sum( (lambda_between ** 2) / ni))
     p_contrast <- pf(F_contrast, 1, df_inn, lower.tail = F)
-    r_effectsize <- cor(lambda_between_row, variable)
-    r_alerting <- cor(lambda_between, Mi)
-    r_contrast <- (r_effectsize * r_alerting) /
+    r_effectsize <- cor(lambda_between_row, dv)
+    if (sd(Mi)==0) {
+      r_alerting <- NA
+      r_contrast <- NA
+      warning("SD of groupmeans is zero")
+    } else {
+      r_alerting <- cor(lambda_between, Mi)
+      r_contrast <- (r_effectsize * r_alerting) /
       (sqrt(
         r_effectsize ** 2 * r_alerting ** 2 - r_effectsize ** 2
         + r_alerting ** 2))
+    }
     sig <- c(F_contrast, p_contrast, df_contrast, df_inn, MS_within,
              SS_between, SS_total, N - 1)
     r <- c(r_effectsize, r_contrast, r_alerting)
-    names(lambda_between) <- between_levels
+    #names(lambda_between) <- between_levels
     desc <- matrix(c(Mi, SEi), ncol = 2, byrow = F)
     colnames(desc) <- c("M", "SE")
     out_l <- list(sig, desc, lambda_between, r)
@@ -244,25 +258,61 @@ calc_contrast <- function(variable,
     return(out_l)
   }
   if (case == "Analysis within cases"){
-    lambda_within <- lambda_within[order(within_levels)]
+    lambda_within <- lambda_within[order(names(lambda_within))]
     ni_within <- table(within)
     N <- sum(ni_within)
-    k_within <- 1
+    L <- NULL
+    for (i in 1:length(table(ID))){
+     var_i <- dv[which(ID==levels(ID)[i])]
+    L[i] <- sum(var_i[order(within[which(ID==levels(ID)[i])])] * lambda_within)
+    }
+    if (!is.null(between)){
+      ni_bw <- table(between)
+      bw_wide <- matrix(NA, ncol = 2, nrow = length(levels(ID)))
+      for(i in 1:length(levels(ID))){
+        id_bw <- as.character(unique(
+          between[which(ID==levels(ID)[i])]
+        ))
+        if (length(id_bw) > 1) {
+          stop("some ID's are in more than one between group")
+        } else {
+          bw_wide[i, 1] <- levels(ID)[i]
+          bw_wide[i, 2] <- id_bw
+        }
+      }
+     ni_L <- table(bw_wide[,2])
+     S2i <- tapply(L,as.factor(bw_wide[,2]), var)
+     if (anyNA(S2i)) {
+       S2i[which(is.na(S2i))] <- 0
+     }
+     S2 <- sum((ni_L-1) * S2i) / sum(ni_L-1)
+     k_bw <- length(ni_bw)
+     df_within <- N - k_bw
+    } else {
+      S2 <- var(L)
+      k_bw <- 1
+      df_id <- length(L)-1
+      df_within <- N - k_bw
+    }
     df_contrast <- 1
-    df_id <- N - 1
-    names(lambda_within) <- within_levels
-    L <- tapply(variable, ID, FUN = function(x) sum(x * lambda_within))
-    S2 <- var(L)
-    df_within <- length(L)-1
-    harm_mean <- k_within / sum(1 / ni_within)
-    t_value <- mean(L) / sqrt( (1 / (k_within * harm_mean)) * S2)
+    if (!is.null(between)){
+      df_id <- sum(ni_L) - k_bw
+      ni_cell <- table(within, between)
+    } else {
+      ni_cell <- ni_within
+    }
+    harm_n <- 1 / mean(1/ni_cell)
+    if (!is.null(between)){
+      L <- tapply(L, bw_wide[,2] ,mean)
+    }
+    t_value <- mean(L) / sqrt( (1 / (k_bw * harm_n)) * S2)
     F_contrast <- t_value ** 2
-    SS_total <- sum( ( (variable - mean(variable)) ** 2))
+    SS_total <- sum( ( (dv - mean(dv)) ** 2))
     p_contrast <- pt(t_value, df_id, lower.tail = F)
     g_effect <- mean(L) / (sqrt(S2))
     r_contrast <- sqrt(F_contrast / (F_contrast + df_within))
     sig <- c(t_value, p_contrast, df_id)
-    desc <- c(mean(L), sd(L) / sqrt(sum(table(L))), sd(L))
+    desc <- c(mean(L), sqrt(S2) / sqrt(sum(table(L))), sqrt(S2))
     r <- c(r_contrast, g_effect)
     out_l <- list(sig, desc, lambda_within, r)
     names(out_l) <- c("sig", "desc", "lambda_between", "effects")
@@ -271,27 +321,44 @@ calc_contrast <- function(variable,
     return(out_l)
   }
   if (case == "Mixed-Analysis: between and within factors"){
-    lambda_within <- sort(lambda_within[order(within_levels)])
+    lambda_within <- lambda_within[order(names(lambda_within))]
+    lambda_between <- lambda_between[order(names(lambda_between))]
     ni_within <- table(within)
     ni_between <- table(between)
     N <- sum(ni_within)
     k_within <- length(ni_within)
     k_between <- length(ni_between)
     df_contrast <- 1
-    L <- tapply(variable, ID,
-                FUN = function(x) sum(x * lambda_within))
+    L <- NULL
+    for (i in 1:length(table(ID))){
+      var_i <- dv[which(ID==levels(ID)[i])]
+      L[i] <- sum(var_i[order(within[which(ID==levels(ID)[i])])] * lambda_within)
+    }
+    bw_wide <- matrix(NA, ncol = 2, nrow = length(levels(ID)))
+    for(i in 1:length(levels(ID))){
+      id_bw <- as.character(unique(
+        between[which(ID==levels(ID)[i])]
+      ))
+      if (length(id_bw) > 1) {
+        stop("some ID's are in more than one between group")
+      } else {
+        bw_wide[i, 1] <- levels(ID)[i]
+        bw_wide[i, 2] <- id_bw
+        }
+    }
     df_id <- length(L) - 1
-    L_group <- tapply(variable, list(ID, between),
-                      FUN = function(x) sum(x * lambda_within))
-    L_group_mean <- apply(L_group, 2, mean, na.rm = T)
-    L_group_var <- apply(L_group, 2, var, na.rm = T)
-    L_group_n <- apply(L_group, 2, function(x) sum(table(x)))
-    MS_contrast <- k_between *
+    L_group_mean <- tapply(L, bw_wide[,2], mean)
+    L_group_var <- tapply(L, bw_wide[,2], var)
+    L_group_n <- tapply(L,  bw_wide[,2],
+                        function(x) sum(table(x)))
+    ni_cell <- table(within, between)
+    harm_n <- 1 / mean(1/ni_cell)
+    MS_contrast <- harm_n *
       sum(L_group_mean * lambda_between) ** 2 /
       sum(lambda_between ** 2)
     S2_pooled <- sum(
       ( (L_group_n - 1) * L_group_var)
-      ) /
+    ) /
       sum(L_group_n - 1)
     F_contrast <- MS_contrast / S2_pooled
     df_within <- length(L) - k_between
@@ -300,19 +367,19 @@ calc_contrast <- function(variable,
     r_contrast <- sqrt(F_contrast / (F_contrast + df_within))
     r_alerting <- cor(L_group_mean, lambda_between)
     lambda_between_row <- rep(NA, length(L))
-      for (i in 1:ncol(L_group)) {
-            lambda_between_row[which(!is.na(L_group[, i]))] <-
-              lambda_between[i]
-      }
+    for (i in 1:length(lambda_between)) {
+    lambda_between_row  <- replace(lambda_between_row,
+               which(bw_wide[,2]==names(lambda_between)[i]),
+               lambda_between[i])
+    }
     r_effectsize <- cor(L, lambda_between_row)
     sig <- c(F_contrast, p_contrast, df_contrast, df_within,
              MS_contrast, S2_pooled)
     r <- c(r_effectsize, r_contrast, r_alerting)
-    names(lambda_between) <- between_levels
-    names(lambda_within) <- within_levels
-    desc_wi <- L_group
+    desc_wi <- L
     desc <- matrix(c(L_group_mean, sqrt(L_group_var / L_group_n)),
                    ncol = 2, byrow = F)
+    rownames(desc) <- names(L_group_mean)
     colnames(desc) <- c("M", "SE")
     out_l <- list(sig, desc, lambda_between, lambda_within, r, desc_wi)
     names(out_l) <- c("sig", "desc", "lambda_between",
@@ -322,3 +389,4 @@ calc_contrast <- function(variable,
     return(out_l)
   }
 }
+

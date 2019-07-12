@@ -1,3 +1,9 @@
+#' Summary of between subject design contrast analysis
+#' @param object output of calc_contrast
+#' @param ... further arguments
+#' @return Displays ANOVA table of the contrastanalysis
+#' and the typical effectsizes.
+#' @export
 summary.cofad_bw <- function(object, ...){
   x <- object
   f_tab <- matrix(c(
@@ -18,6 +24,13 @@ summary.cofad_bw <- function(object, ...){
   names(out) <- c("F-Table", "Effects")
   return(out)
 }
+#' Summary of within subject design contrast analysis
+#' @param object output of calc_contrast
+#' @param ci confidence intervall for composite Score (L-Values)
+#' @param ... further arguments
+#' @return Displays ANOVA table of the contrastanalysis
+#' and the typical effectsizes.
+#' @export
 summary.cofad_wi <- function(object, ci = .95, ...){
   x <- object
   L_M <- x[[2]][[1]]
@@ -37,6 +50,12 @@ summary.cofad_wi <- function(object, ci = .95, ...){
   names(out) <- c("L-Statistics", "Effects")
   return(out)
 }
+#' Summary of a mixed design contrast analysis
+#' @param object output of calc_contrast
+#' @param ... further arguments
+#' @return Displays ANOVA table of the contrastanalysis
+#' and the typical effectsizes.
+#' @export
 summary.cofad_mx <- function(object, ...){
   x <- object
   all_L <- as.vector(x[[6]])
@@ -56,12 +75,7 @@ summary.cofad_mx <- function(object, ...){
      SS_total, df_total, NA, NA, NA),
      ncol = 5, byrow = T)
   f_tab <- round(f_tab, 3)
-  L_mean <- apply(x[[6]], 2, mean, na.rm = T)
-  L_sd <- apply(x[[6]], 2, sd, na.rm = T)
-  l_tab <- round(matrix(c(L_mean, L_sd),
-                        nrow = 2, byrow = T), 3)
-  colnames(l_tab) <- names(L_mean)
-  rownames(l_tab) <- c("mean", "sd")
+  l_tab <- x[[2]]
   r_tab <- round(matrix(c(x[[5]]), ncol = 1), 3)
   colnames(r_tab) <- "effect"
   rownames(r_tab) <- c("r_effectsize", "r_contrast", "r_alerting")

@@ -1,4 +1,10 @@
-# print_methods
+#' Output of between subject design contrast analysis
+#' @param x output of calc_contrast
+#' @param ... further arguments
+#' @return Displays the significance of the contrast analysis.
+#  The contrastweights, the corresponding group and an effectsize are
+#' given.
+#' @export
 print.cofad_bw <- function(x, ...) {
   p_value <- round(x[[1]][2], 3)
   p_value <- ifelse (p_value < .001,
@@ -21,6 +27,13 @@ print.cofad_bw <- function(x, ...) {
   cat("\nContrast Analysis for between factor design\n\n")
   cat(p, contr_1, r_effect_1, sep = "\n" )
 }
+#' Output of a within subject design contrast analysis
+#' @param x output of calc_contrast
+#' @param ... further arguments
+#' @return Displays the significance of the contrast analysis.
+#  The contrastweights, the corresponding group and an effectsize are
+#' given.
+#' @export
 print.cofad_wi <- function(x, ...) {
   L_val <- paste("L-Values: Mean = ", round(x[[2]][1], 3),
                  " ; SD = ", round(x[[2]][3], 3) )
@@ -40,6 +53,13 @@ print.cofad_wi <- function(x, ...) {
   cat("\nContrast Analysis for within factor design\n\n")
   cat(L_val, p, contr_1, g_effect_1, sep = "\n" )
 }
+#' Output of a mixed design contrast analysis
+#' @param x output of calc_contrast
+#' @param ... further arguments
+#' @return Displays the significance of the contrast analysis.
+#  The contrastweights, the corresponding group and an effectsize are
+#' given.
+#' @export
 print.cofad_mx <- function(x, ...) {
   p_value <- round(x[[1]][2], 3)
   p_value <- ifelse (p_value < .001,
