@@ -2,7 +2,7 @@
 #' @param x output of calc_contrast
 #' @param ... further arguments
 #' @return Displays the significance of the contrast analysis.
-#  The contrastweights, the corresponding group and an effectsize are
+#' The contrastweights, the corresponding group and an effectsize are
 #' given.
 #' @export
 print.cofad_bw <- function(x, ...) {
@@ -31,7 +31,7 @@ print.cofad_bw <- function(x, ...) {
 #' @param x output of calc_contrast
 #' @param ... further arguments
 #' @return Displays the significance of the contrast analysis.
-#  The contrastweights, the corresponding group and an effectsize are
+#' The contrastweights, the corresponding group and an effectsize are
 #' given.
 #' @export
 print.cofad_wi <- function(x, ...) {
@@ -57,7 +57,7 @@ print.cofad_wi <- function(x, ...) {
 #' @param x output of calc_contrast
 #' @param ... further arguments
 #' @return Displays the significance of the contrast analysis.
-#  The contrastweights, the corresponding group and an effectsize are
+#' The contrastweights, the corresponding group and an effectsize are
 #' given.
 #' @export
 print.cofad_mx <- function(x, ...) {
