@@ -4,18 +4,20 @@
 #' @param between independent variable that divides the data into
 #' independent groups. Vector must be a factor.
 #' @param lambda_between contrast weights must be a named numeric.
-#' Names must match the levels of between. If lambda_between
+#' Names must match the levels of \code{between}. If
+#' \code{lambda_between}
 #' does not sum up to zero, this will be done automatically.
 #' @param within independent variable which divides the data into
 #' dependent groups. This must be a factor.
 #' @param lambda_within contrast must be a named numeric.
-#' Names must match the levels of between. If lambda_between
+#' Names must match the levels of \code{between}. If
+#' \code{lambda_between}
 #' does not sum up to zero, this will be done automatically.
-#' @param ID indentifier for cases or subjects is needed
+#' @param ID identifier for cases or subjects is needed
 #' for within- and mixed contrastanalysis.
-#' @param data optional argument for the data.frame containing dv
-#' and groups.
-#' @details For multi-factorial designs, the lambdaweights of
+#' @param data optional argument for the \code{data.frame}
+#' containing \code{dv} and groups.
+#' @details For multi-factorial designs, the lambda weights of
 #' the factors must be connected.
 #' @return Calculates the significance of the contrast analysis.
 #  The contrastweights, the corresponding group and an effectsize are
@@ -24,7 +26,7 @@
 #' Contrasts and effect sizes in behavioral research:
 #' A correlational approach. New York: Cambridge University Press.
 #' @examples
-#' # Exampel for between-subjects-design Table 3.1 from
+#' # Example for between-subjects design Table 3.1 from
 #' # Rosenthal, Rosnow and Rubin (2001)
 #'
 #' tab31 <- data.frame(
@@ -40,7 +42,7 @@
 #' contr_bw
 #' summary(contr_bw)
 #'
-#' # Exampel for within-subjects-design Calculation 16.6 from
+#' # Example for within-subjects design Calculation 16.6 from
 #' # Sedlmeier and Renkewitz (2018, p. 537)
 #'
 #' sedlmeier537 <- data.frame(
