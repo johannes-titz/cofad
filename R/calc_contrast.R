@@ -250,7 +250,6 @@ calc_contrast <- function(dv,
     sig <- c(F_contrast, p_contrast, df_contrast, df_inn, MS_within,
              SS_between, SS_total, N - 1)
     r <- c(r_effectsize, r_contrast, r_alerting)
-    #names(lambda_between) <- between_levels
     desc <- matrix(c(Mi, SEi), ncol = 2, byrow = F)
     colnames(desc) <- c("M", "SE")
     out_l <- list(sig, desc, lambda_between, r)
