@@ -2,7 +2,7 @@
 % Please edit documentation in R/print_methods.R
 \name{print.cofad_bw}
 \alias{print.cofad_bw}
-\title{Output of between subject design contrast analysis}
+\title{Output of between-subject design contrast analysis}
 \usage{
 \method{print}{cofad_bw}(x, ...)
 }
@@ -13,8 +13,9 @@
 }
 \value{
 Displays the significance of the contrast analysis.
+The contrastweights, the corresponding group and an effectsize are
 given.
 }
 \description{
-Output of between subject design contrast analysis
+Output of between-subject design contrast analysis
 }

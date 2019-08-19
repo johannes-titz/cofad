@@ -63,7 +63,7 @@ expect_warning(
 tab3_1 <- data.frame(
   Val = c(2, 6, 8, 4, 10, 6, 8, 10, 4, 12, 8,
           16, 10, 14, 12, 12, 18, 14, 20, 16),
-  Let = rep(c("A", "B", "C", "D"), c(5, 5, 5, 5)))
+  Let = as.factor(rep(c("A", "B", "C", "D"), c(5, 5, 5, 5))))
 tab3_1 <- tab3_1[sample(1:20, 20, F ),]
 t31 <- calc_contrast(dv = Val,
                     between = Let,

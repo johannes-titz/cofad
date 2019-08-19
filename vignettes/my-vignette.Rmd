@@ -105,7 +105,7 @@ Let us now do an analysis for within-subjects designs.
 
 ## Within-Subjects Designs
 
-For within designs the calculations are quite different, but cofad takes care of it and we just have to use the within parameters *within* and *within_levels* instead of the between equivalents. As an example we use Table 16.5 from @sedlmeier2018. Reading ability was assessed for eight participants under four different conditions. The hypothesis is that you can read best wihout music, white noise reduces your reading ability and music (independent of type) reduces it even further.
+For within designs the calculations are quite different, but cofad takes care of it and we just have to use the within parameters *within* and *lambda_within* instead of the between equivalents. As an example we use Table 16.5 from @sedlmeier2018. Reading ability was assessed for eight participants under four different conditions. The hypothesis is that you can read best wihout music, white noise reduces your reading ability and music (independent of type) reduces it even further.
 
 ```{r}
 d <- data.frame(reading_test = c(27, 25, 30, 29, 30, 33, 31, 35,
