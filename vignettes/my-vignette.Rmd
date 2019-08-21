@@ -124,7 +124,7 @@ calc_contrast(dv = reading_test, within = music,
              ID = participant, data = d)
 ```
 
-You can see that the siginifance test is just a $t$-test and the reported effect size is also for a mean comparison ($g$). When conducting the analysis manually, we can see why:
+You can see that the siginifance test is just a $t$-test and the reported effect size is also for a mean comparison ($g$). (The $t$-test is one-tailed, because contrast analysis has always a specific hypotheses.) When conducting the analysis manually, we can see why:
 
 ```{r}
 mtr <- matrix(d$reading_test, ncol = 4)
@@ -137,7 +137,7 @@ Only the linear combination of the dependent variable and the contrast weights f
 
 ## Mixed Designs
 
-The idea of mixed designs is a combination of between and within factors. In this case cofad calculates the *L-Value* for the within factor, which it then treats as a new dependent variable. @Rosenthal2000, in their table 5.3, give an illustrative example: Nine children are measured four times (within), but they also belong to different groups of age (between).
+The idea of mixed designs is a combination of between and within factors. In this case cofad calculates the *L*-Value for the within factor, which is treated as a new dependent variable. Thereafter, these used for the between analysis.  @Rosenthal2000, in their table 5.3, give an illustrative example: Nine children are measured four times (within), but they also belong to different groups of age (between).
 
 There are two hypotheses: 
 
@@ -173,7 +173,7 @@ contr_mx <- calc_contrast(dv = Var,
                           )
 contr_mx
 ```
-The results look like a contrast analysis for between-subject designs, the second step of the mixed desing contrast analysis. Again, the summary gives some more details: The effect sizes and within group means and standard errors of the L-Values. 
+The results look like a contrast analysis for between-subject designs. Again, the summary gives some more details: The effect sizes and within group means and standard errors of the *L*-values. 
 ```{r}
 summary(contr_mx)
 ```
