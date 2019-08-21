@@ -6,9 +6,9 @@
 #' given.
 #' @export
 print.cofad_bw <- function(x, ...) {
-  p_value <- round(x[[1]][2], 3)
-  p_value <- ifelse (p_value < .001,
-                     paste("; p < .001", sep = ""),
+  p_value <- round(x[[1]][2], 8)
+  p_value <- ifelse (p_value < .00000001,
+                     paste("; p < .00000001", sep = ""),
                      paste("; p = ", p_value, sep = "")
   )
   p <- paste("F(1,", x[[1]][4], ") = ", round(x[[1]][1], 3),
@@ -37,9 +37,9 @@ print.cofad_bw <- function(x, ...) {
 print.cofad_wi <- function(x, ...) {
   L_val <- paste("L-Values: Mean = ", round(x[[2]][1], 3),
                  "; SD = ", round(x[[2]][3], 3) )
-  p_value <- round(x[[1]][2], 3)
-  p_value <- ifelse (p_value < .001,
-                     paste("; p < .001", sep = ""),
+  p_value <- round(x[[1]][2], 8)
+  p_value <- ifelse (p_value < .00000001,
+                     paste("; p < .00000001", sep = ""),
                      paste("; p = ", p_value, sep = "")
   )
   p <- paste("t(", x[[1]][3], ") = ", round(x[[1]][1], 3),
@@ -61,12 +61,11 @@ print.cofad_wi <- function(x, ...) {
 #' given.
 #' @export
 print.cofad_mx <- function(x, ...) {
-  p_value <- round(x[[1]][2], 3)
-  p_value <- ifelse (p_value < .001,
-                     paste("; p < .001", sep = ""),
+  p_value <- round(x[[1]][2], 8)
+  p_value <- ifelse (p_value < .00000001,
+                     paste("; p < .00000001", sep = ""),
                      paste("; p = ", p_value, sep = "")
   )
-
   p <- paste("t(", x[[1]][3], ") = ", round(x[[1]][1], 3),
              p_value, sep = "")
   lambda <- x[[3]]
