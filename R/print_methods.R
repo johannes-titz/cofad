@@ -13,7 +13,7 @@ print.cofad_bw <- function(x, ...) {
   )
   p <- paste("F(1,", x[[1]][4], ") = ", round(x[[1]][1], 3),
              p_value, sep = "")
-  lambda <- x[[3]]
+  lambda <- round(x[[3]], 3)
   contr_1 <-  paste("Contrasts: ",
                     paste(names(lambda), "=", lambda, collapse = "; "),
                     collapse = NULL)
@@ -44,7 +44,7 @@ print.cofad_wi <- function(x, ...) {
   )
   p <- paste("t(", x[[1]][3], ") = ", round(x[[1]][1], 3),
              p_value, sep = "")
-  lambda <- x[[3]]
+  lambda <- round(x[[3]], 3)
   contr_1 <-  paste("Contrasts: ",
                     paste(names(lambda), "=", lambda, collapse = "; "),
                     collapse = NULL)
@@ -68,7 +68,7 @@ print.cofad_mx <- function(x, ...) {
   )
   p <- paste("t(", x[[1]][3], ") = ", round(x[[1]][1], 3),
              p_value, sep = "")
-  lambda <- x[[3]]
+  lambda <- round(x[[3]], 3)
   contr_1 <-  paste("Contrasts: ",
                     paste(names(lambda), "=", lambda, collapse = "; "),
                     collapse = NULL)
