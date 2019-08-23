@@ -22,9 +22,4 @@ Analysis  --> analysis
 Designs   --> designs
 ,and      --> , and
 
-
-Please add a DOI, arXiv or ISBN to your reference in your Description text in the form
-authors (year) <doi:...>
-authors (year) <arXiv:...>
-authors (year, ISBN:...)
-with no space after 'doi:', 'arXiv:' and angle brackets for auto-linking.
+add ISBN to reference Description text in the form
