@@ -16,4 +16,15 @@ checking CRAN incoming feasibility ... NOTE
 
 ## Additional info
 
-"cofad" is the first submission and my first package
+Resubmission after Fixing.
+
+Analysis  --> analysis
+Designs   --> designs
+,and      --> , and
+
+
+Please add a DOI, arXiv or ISBN to your reference in your Description text in the form
+authors (year) <doi:...>
+authors (year) <arXiv:...>
+authors (year, ISBN:...)
+with no space after 'doi:', 'arXiv:' and angle brackets for auto-linking.
