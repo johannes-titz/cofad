@@ -47,7 +47,7 @@ expect_warning(
                 lambda_within = NULL,
                 ID = NULL,
                 data = NULL),
-  "lambdas are centered"
+  "lambdas are centered and rounded to 3 digits"
 )
 expect_warning(
   calc_contrast(dv = c(1:7, NA),

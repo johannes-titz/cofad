@@ -169,11 +169,11 @@ calc_contrast <- function(dv,
   }
   if (sum(lambda_between) != 0) {
     lambda_between <- lambda_between - mean(lambda_between)
-    warning("lambdas are centered")
+    warning("lambdas are centered and rounded to 3 digits")
   }
   if (sum(lambda_within) != 0) {
     lambda_within <- lambda_within - mean(lambda_within)
-    warning("lambdas are centered")
+    warning("lambdas are centered and rounded to 3 digits")
   }
   if (anyNA(dv)) {
     indexNA <- which(is.na(dv))
