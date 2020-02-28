@@ -1,0 +1,8 @@
+image: r-base
+
+test:
+   script:
+    - R -e 'install.packages(c("testthat"))'
+    - R CMD build . --no-build-vignettes --no-manual
+    - cofad=$(ls -1t *.tar.gz | head -n 1)
+    - R CMD check "${cofad}" --no-build-vignettes --no-manual

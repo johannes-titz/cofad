@@ -6,7 +6,7 @@ output: rmarkdown::html_vignette
 bibliography: "library.bib"
 csl: apa.csl
 vignette: >
-  %\VignetteIndexEntry{my-vignette}
+  %\VignetteIndexEntry{cofad-vignette}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -39,8 +39,9 @@ Now we need some data and hypotheses. We can simply take the data from @furr2004
 ```{r}
 d <- data.frame(empathy = c(51, 56, 61, 58, 54, 62, 67, 57, 65, 59, 50, 49, 47, 45,
                             44, 50, 45, 40, 49, 41),
-                major = rep(c("psychology", "education", "business",
-                              "chemistry"), each = 5))
+                major = as.factor(
+                  rep(c("psychology", "education", "business",
+                              "chemistry"), each = 5)))
 head(d)
 ```
 
