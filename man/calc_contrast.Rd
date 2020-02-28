@@ -4,8 +4,15 @@
 \alias{calc_contrast}
 \title{Calculate contrast analysis for factorial designs}
 \usage{
-calc_contrast(dv, between = NULL, lambda_between = NULL,
-  within = NULL, lambda_within = NULL, ID = NULL, data = NULL)
+calc_contrast(
+  dv,
+  between = NULL,
+  lambda_between = NULL,
+  within = NULL,
+  lambda_within = NULL,
+  ID = NULL,
+  data = NULL
+)
 }
 \arguments{
 \item{dv}{dependent variable. Values must be numeric.}
