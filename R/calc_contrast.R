@@ -83,6 +83,9 @@
 #'               )
 #' contr_mx
 #' summary(contr_mx)
+#'
+#' @export
+#' @import stats
 calc_contrast <- function(dv,
                           between = NULL,
                           lambda_between = NULL,
@@ -378,6 +381,8 @@ calc_contrast <- function(dv,
   }
 }
 
+# Validates that lambda_between is correct
+#
 check_lambda_between <- function(lambda_between){
 if (!is.null(lambda_between)){
     if (!is.numeric(lambda_between)){
@@ -397,6 +402,9 @@ if (!is.null(lambda_between)){
   lambda_between
 }
 
+# Validates that every condition gets a lambda
+#
+# @noRd
 check_labels <- function(between, lambda_between){
   if (!is.null(between) & !is.null(lambda_between)) {
         if (anyNA(match(levels(between),names(lambda_between)))) {
