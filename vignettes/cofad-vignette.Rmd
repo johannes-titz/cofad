@@ -117,7 +117,7 @@ d <- data.frame(reading_test = c(27, 25, 30, 29, 30, 33, 31, 35,
                                  21, 25, 23, 26, 27, 26, 29, 31, 
                                  23, 24, 24, 28, 24, 26, 27, 32),
                 participant = as.factor(rep(1:8, 4)),
-                music = rep(c("without music", "white noise", "classic", "jazz"), each = 8))
+                music = as.factor(rep(c("without music", "white noise", "classic", "jazz"), each = 8)))
 head(d)
 calc_contrast(dv = reading_test, within = music,
               lambda_within = c("without music" = 1.25, 
@@ -179,9 +179,11 @@ The results look like a contrast analysis for between-subject designs. Again, th
 summary(contr_mx)
 ```
 
-Sometimes you would like to run a contrast analysis on aggregated data. If you have the means, standard deviations and sample sizes for every condition, you can do this in cofad.
+# Aggregated Data
+Sometimes you would like to run a contrast analysis on aggregated data (e.g. when no raw data is available). If you have the means, standard deviations and sample sizes for every condition, you can do this in cofad. For instance, if we take our first example and aggregate it, we can still calculate the contrast analysis:
 
 ```{r}
+library(dplyr)
 d <- data.frame(empathy = c(51, 56, 61, 58, 54, 62, 67, 57, 65, 59, 50, 49, 47, 45,
                             44, 50, 45, 40, 49, 41),
                 major = as.factor(
@@ -190,10 +192,13 @@ d <- data.frame(empathy = c(51, 56, 61, 58, 54, 62, 67, 57, 65, 59, 50, 49, 47, 
 
 d_agg <- d %>% group_by(major) %>% summarize(mean = mean(empathy),
                                              sd = sd(empathy), n = n())
+lambdas = c("psychology" = 1, "education" = -1,
+            "business" = 0, "chemistry" = 0)
+#d_agg <- as.data.frame(d_agg)
 
-calc_contrast_aggregated(d_agg$mean, d_agg$sd, d_agg$n, lambdas = c(0, 0, -1, 1))
+calc_contrast_aggregated(mean, sd, n, lambdas, major, d_agg)
 ```
-Let us compare this with the raw data analysis:
+And the result is indeed the same when compared to the analysis with the raw data:
 
 ```{r}
 ca <- calc_contrast(dv = empathy, between = major,
@@ -202,7 +207,7 @@ ca <- calc_contrast(dv = empathy, between = major,
                     data = d)
 ca
 ```
-
+This will only work for
 
 This was the introduction to cofad. If you have any suggestions you can post it on our gitlab site:
 https://gitlab.hrz.tu-chemnitz.de/burma--tu-chemnitz.de/cofad.git
