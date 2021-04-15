@@ -13,6 +13,7 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    dplyr
 VignetteBuilder: knitr
 URL: https://gitlab.hrz.tu-chemnitz.de/burma--tu-chemnitz.de/cofad.git
