@@ -75,6 +75,7 @@ calc_contrast_aggregated <- function(means, sds, ns, lambdas, between, data){
 #'
 #' @param x vector of mean values
 #' @param n vector of sample sizes values
+#' @noRd
 ss <- function(x, n) {
   sum(n*(x-mean(x))^2)
 }
