@@ -179,6 +179,21 @@ The results look like a contrast analysis for between-subject designs. Again, th
 summary(contr_mx)
 ```
 
+Sometimes you would like to run a contrast analysis on aggregated data. If you have the means, standard deviations and sample sizes for every condition, you can do this in cofad.
+
+```{r}
+d <- data.frame(empathy = c(51, 56, 61, 58, 54, 62, 67, 57, 65, 59, 50, 49, 47, 45,
+                            44, 50, 45, 40, 49, 41),
+                major = as.factor(
+                  rep(c("psychology", "education", "business",
+                              "chemistry"), each = 5)))
+
+d_agg <- d %>% group_by(major) %>% summarize(mean = mean(empathy),
+                                             sd = sd(empathy), n = n())
+
+calc_contrast_aggregated(d_agg$mean, d_agg$sd, d_agg$n, lambdas = c(0, 0, -1, 1))
+```
+
 
 
 This was the introduction to cofad. If you have any suggestions you can post it on our gitlab site:
