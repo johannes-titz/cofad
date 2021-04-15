@@ -98,6 +98,7 @@ calc_contrast <- function(dv,
   } else if (!is.null(data) & !is.data.frame(data)){
     stop("data is not a data.frame")
   }
+
   if (is.null(lambda_between) & is.null(lambda_within)) {
     stop("lambda is missing")
   }
@@ -107,17 +108,9 @@ calc_contrast <- function(dv,
   if (!is.factor(between) & !is.null(between)){
     stop("between must be a factor")
   }
-  if (!is.null(lambda_between)){
-    if (!is.numeric(lambda_between)){
-      stop("lambda must be a named numeric")
-    }
-    if (is.null(names(lambda_between))){
-      stop("lambda must be a named numeric")
-    }
-    if (anyNA(lambda_between)){
-      stop("NA in lambda is not allowed")
-    }
-  }
+
+  lambda_between <- check_lambda_between(lambda_between)
+
   if (!is.null(lambda_within)){
     if (!is.numeric(lambda_within)){
       stop("lambda must be a named numeric")
@@ -133,11 +126,8 @@ calc_contrast <- function(dv,
     stop("within must be a factor")
   }
 
-    if (!is.null(between) & !is.null(lambda_between)) {
-      if (anyNA(match(levels(between),names(lambda_between)))) {
-        stop("lambda names doesn't match all between labels")
-      }
-    }
+  check_labels(between, lambda_between)
+
   if (!is.null(within) & !is.null(lambda_within)){
     if (anyNA(match(levels(within),names(lambda_within)))) {
       stop("lambda names doesn't match all within labels")
@@ -167,10 +157,7 @@ calc_contrast <- function(dv,
     case == "Mixed-Analysis: between and within factors") {
     stop("Missing arguments")
   }
-  if (sum(lambda_between) != 0) {
-    lambda_between <- lambda_between - mean(lambda_between)
-    warning("lambdas are centered and rounded to 3 digits")
-  }
+
   if (sum(lambda_within) != 0) {
     lambda_within <- lambda_within - mean(lambda_within)
     warning("lambdas are centered and rounded to 3 digits")
@@ -239,7 +226,7 @@ calc_contrast <- function(dv,
     if (sd(Mi)==0) {
       r_alerting <- NA
       r_contrast <- NA
-      warning("SD of groupmeans is zero")
+      warning("SD of group means is zero")
     } else {
       r_alerting <- cor(lambda_between, Mi)
       r_contrast <- (r_effectsize * r_alerting) /
@@ -391,3 +378,29 @@ calc_contrast <- function(dv,
   }
 }
 
+check_lambda_between <- function(lambda_between){
+if (!is.null(lambda_between)){
+    if (!is.numeric(lambda_between)){
+      stop("lambda must be a named numeric")
+    }
+    if (is.null(names(lambda_between))){
+      stop("lambda must be a named numeric")
+    }
+    if (anyNA(lambda_between)){
+      stop("NA in lambda is not allowed")
+    }
+}
+  if (sum(lambda_between) != 0) {
+    lambda_between <- lambda_between - mean(lambda_between)
+    warning("lambdas are centered and rounded to 3 digits")
+  }
+  lambda_between
+}
+
+check_labels <- function(between, lambda_between){
+  if (!is.null(between) & !is.null(lambda_between)) {
+        if (anyNA(match(levels(between),names(lambda_between)))) {
+          stop("lambda names doesn't match all between labels")
+        }
+  }
+}
