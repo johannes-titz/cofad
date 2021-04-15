@@ -6,9 +6,14 @@
 #'   condition in data
 #' @param ns named character, vector of sample size values for every condition
 #'   in data
-#' @param lambdas named character, vector of lambda values for every condition
-#'   in data
-#'
+#' @param lambdas contrast weights must be a named numeric.
+#' Names must match the levels of \code{between}. If
+#' \code{lambda_between}
+#' does not sum up to zero, this will be done automatically.
+#' @param between independent variable that divides the data into
+#' independent groups (a factor).
+#' @param data optional argument for the \code{data.frame} containing all variables
+#' except for lambdas
 #' @return Calculates the significance of the contrast analysis. The
 #contrastweights, the corresponding group and an effectsize are ' given.
 #'
@@ -25,7 +30,7 @@ calc_contrast_aggregated <- function(means, sds, ns, lambdas, between, data){
     means <- eval(arguments$means, data)
     sds <- eval(arguments$sds, data)
     ns <- eval(arguments$ns, data)
-    lambdas <- eval(arguments$lambdas, data)
+    #lambdas <- eval(arguments$lambdas, data)
     between <- eval(arguments$between, data)
   } else if (!is.null(data) & !is.data.frame(data)){
     stop("data is not a data.frame")
