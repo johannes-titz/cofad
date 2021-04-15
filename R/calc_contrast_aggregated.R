@@ -18,17 +18,24 @@
 #'
 #' @examples
 #'
-#'
-calc_contrast_aggregated <- function(means = "means", sds = "sds", ns = "ns",
-                                     lambdas = "lambdas", data){
-    if (!is.null(data) & is.data.frame(data)) {
+#' @export
+calc_contrast_aggregated <- function(means, sds, ns, lambdas, between, data){
+  if (!is.null(data) & (is.data.frame(data))) {
     arguments <- as.list(match.call())
     means <- eval(arguments$means, data)
     sds <- eval(arguments$sds, data)
+    ns <- eval(arguments$ns, data)
     lambdas <- eval(arguments$lambdas, data)
+    between <- eval(arguments$between, data)
   } else if (!is.null(data) & !is.data.frame(data)){
     stop("data is not a data.frame")
   }
+  lambdas <- check_lambda_between(lambdas)
+  check_labels(between, lambdas)
+  # correctly sort lambdas
+  lambdas_pos <- sapply(between, function(x) which(x == names(lambdas)))
+  lambdas <- lambdas[lambdas_pos]
+
   df_between <- length(means) - 1
   df_within <- sum(ns) - length(means)
   sigma_within <- sum(sds^2*ns) / (sum(ns))
