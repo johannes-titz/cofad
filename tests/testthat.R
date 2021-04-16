@@ -52,11 +52,11 @@ expect_warning(
 expect_warning(
   calc_contrast(dv = c(1:7, NA),
                 between = as.factor(rep(1:2,4)),
-                lambda_between =  c("1" = 1, "2" = 2),
+                lambda_between =  c("1" = -1, "2" = 1),
                 within = as.factor(rep(1:4,2)),
                 ID = NULL,
                 data = NULL),
-  "SD of groupmeans is zero"
+  "SD of group means is zero"
 )
 ###### Test between
 # Table 3.1 from Rosenthal Chapter 3
