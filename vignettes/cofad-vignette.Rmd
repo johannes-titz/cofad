@@ -196,7 +196,7 @@ lambdas = c("psychology" = 1, "education" = -1,
             "business" = 0, "chemistry" = 0)
 #d_agg <- as.data.frame(d_agg)
 
-calc_contrast_aggregated(mean, sd, n, lambdas, major, d_agg)
+calc_contrast_aggregated(mean, sd, n, major, lambdas, d_agg)
 ```
 And the result is indeed the same when compared to the analysis with the raw data:
 

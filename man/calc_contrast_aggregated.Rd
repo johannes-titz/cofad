@@ -4,31 +4,28 @@
 \alias{calc_contrast_aggregated}
 \title{Calculate between contrast analysis from aggregated data (means, sds and ns)}
 \usage{
-calc_contrast_aggregated(means, sds, ns, lambdas, between, data)
+calc_contrast_aggregated(means, sds, ns, between, lambda_between, data)
 }
 \arguments{
-\item{means}{named character, vector of mean values for every condition in
-data}
+\item{means}{numeric vector of mean values for every condition}
 
-\item{sds}{named character, vector of standard deviation values for every
-condition in data}
+\item{sds}{numeric vector of standard deviation values for every condition}
 
-\item{ns}{named character, vector of sample size values for every condition
-in data}
+\item{ns}{numeric vector of sample size values for every condition}
 
-\item{lambdas}{contrast weights must be a named numeric.
-Names must match the levels of \code{between}. If
-\code{lambda_between}
-does not sum up to zero, this will be done automatically.}
+\item{between}{factor for the independent variable that divides the data into
+independent groups}
 
-\item{between}{independent variable that divides the data into
-independent groups (a factor).}
+\item{lambda_between}{numeric vector for contrast weights. Names must match
+the levels of \code{between}. If \code{lambda_between} does not sum up to
+zero, this will be done automatically (centering).}
 
 \item{data}{optional argument for the \code{data.frame} containing all variables
-except for lambdas}
+except for lambda_between}
 }
 \value{
-Calculates the significance of the contrast analysis. The
+an object of type cofad_bw, including p-value, F-value, contrast
+  weights, different effect sizes
 }
 \description{
 Calculate between contrast analysis from aggregated data (means, sds and ns)
@@ -38,6 +35,6 @@ Calculate between contrast analysis from aggregated data (means, sds and ns)
 }
 \references{
 Rosenthal, R., Rosnow, R.L., & Rubin, D.B. (2000). Contrasts and
-  effect sizes in behmeansioral research: A correlational approach. New York:
+  effect sizes in behavioral research: A correlational approach. New York:
   Cambridge University Press.
 }
