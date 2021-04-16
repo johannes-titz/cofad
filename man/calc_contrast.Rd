@@ -40,8 +40,8 @@ for within- and mixed contrastanalysis.}
 containing \code{dv} and groups.}
 }
 \value{
-Calculates the significance of the contrast analysis.
-given.
+an object of type cofad_bw or cofad_wi or cofad_mx, including
+  p-value, F-value, contrast weights, different effect sizes
 }
 \description{
 Calculate contrast analysis for factorial designs
@@ -108,6 +108,7 @@ contr_mx <- calc_contrast(dv = Var, between = bw,
               )
 contr_mx
 summary(contr_mx)
+
 }
 \references{
 Rosenthal, R., Rosnow, R.L., & Rubin, D.B. (2000).
