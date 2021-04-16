@@ -19,9 +19,8 @@
 #' containing \code{dv} and groups.
 #' @details For multi-factorial designs, the lambda weights of
 #' the factors must be connected.
-#' @return Calculates the significance of the contrast analysis.
-#  The contrastweights, the corresponding group and an effectsize are
-#' given.
+#' @return an object of type cofad_bw or cofad_wi or cofad_mx, including
+#'   p-value, F-value, contrast weights, different effect sizes
 #' @references Rosenthal, R., Rosnow, R.L., & Rubin, D.B. (2000).
 #' Contrasts and effect sizes in behavioral research:
 #' A correlational approach. New York: Cambridge University Press.
