@@ -1,45 +1,41 @@
 #' Calculate between contrast analysis from aggregated data (means, sds and ns)
 #'
-#' @param means named character, vector of mean values for every condition in
-#'   data
-#' @param sds named character, vector of standard deviation values for every
-#'   condition in data
-#' @param ns named character, vector of sample size values for every condition
-#'   in data
-#' @param lambdas contrast weights must be a named numeric.
-#' Names must match the levels of \code{between}. If
-#' \code{lambda_between}
-#' does not sum up to zero, this will be done automatically.
-#' @param between independent variable that divides the data into
-#' independent groups (a factor).
+#' @param means numeric vector of mean values for every condition
+#' @param sds numeric vector of standard deviation values for every condition
+#' @param ns numeric vector of sample size values for every condition
+#' @param between factor for the independent variable that divides the data into
+#' independent groups
+#' @param lambda_between numeric vector for contrast weights. Names must match
+#'   the levels of \code{between}. If \code{lambda_between} does not sum up to
+#'   zero, this will be done automatically (centering).
 #' @param data optional argument for the \code{data.frame} containing all variables
-#' except for lambdas
-#' @return Calculates the significance of the contrast analysis. The
-#contrastweights, the corresponding group and an effectsize are ' given.
+#' except for lambda_between
+#' @return an object of type cofad_bw, including p-value, F-value, contrast
+#'   weights, different effect sizes
 #'
 #' @references Rosenthal, R., Rosnow, R.L., & Rubin, D.B. (2000). Contrasts and
-#'   effect sizes in behmeansioral research: A correlational approach. New York:
+#'   effect sizes in behavioral research: A correlational approach. New York:
 #'   Cambridge University Press.
 #'
 #' @examples
 #'
 #' @export
-calc_contrast_aggregated <- function(means, sds, ns, lambdas, between, data){
+calc_contrast_aggregated <- function(means, sds, ns, between, lambda_between, data){
   if (!is.null(data) & (is.data.frame(data))) {
     arguments <- as.list(match.call())
     means <- eval(arguments$means, data)
     sds <- eval(arguments$sds, data)
     ns <- eval(arguments$ns, data)
-    #lambdas <- eval(arguments$lambdas, data)
+    #lambda_between <- eval(arguments$lambda_between, data)
     between <- eval(arguments$between, data)
   } else if (!is.null(data) & !is.data.frame(data)){
     stop("data is not a data.frame")
   }
-  lambdas <- check_lambda_between(lambdas)
-  check_labels(between, lambdas)
-  # correctly sort lambdas
-  lambdas_pos <- sapply(between, function(x) which(x == names(lambdas)))
-  lambdas <- lambdas[lambdas_pos]
+  lambda_between <- check_lambda_between(lambda_between)
+  check_labels(between, lambda_between)
+  # correctly sort lambda_between
+  lambda_between_pos <- sapply(between, function(x) which(x == names(lambda_between)))
+  lambda_between <- lambda_between[lambda_between_pos]
 
   df_between <- length(means) - 1
   df_within <- sum(ns) - length(means)
@@ -48,8 +44,8 @@ calc_contrast_aggregated <- function(means, sds, ns, lambdas, between, data){
   sigma_between <- ss_between / df_between
   F_between <- sigma_between / sigma_within
   # contrast
-  kov <- sum(lambdas * means)
-  ss_contrast <- kov^2 / (sum((lambdas^2) / ns))
+  kov <- sum(lambda_between * means)
+  ss_contrast <- kov^2 / (sum((lambda_between^2) / ns))
   # ss contrast is the same as sigma contrast
   F_contrast <- ss_contrast / sigma_within
   # which direction?
@@ -64,7 +60,7 @@ calc_contrast_aggregated <- function(means, sds, ns, lambdas, between, data){
   r <- c(r_effectsize, r_contrast, r_alerting)
   desc <- matrix(c(means, sds / sqrt(ns)), ncol = 2, byrow = F)
   colnames(desc) <- c("M", "SE")
-  out_l <- list(sig, desc, lambdas, r)
+  out_l <- list(sig, desc, lambda_between, r)
   names(out_l) <- c("sig", "desc", "lambda_between", "effects")
   class(out_l) <- c("cofad_bw")
   structure(out_l)
