@@ -145,8 +145,10 @@ myserver <- shinyServer(function(input, output, session) {
                    id = "sort3")
         )
       ),
-
-      column(3, rHandsontableOutput("hot", width = 300)),
+      # lambda between table ----
+      #if (length(y()) > 0) {
+        column(3, rHandsontableOutput("hot", width = 300))#}
+      ,
       sortable_js(
         "sort1",
         options = sortable_options(
@@ -197,12 +199,7 @@ myserver <- shinyServer(function(input, output, session) {
   # lambda labels
   output$hot <- renderRHandsontable({
     between <- unique(reactive$data[, c(y())])
-    #names(dat) <- c("y")
-    #print(dat)
-    #dat$lambda <- numeric(nrow(dat))
     DF <- data.frame(between, lambda = numeric(length(between)))
-    #names(dat) <- c("Between condition", "lambda")
-    #DF <- dat
     if (!is.null(DF))
       rhandsontable(DF, stretchH = "all")
   })
@@ -219,15 +216,13 @@ myserver <- shinyServer(function(input, output, session) {
 
    dat$y <- as.factor(dat$y)
    data_lambda <- data_lambda()
-   print(data_lambda)
    lambda_between <- data_lambda[,2]
    names(lambda_between) <- data_lambda[,1]
-   print(lambda_between)
    contr_bw <- calc_contrast(
    dv = x,
    between = y,
    lambda_between = lambda_between,
    data = dat)
-   contr_bw
+   print(contr_bw)
   })
 })
