@@ -37,12 +37,20 @@ colnames_to_tags <- function(df){
 #' @noRd
 myserver <- shinyServer(function(input, output, session) {
   # create reactive variables
-  reactive <- reactiveValues(level1 = data.frame(),
+  reactive <- reactiveValues(data_lambda = data.frame(),
                              level2 = data.frame(),
                              data = data.frame(), r_mdl_formula = "",
                              group_id_selected = character(0),
                              group_ids = character(0),
                              table = NULL)
+
+  data_lambda = reactive({
+    if (!is.null(input$hot)) {
+      DF = hot_to_r(input$hot)
+      reactive$data_lambda = DF
+      DF
+    }
+  })
   # example data set for tutorial in paper -------------------------------------
   # observe({
   #       query <- parseQueryString(session$clientData$url_search)
@@ -137,6 +145,8 @@ myserver <- shinyServer(function(input, output, session) {
                    id = "sort3")
         )
       ),
+
+      column(3, rHandsontableOutput("hot", width = 300)),
       sortable_js(
         "sort1",
         options = sortable_options(
@@ -171,7 +181,11 @@ myserver <- shinyServer(function(input, output, session) {
     )
   })
 
-   x <- reactive({
+  #observeEvent(input$sort_y){
+    #updateNumericInput(session, "")
+  #}
+
+  x <- reactive({
     x <- input$sort_dv
     if (is.character(x)) x %>% trimws()
   })
@@ -180,6 +194,18 @@ myserver <- shinyServer(function(input, output, session) {
     input$sort_y %>% trimws()
   })
 
+  # lambda labels
+  output$hot <- renderRHandsontable({
+    between <- unique(reactive$data[, c(y())])
+    #names(dat) <- c("y")
+    #print(dat)
+    #dat$lambda <- numeric(nrow(dat))
+    DF <- data.frame(between, lambda = numeric(length(between)))
+    #names(dat) <- c("Between condition", "lambda")
+    #DF <- dat
+    if (!is.null(DF))
+      rhandsontable(DF, stretchH = "all")
+  })
 
   # create table ---------------------------------------------------------------
   output$table_region <- renderPrint({
@@ -192,10 +218,15 @@ myserver <- shinyServer(function(input, output, session) {
    names(dat) <- c("x", "y")
 
    dat$y <- as.factor(dat$y)
+   data_lambda <- data_lambda()
+   print(data_lambda)
+   lambda_between <- data_lambda[,2]
+   names(lambda_between) <- data_lambda[,1]
+   print(lambda_between)
    contr_bw <- calc_contrast(
    dv = x,
    between = y,
-   lambda_between = c("A" = -3, "B" = -1, "C" = 1, "D" = 3),
+   lambda_between = lambda_between,
    data = dat)
    contr_bw
   })
