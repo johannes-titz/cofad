@@ -193,10 +193,6 @@ myserver <- shinyServer(function(input, output, session) {
     )
   })
 
-  #observeEvent(input$sort_y){
-    #updateNumericInput(session, "")
-  #}
-
   x <- reactive({
     x <- input$sort_dv
     if (is.character(x)) x %>% trimws()
@@ -237,8 +233,6 @@ myserver <- shinyServer(function(input, output, session) {
         need(length(y()) > 0 | length(within_var_name() > 0),
              "Drag at least one vVariable to Independent Variable (between or within or both).")
       )
-   # print(is.null(y()))
-    #validate(need(y()), need(within_var_name()))
 
    dat <- reactive$data[, c(x(), y())]
    names(dat) <- c("x", "y")
