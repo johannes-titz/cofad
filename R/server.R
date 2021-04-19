@@ -21,17 +21,21 @@ colnames_to_tags <- function(df){
 myserver <- shinyServer(function(input, output, session) {
   # create reactive variables
   reactive <- reactiveValues(data_lambda = data.frame(),
-                             level2 = data.frame(),
-                             data = data.frame(), r_mdl_formula = "",
-                             group_id_selected = character(0),
-                             group_ids = character(0),
-                             table = NULL)
-
+                             data_lambda_within = data.frame(),
+                             data = data.frame(),
+                             r_mdl_formula = "")
   data_lambda = reactive({
-    if (!is.null(input$hot)) {
-      DF = hot_to_r(input$hot)
-      reactive$data_lambda = DF
-      DF
+    if (!is.null(input$hot_lambda_btw)) {
+      df = hot_to_r(input$hot_lambda_btw)
+      reactive$data_lambda = df
+      df
+    }
+  })
+  data_lambda_within = reactive({
+    if (!is.null(input$hot_lambda_wi)) {
+      df = hot_to_r(input$hot_lambda_wi)
+      reactive$data_lambda_within = df
+      df
     }
   })
   # example data set for tutorial in paper -------------------------------------
@@ -46,16 +50,10 @@ myserver <- shinyServer(function(input, output, session) {
   #           shinyjs::hide("display_model")
   #           shinyjs::hide("output_region")
   #           shinyjs::hide("help")
-  #
-  #           id <- find_id(data)
-  #           reactive$group_id_selected <- id[1]
-  #           reactive$group_ids <- id
-  #           result <- determine_levels(id[1], data, show_prog = T)
-  #           reactive$level1 <- filter_ivs(result$level1, data)
-  #           reactive$level2 <- filter_ivs(result$level2, data)
   #         }
   #       }
   #   })
+  # upload file area -----------------------------------------------------------
   output$file_area <- renderUI({
     if(!is.null(input$isSafari)){
       if (as.character(input$isSafari) == "TRUE") {
@@ -76,15 +74,15 @@ myserver <- shinyServer(function(input, output, session) {
     reactive$data <- data
     reactive$names <- names(data)
     shinyjs::show("create_model")
-    reactive$group_id_selected <- NA
   #           shinyjs::show("reactive_mode_area")
   #           shinyjs::hide("display_model")
   #           shinyjs::hide("output_region")
     shinyjs::hide("help")
+    shinyjs::show("output_region")
     })
   })
   # USER INTERFACE --------------------
-  # this is there because data changes, so variables for first panel are not
+  # this is here because data changes, so variables for first panel are not
   # fixed; the other two panels do not have to be here, but this makes it
   # easier to construct the fluid layout
   output$variables <- renderUI({
@@ -97,14 +95,13 @@ myserver <- shinyServer(function(input, output, session) {
           tags$div(class = "panel-heading", "Variables"),
           tags$div(
             class = "panel-body",
-            id = "sort1",
+            id = "sort_variables",
             colnames_to_tags(reactive$data)
           )
         )
       ),
-
       column(
-        width = 3,
+        width = 6,
         # PANEL DEPENDENT VARIABLES --------------
         tags$div(
           class = "panel panel-default",
@@ -114,9 +111,11 @@ myserver <- shinyServer(function(input, output, session) {
             "Dependent Variable (drag here)"
           ),
           tags$div(class = "panel-body",
-                   id = "sort2")
+                   id = "sort_dv")
         ),
+      fluidRow(
         # PANEL BETWEEN --------------
+        column(width = 5,
         tags$div(
           class = "panel panel-default",
           tags$div(
@@ -126,14 +125,31 @@ myserver <- shinyServer(function(input, output, session) {
           ),
           tags$div(class = "panel-body",
                    id = "sort3")
-        )
-      ),
+        )),
+
       # lambda between table ----
       #if (length(y()) > 0) {
-        column(3, rHandsontableOutput("hot", width = 300))#}
-      ,
+        column(width = 5, rHandsontableOutput("hot_lambda_btw", width = 200))#}
+      ), fluidRow(
+        # PANEL WITHIN --------------
+        column(width = 5,
+        tags$div(
+          class = "panel panel-default",
+          tags$div(
+            class = "panel-heading",
+            tags$span(class = "glyphicon glyphicon-stats"),
+            "Independent Variable, within (drag here)"
+          ),
+          tags$div(class = "panel-body",
+                   id = "sort_within")
+        )),
+
+      # lambda between table ----
+      #if (length(y()) > 0) {
+        column(width = 5, rHandsontableOutput("hot_lambda_wi", width = 200))#}
+      )),
       sortable_js(
-        "sort1",
+        "sort_variables",
         options = sortable_options(
           group = list(name = "sortGroup1",
                        put = TRUE),
@@ -142,7 +158,7 @@ myserver <- shinyServer(function(input, output, session) {
         )
       ),
       sortable_js(
-        "sort2",
+        "sort_dv",
         options = sortable_options(
           group = list(
             group = "sortGroup1",
@@ -162,6 +178,17 @@ myserver <- shinyServer(function(input, output, session) {
           ),
           onSort = sortable_js_capture_input("sort_y")
         )
+      ),
+      sortable_js(
+        "sort_within",
+        options = sortable_options(
+          group = list(
+            group = "sortGroup1",
+            put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
+            pull = TRUE
+          ),
+          onSort = sortable_js_capture_input("sort_within")
+        )
       )
     )
   })
@@ -176,12 +203,26 @@ myserver <- shinyServer(function(input, output, session) {
   })
 
   y <- reactive({
-    input$sort_y %>% trimws()
+    res <- input$sort_y %>% trimws()
+    print(res)
+    res
+  })
+
+  within_var_name <- reactive({
+    input$sort_within %>% trimws()
   })
 
   # lambda labels
-  output$hot <- renderRHandsontable({
-    between <- unique(reactive$data[, c(y())])
+  output$hot_lambda_btw <- renderRHandsontable({
+    within <- sort(unique(reactive$data[, c(y())]))
+    DF <- data.frame(within, lambda = numeric(length(within)))
+    if (!is.null(DF))
+      rhandsontable(DF, stretchH = "all")
+  })
+
+  # lambda labels within
+  output$hot_lambda_wi <- renderRHandsontable({
+    between <- sort(unique(reactive$data[, c(within_var_name())]))
     DF <- data.frame(between, lambda = numeric(length(between)))
     if (!is.null(DF))
       rhandsontable(DF, stretchH = "all")
@@ -190,9 +231,12 @@ myserver <- shinyServer(function(input, output, session) {
   # create table ---------------------------------------------------------------
   output$table_region <- renderPrint({
     validate(
-        need(x(), "Drag a variable to Dependent Variable"),
-        need(y(), "Drag a variable to Independent Variable, between")
+        need(x(), "Drag a variable to Dependent Variable."),
+        need(length(y()) > 0 | length(within_var_name() > 0),
+             "Drag at least one vVariable to Independent Variable (between or within or both).")
       )
+   # print(is.null(y()))
+    #validate(need(y()), need(within_var_name()))
 
    dat <- reactive$data[, c(x(), y())]
    names(dat) <- c("x", "y")

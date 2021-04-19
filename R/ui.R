@@ -6,7 +6,9 @@ library(shiny)
 library(htmlwidgets)
 library(sortable)
 library(magrittr)
-
+library(shinydashboard)
+library(shinyalert)
+library(rhandsontable)
 colnames_to_tags <- function(df){
   lapply(
     colnames(df),
@@ -65,16 +67,16 @@ shinyUI(
               box(title = "Help", status = "primary",
                       HTML('<p>How to use cofad? See <a href="https://github.com/johannes-titz/cofad/blob/master/README.md" target="_blank">README</a> for a short introduction.</p>
                   <p>Bugtracker: <a href="https://github.com/johannes-titz/cofad/issues" target="_blank">https://github.com/johannes-titz/cofad/issues</a></p>'))),
-          div(id = "create_model",
+          shinyjs::hidden(div(id = "create_model",
           box(title = "2. Create model", status = "primary", collapsible = T,
-              width = 8,
+              width = 6,
               uiOutput("variables"),
 
           ),
-          fluidRow(
-      class = "panel-body",
-    )
-    ),
+    #       fluidRow(
+    #   class = "panel-body",
+    # )
+    )),
           shinyjs::hidden(div(id = "display_model",
             box(title = "Model", status = "primary", collapsible = T, width = 4,
                 # level 1
@@ -88,20 +90,20 @@ shinyUI(
                 br(), strong("R model formula"),
                 uiOutput("mod_r")
             ))
-          )),
+          ),
         # Output Table, Download -----------------------------------------------
-       fluidRow(
-         (div(id = "output_region",
-                    box(title = "3. Save output table",
+       column(width = 6,
+         shinyjs::hidden(div(id = "output_region",
+                    box(title = "3. Result",
                         status = "primary",
                         width = 6,
-                        uiOutput("table_region"),
-                        br(),
-                        downloadButton("download", "Download Table")),
+                        uiOutput("table_region"))#,
+                        #br(),
+                        #downloadButton("download", "Download Table")),
 
                     )
                 )
-         ),
+         ))
 
 
   )
