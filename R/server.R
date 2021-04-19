@@ -214,16 +214,18 @@ myserver <- shinyServer(function(input, output, session) {
 
   # lambda labels
   output$hot_lambda_btw <- renderRHandsontable({
-    within <- sort(unique(reactive$data[, c(y())]))
-    DF <- data.frame(within, lambda = numeric(length(within)))
+    validate(need(y(), "Select an IV between"))
+    btw <- sort(unique(reactive$data[, c(y())]))
+    DF <- data.frame(btw, lambda = 1:length(btw))
     if (!is.null(DF))
       rhandsontable(DF, stretchH = "all")
   })
 
   # lambda labels within
   output$hot_lambda_wi <- renderRHandsontable({
+    validate(need(within_var_name(), "Select an IV within"))
     between <- sort(unique(reactive$data[, c(within_var_name())]))
-    DF <- data.frame(between, lambda = numeric(length(between)))
+    DF <- data.frame(between, lambda = 1:length(between))
     if (!is.null(DF))
       rhandsontable(DF, stretchH = "all")
   })
@@ -241,6 +243,7 @@ myserver <- shinyServer(function(input, output, session) {
    dat <- reactive$data[, c(x(), y())]
    names(dat) <- c("x", "y")
 
+   # ID is needed for within, right?
    dat$y <- as.factor(dat$y)
    data_lambda <- data_lambda()
    lambda_between <- data_lambda[,2]
