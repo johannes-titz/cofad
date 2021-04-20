@@ -24,18 +24,22 @@ myserver <- shinyServer(function(input, output, session) {
                              data_lambda_within = data.frame(),
                              data = data.frame(),
                              r_mdl_formula = "")
-  data_lambda = reactive({
+  lambda_between = reactive({
     if (!is.null(input$hot_lambda_btw)) {
       df = hot_to_r(input$hot_lambda_btw)
+      lambda <- df[,2]
+      names(lambda) <- df[,1]
       reactive$data_lambda = df
-      df
+      lambda
     }
   })
-  data_lambda_within = reactive({
+  lambda_within = reactive({
     if (!is.null(input$hot_lambda_wi)) {
       df = hot_to_r(input$hot_lambda_wi)
+      lambda <- df[,2]
+      names(lambda) <- df[,1]
       reactive$data_lambda_within = df
-      df
+      lambda
     }
   })
   # example data set for tutorial in paper -------------------------------------
@@ -217,19 +221,25 @@ myserver <- shinyServer(function(input, output, session) {
   })
 
   dv <- reactive({
-    dv_name <- input$sort_dv_name
-    if (is.character(dv_name)) dv_name %>% trimws()
-    reactive$data[,dv_name]
+    if (length(input$sort_dv_name) > 0){
+      dv_name <- input$sort_dv_name
+      #if (is.character(dv_name)) dv_name %>% trimws()
+      reactive$data[,dv_name]
+    } else NULL
   })
 
   between <- reactive({
-    between_var_name <- input$sort_between_name %>% trimws()
-    as.factor(reactive$data[, between_var_name])
+    if (length(input$sort_between_name) > 0){
+      between_var_name <- input$sort_between_name %>% trimws()
+      as.factor(reactive$data[, between_var_name])
+    } else NULL
   })
 
   within <- reactive({
-    within_var_name <- input$sort_within %>% trimws()
-    reactive$data[, within_var_name]
+    if (length(input$sort_within) > 0){
+      within_var_name <- input$sort_within %>% trimws()
+      as.factor(reactive$data[, within_var_name])
+    } else NULL
   })
 
   # lambda labels
@@ -238,16 +248,18 @@ myserver <- shinyServer(function(input, output, session) {
     btw <- sort(unique(between()))
     DF <- data.frame(btw, lambda = 1:length(btw))
     if (!is.null(DF))
-      rhandsontable(DF, stretchH = "all")
+      the_tab <- rhandsontable(DF, stretchH = "all")
+      hot_col(the_tab, "btw", readOnly = T)
   })
 
   # lambda labels within
   output$hot_lambda_wi <- renderRHandsontable({
     validate(need(within(), ""))
-    between <- sort(unique(reactive$data[, c(within())]))
-    DF <- data.frame(between, lambda = 1:length(between))
+    wi <- sort(unique(reactive$data[, c(within())]))
+    DF <- data.frame(wi, lambda = 1:length(wi))
     if (!is.null(DF))
-      rhandsontable(DF, stretchH = "all")
+      the_tab <- rhandsontable(DF, stretchH = "all")
+      hot_col(the_tab, "wi", readOnly = T)
   })
 
   # create table ---------------------------------------------------------------
@@ -255,24 +267,20 @@ myserver <- shinyServer(function(input, output, session) {
     validate(
         need(dv(), "Drag a variable to Dependent Variable."),
         need(length(between()) > 0 | length(within() > 0),
-             "Drag at least one Variable to Independent Variable (between or within or both).")
+             "Drag at least one Variable to Independent Variable (between or within or both)."),
+        need(length(lambda_between()) > 0 | length(lambda_within() > 0),
+             "Specify Lambdas).")
       )
-
    #dat <- reactive$data[, c(dv_name(), between_name())]
    #names(dat) <- c("dv_name", "between_name")
 
    # ID is needed for within, right?
    #dat$between_name<- as.factor(dat$between_name)
-
-   data_lambda <- data_lambda()
-   lambda_between <- data_lambda[,2]
-   names(lambda_between) <- data_lambda[,1]
-
-   contr_bw <- calc_contrast(
+   contr <- calc_contrast(
    dv = dv(),
    between = between(),
-   lambda_between = lambda_between,
+   lambda_between = lambda_between(),
    data = NULL)
-   print(contr_bw)
+   print(contr)
   })
 })
