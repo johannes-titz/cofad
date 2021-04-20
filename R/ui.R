@@ -34,9 +34,9 @@ colnames_to_tags <- function(df){
 myui <- function(request){
 shinyUI(
   dashboardPage(
-    title = "cofad",
+    title = "cofad-app",
     skin = "blue",
-    dashboardHeader(title = "cofad"),
+    dashboardHeader(title = "cofad-app"),
       # Sidebar-----------------------------------------------------------------
       dashboardSidebar(
         shinybusy::add_busy_spinner(spin = "self-building-square",
