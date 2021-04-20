@@ -112,7 +112,7 @@ myserver <- shinyServer(function(input, output, session) {
             "Dependent Variable (drag here)"
           ),
           tags$div(class = "panel-body",
-                   id = "sort_dv")
+                   id = "sort_dv_name")
         )),
         column(width=5,
                tags$div(
@@ -170,14 +170,14 @@ myserver <- shinyServer(function(input, output, session) {
         )
       ),
       sortable_js(
-        "sort_dv",
+        "sort_dv_name",
         options = sortable_options(
           group = list(
             group = "sortGroup1",
             put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
             pull = TRUE
           ),
-          onSort = sortable_js_capture_input("sort_dv")
+          onSort = sortable_js_capture_input("sort_dv_name")
         )
       ),
       sortable_js(
@@ -188,7 +188,7 @@ myserver <- shinyServer(function(input, output, session) {
             put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
             pull = TRUE
           ),
-          onSort = sortable_js_capture_input("sort_y")
+          onSort = sortable_js_capture_input("sort_between_name")
         )
       ),
       sortable_js(
@@ -216,13 +216,13 @@ myserver <- shinyServer(function(input, output, session) {
     )
   })
 
-  x <- reactive({
-    x <- input$sort_dv
-    if (is.character(x)) x %>% trimws()
+  dv_name <- reactive({
+    dv_name <- input$sort_dv_name
+    if (is.character(dv_name)) dv_name %>% trimws()
   })
 
-  y <- reactive({
-    res <- input$sort_y %>% trimws()
+  between_name<- reactive({
+    res <- input$sort_between_name %>% trimws()
     res
   })
 
@@ -232,8 +232,8 @@ myserver <- shinyServer(function(input, output, session) {
 
   # lambda labels
   output$hot_lambda_btw <- renderRHandsontable({
-    validate(need(y(), ""))
-    btw <- sort(unique(reactive$data[, c(y())]))
+    validate(need(between_name(), ""))
+    btw <- sort(unique(reactive$data[, c(between_name())]))
     DF <- data.frame(btw, lambda = 1:length(btw))
     if (!is.null(DF))
       rhandsontable(DF, stretchH = "all")
@@ -251,22 +251,22 @@ myserver <- shinyServer(function(input, output, session) {
   # create table ---------------------------------------------------------------
   output$table_region <- renderPrint({
     validate(
-        need(x(), "Drag a variable to Dependent Variable."),
-        need(length(y()) > 0 | length(within_var_name() > 0),
+        need(dv_name(), "Drag a variable to Dependent Variable."),
+        need(length(between_name()) > 0 | length(within_var_name() > 0),
              "Drag at least one Variable to Independent Variable (between or within or both).")
       )
 
-   dat <- reactive$data[, c(x(), y())]
-   names(dat) <- c("x", "y")
+   dat <- reactive$data[, c(dv_name(), between_name())]
+   names(dat) <- c("dv_name", "between_name")
 
    # ID is needed for within, right?
-   dat$y <- as.factor(dat$y)
+   dat$between_name<- as.factor(dat$between_name)
    data_lambda <- data_lambda()
    lambda_between <- data_lambda[,2]
    names(lambda_between) <- data_lambda[,1]
    contr_bw <- calc_contrast(
-   dv = x,
-   between = y,
+   dv = dv_name,
+   between = between_name,
    lambda_between = lambda_between,
    data = dat)
    print(contr_bw)
