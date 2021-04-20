@@ -216,24 +216,26 @@ myserver <- shinyServer(function(input, output, session) {
     )
   })
 
-  dv_name <- reactive({
+  dv <- reactive({
     dv_name <- input$sort_dv_name
     if (is.character(dv_name)) dv_name %>% trimws()
+    reactive$data[,dv_name]
   })
 
-  between_name<- reactive({
-    res <- input$sort_between_name %>% trimws()
-    res
+  between <- reactive({
+    between_var_name <- input$sort_between_name %>% trimws()
+    as.factor(reactive$data[, between_var_name])
   })
 
-  within_var_name <- reactive({
-    input$sort_within %>% trimws()
+  within <- reactive({
+    within_var_name <- input$sort_within %>% trimws()
+    reactive$data[, within_var_name]
   })
 
   # lambda labels
   output$hot_lambda_btw <- renderRHandsontable({
-    validate(need(between_name(), ""))
-    btw <- sort(unique(reactive$data[, c(between_name())]))
+    validate(need(between(), ""))
+    btw <- sort(unique(between()))
     DF <- data.frame(btw, lambda = 1:length(btw))
     if (!is.null(DF))
       rhandsontable(DF, stretchH = "all")
@@ -241,8 +243,8 @@ myserver <- shinyServer(function(input, output, session) {
 
   # lambda labels within
   output$hot_lambda_wi <- renderRHandsontable({
-    validate(need(within_var_name(), ""))
-    between <- sort(unique(reactive$data[, c(within_var_name())]))
+    validate(need(within(), ""))
+    between <- sort(unique(reactive$data[, c(within())]))
     DF <- data.frame(between, lambda = 1:length(between))
     if (!is.null(DF))
       rhandsontable(DF, stretchH = "all")
@@ -251,24 +253,26 @@ myserver <- shinyServer(function(input, output, session) {
   # create table ---------------------------------------------------------------
   output$table_region <- renderPrint({
     validate(
-        need(dv_name(), "Drag a variable to Dependent Variable."),
-        need(length(between_name()) > 0 | length(within_var_name() > 0),
+        need(dv(), "Drag a variable to Dependent Variable."),
+        need(length(between()) > 0 | length(within() > 0),
              "Drag at least one Variable to Independent Variable (between or within or both).")
       )
 
-   dat <- reactive$data[, c(dv_name(), between_name())]
-   names(dat) <- c("dv_name", "between_name")
+   #dat <- reactive$data[, c(dv_name(), between_name())]
+   #names(dat) <- c("dv_name", "between_name")
 
    # ID is needed for within, right?
-   dat$between_name<- as.factor(dat$between_name)
+   #dat$between_name<- as.factor(dat$between_name)
+
    data_lambda <- data_lambda()
    lambda_between <- data_lambda[,2]
    names(lambda_between) <- data_lambda[,1]
+
    contr_bw <- calc_contrast(
-   dv = dv_name,
-   between = between_name,
+   dv = dv(),
+   between = between(),
    lambda_between = lambda_between,
-   data = dat)
+   data = NULL)
    print(contr_bw)
   })
 })
