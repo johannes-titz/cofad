@@ -100,27 +100,39 @@ myserver <- shinyServer(function(input, output, session) {
           )
         )
       ),
-      column(
-        width = 6,
+      column(width=7,
+        fluidRow(
+          column(width = 7,
         # PANEL DEPENDENT VARIABLES --------------
         tags$div(
           class = "panel panel-default",
           tags$div(
             class = "panel-heading",
-            tags$span(class = "glyphicon glyphicon-stats"),
+            tags$span(class = "glyphicon"),
             "Dependent Variable (drag here)"
           ),
           tags$div(class = "panel-body",
                    id = "sort_dv")
-        ),
+        )),
+        column(width=5,
+               tags$div(
+          class = "panel panel-default",
+          tags$div(
+            class = "panel-heading",
+            tags$span(class = "glyphicon"),
+            "ID Variable (drag here)"
+          ),
+          tags$div(class = "panel-body",
+                   id = "sort_id")
+        ))),
       fluidRow(
         # PANEL BETWEEN --------------
-        column(width = 5,
+        column(width = 7,
         tags$div(
           class = "panel panel-default",
           tags$div(
             class = "panel-heading",
-            tags$span(class = "glyphicon glyphicon-stats"),
+            tags$span(class = "glyphicon"),
             "Independent Variable, between (drag here)"
           ),
           tags$div(class = "panel-body",
@@ -132,12 +144,12 @@ myserver <- shinyServer(function(input, output, session) {
         column(width = 5, rHandsontableOutput("hot_lambda_btw", width = 200))#}
       ), fluidRow(
         # PANEL WITHIN --------------
-        column(width = 5,
+        column(width = 7,
         tags$div(
           class = "panel panel-default",
           tags$div(
             class = "panel-heading",
-            tags$span(class = "glyphicon glyphicon-stats"),
+            tags$span(class = "glyphicon"),
             "Independent Variable, within (drag here)"
           ),
           tags$div(class = "panel-body",
@@ -189,6 +201,17 @@ myserver <- shinyServer(function(input, output, session) {
           ),
           onSort = sortable_js_capture_input("sort_within")
         )
+      ),
+      sortable_js(
+        "sort_id",
+        options = sortable_options(
+          group = list(
+            group = "sortGroup1",
+            put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
+            pull = TRUE
+          ),
+          onSort = sortable_js_capture_input("sort_id")
+        )
       )
     )
   })
@@ -200,7 +223,6 @@ myserver <- shinyServer(function(input, output, session) {
 
   y <- reactive({
     res <- input$sort_y %>% trimws()
-    print(res)
     res
   })
 
@@ -210,7 +232,7 @@ myserver <- shinyServer(function(input, output, session) {
 
   # lambda labels
   output$hot_lambda_btw <- renderRHandsontable({
-    validate(need(y(), "Select an IV between"))
+    validate(need(y(), ""))
     btw <- sort(unique(reactive$data[, c(y())]))
     DF <- data.frame(btw, lambda = 1:length(btw))
     if (!is.null(DF))
@@ -219,7 +241,7 @@ myserver <- shinyServer(function(input, output, session) {
 
   # lambda labels within
   output$hot_lambda_wi <- renderRHandsontable({
-    validate(need(within_var_name(), "Select an IV within"))
+    validate(need(within_var_name(), ""))
     between <- sort(unique(reactive$data[, c(within_var_name())]))
     DF <- data.frame(between, lambda = 1:length(between))
     if (!is.null(DF))
@@ -231,7 +253,7 @@ myserver <- shinyServer(function(input, output, session) {
     validate(
         need(x(), "Drag a variable to Dependent Variable."),
         need(length(y()) > 0 | length(within_var_name() > 0),
-             "Drag at least one vVariable to Independent Variable (between or within or both).")
+             "Drag at least one Variable to Independent Variable (between or within or both).")
       )
 
    dat <- reactive$data[, c(x(), y())]
