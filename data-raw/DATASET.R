@@ -69,7 +69,13 @@ ca <- calc_contrast(dv = empathy, between = major,
                     data = furr)
 ca
 
-write.csv(tab31, "inst/extdata/tab31.csv", row.names = F)
-write.csv(sedlmeier537, "inst/extdata/sedlmeier537.csv", row.names = F)
-write.csv(tab53, "inst/extdata/tab53.csv", row.names = F)
-write.csv(furr, "inst/extdata/furr.csv", row.names = F)
+
+write.csv(tab31, "data-raw/tab31.csv", row.names = F)
+write.csv(sedlmeier537, "data-raw/sedlmeier537.csv", row.names = F)
+write.csv(tab53, "data-raw/tab53.csv", row.names = F)
+write.csv(furr, "data-raw/furr.csv", row.names = F)
+
+usethis::use_data(tab31, overwrite=T)
+usethis::use_data(sedlmeier537, overwrite=T)
+usethis::use_data(tab53, overwrite=T)
+usethis::use_data(furr, overwrite=T)
