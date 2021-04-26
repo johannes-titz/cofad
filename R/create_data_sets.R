@@ -17,13 +17,15 @@ summary(contr_bw)
 # Example for within-subjects design Calculation 16.6 from
 # Sedlmeier and Renkewitz (2018, p. 537)
 
-sedlmeier537 <- data.frame(
-   Var = c(27, 25, 30, 29, 30, 33, 31, 35,
-           25, 26, 32, 29, 28, 30, 32, 34,
-           21, 25, 23, 26, 27, 26, 29, 31,
-           23, 24, 24, 28, 24, 26, 27, 32),
-   within = as.factor(rep(1:4,c(8,8,8,8))),
-   ID = as.factor(rep(1:8,4)))
+sedlmeier537 <- d <- data.frame(reading_test = c(27, 25, 30, 29, 30, 33, 31, 35,
+                                                 25, 26, 32, 29, 28, 30, 32, 34,
+                                                 21, 25, 23, 26, 27, 26, 29, 31,
+                                                 23, 24, 24, 28, 24, 26, 27, 32),
+                                participant = as.factor(rep(1:8, 4)),
+                                music = as.factor(rep(c("without music",
+                                                        "white noise",
+                                                        "classic", "jazz"),
+                                                      each = 8)))
 contr_wi <- calc_contrast(
    dv = Var,
    within = within,
@@ -56,4 +58,18 @@ contr_mx <- calc_contrast(dv = Var, between = bw,
 contr_mx
 summary(contr_mx)
 
-write.csv(tab31, "tab31.csv")
+furr <- data.frame(empathy = c(51, 56, 61, 58, 54, 62, 67, 57, 65, 59, 50, 49, 47, 45,
+                            44, 50, 45, 40, 49, 41),
+                major = as.factor(
+                  rep(c("psychology", "education", "business",
+                              "chemistry"), each = 5)))
+ca <- calc_contrast(dv = empathy, between = major,
+                    lambda_between = c("psychology" = 1, "education" = -1,
+                                       "business" = 0, "chemistry" = 0),
+                    data = furr)
+ca
+
+write.csv(tab31, "inst/extdata/tab31.csv", row.names = F)
+write.csv(sedlmeier537, "inst/extdata/sedlmeier537.csv", row.names = F)
+write.csv(tab53, "inst/extdata/tab53.csv", row.names = F)
+write.csv(furr, "inst/extdata/furr.csv", row.names = F)
