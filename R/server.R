@@ -237,11 +237,12 @@ myserver <- shinyServer(function(input, output, session) {
   output$hot_lambda_btw <- rhandsontable::renderRHandsontable({
     validate(need(between(), "Drag Variable to between."))
     btw <- sort(unique(between()))
-    lambda_btw <- lambda_btw()
+    lambda_btw <- lambda_between()
     if (is.null(lambda_btw)) lambda_btw <- 1:length(btw)
     DF <- data.frame(btw, lambda_btw)
     if (!is.null(DF))
-      the_tab <- rhandsontable::rhandsontable(DF, stretchH = "all")
+      the_tab <- rhandsontable::rhandsontable(DF, stretchH = "all",
+                                              rowHeaders = NULL)
       rhandsontable::hot_col(the_tab, "btw", readOnly = T)
   })
 
