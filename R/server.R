@@ -1,5 +1,7 @@
 #' @importFrom shinyjs show hide
 #' @importFrom shinyalert shinyalert
+#' @importFrom rhandsontable renderRHandsontable rHandsontableOutput hot_col
+#' @importFrom sortable sortable_js
 #' @noRd
 myserver <- shinyServer(function(input, output, session) {
   # create reactive variables
@@ -9,7 +11,7 @@ myserver <- shinyServer(function(input, output, session) {
                              r_mdl_formula = "")
   lambda_between = reactive({
     if (!is.null(input$hot_lambda_btw)) {
-      df = hot_to_r(input$hot_lambda_btw)
+      df = rhandsontable::hot_to_r(input$hot_lambda_btw)
       lambda <- df[,2]
       names(lambda) <- df[,1]
       reactive$data_lambda = df
@@ -18,7 +20,7 @@ myserver <- shinyServer(function(input, output, session) {
   })
   lambda_within = reactive({
     if (!is.null(input$hot_lambda_wi)) {
-      df = hot_to_r(input$hot_lambda_wi)
+      df = rhandsontable::hot_to_r(input$hot_lambda_wi)
       lambda <- df[,2]
       names(lambda) <- df[,1]
       reactive$data_lambda_within = df
@@ -87,16 +89,16 @@ myserver <- shinyServer(function(input, output, session) {
           )
         )
       ),
-      column(width=7,
+      column(width=8,
         fluidRow(
-          column(width = 7,
+          column(width = 4,
         # PANEL DEPENDENT VARIABLES --------------
         tags$div(
           class = "panel panel-default",
           tags$div(
             class = "panel-heading",
             tags$span(class = "glyphicon"),
-            "Dependent Variable (drag here)"
+            "DV"
           ),
           tags$div(class = "panel-body",
                    id = "sort_dv_name")
@@ -107,20 +109,20 @@ myserver <- shinyServer(function(input, output, session) {
           tags$div(
             class = "panel-heading",
             tags$span(class = "glyphicon"),
-            "ID Variable (drag here)"
+            "ID Variable"
           ),
           tags$div(class = "panel-body",
                    id = "sort_id")
         ))),
       fluidRow(
         # PANEL BETWEEN --------------
-        column(width = 7,
+        column(width = 4,
         tags$div(
           class = "panel panel-default",
           tags$div(
             class = "panel-heading",
             tags$span(class = "glyphicon"),
-            "Independent Variable, between (drag here)"
+            "IV, between"
           ),
           tags$div(class = "panel-body",
                    id = "sort3")
@@ -128,131 +130,141 @@ myserver <- shinyServer(function(input, output, session) {
 
       # lambda between table ----
       #if (length(y()) > 0) {
-        column(width = 5, rHandsontableOutput("hot_lambda_btw", width = 200))#}
+        column(width = 5, rhandsontable::rHandsontableOutput("hot_lambda_btw", width = 250))#}
       ), fluidRow(
         # PANEL WITHIN --------------
-        column(width = 7,
+        column(width = 4,
         tags$div(
           class = "panel panel-default",
           tags$div(
             class = "panel-heading",
             tags$span(class = "glyphicon"),
-            "Independent Variable, within (drag here)"
+            "IV, within"
           ),
           tags$div(class = "panel-body",
                    id = "sort_within")
         )),
 
-      # lambda between table ----
+      # lambda within table ----
       #if (length(y()) > 0) {
-        column(width = 5, rHandsontableOutput("hot_lambda_wi", width = 200))#}
+        column(width = 5, rhandsontable::rHandsontableOutput("hot_lambda_wi", width = 200))#}
       )),
-      sortable_js(
+      sortable::sortable_js(
         "sort_variables",
-        options = sortable_options(
+        options = sortable::sortable_options(
           group = list(name = "sortGroup1",
                        put = TRUE),
           sort = FALSE,
-          onSort = sortable_js_capture_input("sort_vars")
+          onSort = sortable::sortable_js_capture_input("sort_vars")
         )
       ),
-      sortable_js(
+      sortable::sortable_js(
         "sort_dv_name",
-        options = sortable_options(
+        options = sortable::sortable_options(
           group = list(
             group = "sortGroup1",
             put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
             pull = TRUE
           ),
-          onSort = sortable_js_capture_input("sort_dv_name")
+          onSort = sortable::sortable_js_capture_input("sort_dv_name")
         )
       ),
-      sortable_js(
+      sortable::sortable_js(
         "sort3",
-        options = sortable_options(
+        options = sortable::sortable_options(
           group = list(
             group = "sortGroup1",
             put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
             pull = TRUE
           ),
-          onSort = sortable_js_capture_input("sort_between_name")
+          onSort = sortable::sortable_js_capture_input("sort_between_name")
         )
       ),
-      sortable_js(
+      sortable::sortable_js(
         "sort_within",
-        options = sortable_options(
+        options = sortable::sortable_options(
           group = list(
             group = "sortGroup1",
             put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
             pull = TRUE
           ),
-          onSort = sortable_js_capture_input("sort_within")
+          onSort = sortable::sortable_js_capture_input("sort_within")
         )
       ),
-      sortable_js(
+      sortable::sortable_js(
         "sort_id",
-        options = sortable_options(
+        options = sortable::sortable_options(
           group = list(
             group = "sortGroup1",
             put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
             pull = TRUE
           ),
-          onSort = sortable_js_capture_input("sort_id")
+          onSort = sortable::sortable_js_capture_input("sort_id")
         )
       )
     )
   })
 
+  id <- reactive({
+    if (length(input$sort_id) > 0){
+      sort_id <- input$sort_id
+      #if (is.character(dv_name)) dv_name
+      reactive$data[,sort_id]
+    } else NULL
+  })
+
   dv <- reactive({
     if (length(input$sort_dv_name) > 0){
       dv_name <- input$sort_dv_name
-      #if (is.character(dv_name)) dv_name %>% trimws()
+      #if (is.character(dv_name)) dv_name
       reactive$data[,dv_name]
     } else NULL
   })
 
   between <- reactive({
     if (length(input$sort_between_name) > 0){
-      between_var_name <- input$sort_between_name %>% trimws()
+      between_var_name <- input$sort_between_name
       as.factor(reactive$data[, between_var_name])
     } else NULL
   })
 
   within <- reactive({
     if (length(input$sort_within) > 0){
-      within_var_name <- input$sort_within %>% trimws()
+      within_var_name <- input$sort_within
       as.factor(reactive$data[, within_var_name])
     } else NULL
   })
 
   # lambda labels
-  output$hot_lambda_btw <- renderRHandsontable({
-    validate(need(between(), ""))
+  output$hot_lambda_btw <- rhandsontable::renderRHandsontable({
+    validate(need(between(), "Drag Variable to between."))
     btw <- sort(unique(between()))
     DF <- data.frame(btw, lambda = 1:length(btw))
     if (!is.null(DF))
-      the_tab <- rhandsontable(DF, stretchH = "all")
-      hot_col(the_tab, "btw", readOnly = T)
+      the_tab <- rhandsontable::rhandsontable(DF, stretchH = "all")
+      rhandsontable::hot_col(the_tab, "btw", readOnly = T)
   })
 
   # lambda labels within
-  output$hot_lambda_wi <- renderRHandsontable({
-    validate(need(within(), ""))
-    wi <- sort(unique(reactive$data[, c(within())]))
+  output$hot_lambda_wi <- rhandsontable::renderRHandsontable({
+    validate(need(within(), "Drag Variable to within."))
+    wi <- sort(unique(within()))
     DF <- data.frame(wi, lambda = 1:length(wi))
     if (!is.null(DF))
-      the_tab <- rhandsontable(DF, stretchH = "all")
-      hot_col(the_tab, "wi", readOnly = T)
+      the_tab <- rhandsontable::rhandsontable(DF, stretchH = "all")
+      rhandsontable::hot_col(the_tab, "wi", readOnly = T)
   })
 
   # create table ---------------------------------------------------------------
   output$table_region <- renderPrint({
     validate(
         need(dv(), "Drag a variable to Dependent Variable."),
-        need(length(between()) > 0 | length(within() > 0),
-             "Drag at least one Variable to Independent Variable (between or within or both)."),
-        need(length(lambda_between()) > 0 | length(lambda_within() > 0),
-             "Specify Lambdas).")
+        need(length(between()) > 0 | length(within()) > 0,
+             "Drag at least one Variable to IV (between or within or both)."),
+        need(length(lambda_between()) > 0 | length(lambda_within()) > 0,
+             "Specify Lambdas.")#,
+        #
+        #need(length(id()) > 0 | is.null(id()), "id length 0")
       )
    #dat <- reactive$data[, c(dv_name(), between_name())]
    #names(dat) <- c("dv_name", "between_name")
@@ -263,6 +275,9 @@ myserver <- shinyServer(function(input, output, session) {
    dv = dv(),
    between = between(),
    lambda_between = lambda_between(),
+   ID = id(),
+   within = within(),
+   lambda_within = lambda_within(),
    data = NULL)
    print(contr)
   })
