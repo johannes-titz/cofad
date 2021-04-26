@@ -2,13 +2,6 @@ options(shiny.autoreload = F) # for faster testing
 options(shiny.sanitize.errors = FALSE) # (handle errors manually)
 enableBookmarking("url") # not currently supported, but maybe later
 
-library(shiny)
-library(htmlwidgets)
-library(sortable)
-library(magrittr)
-library(shinydashboard)
-library(shinyalert)
-library(rhandsontable)
 colnames_to_tags <- function(df){
   lapply(
     colnames(df),
@@ -33,12 +26,12 @@ colnames_to_tags <- function(df){
 #' @noRd
 myui <- function(request){
 shinyUI(
-  dashboardPage(
+  shinydashboard::dashboardPage(
     title = "cofad-app",
     skin = "blue",
-    dashboardHeader(title = "cofad-app"),
+    shinydashboard::dashboardHeader(title = "cofad-app"),
       # Sidebar-----------------------------------------------------------------
-      dashboardSidebar(
+      shinydashboard::dashboardSidebar(
         shinybusy::add_busy_spinner(spin = "self-building-square",
                                     position = "bottom-right",
                                     margin = c(50, 0)),
@@ -49,7 +42,7 @@ shinyUI(
         h6("Currently, you can only load .csv files and .sav (SPSS) files."),
         HTML('<footer><font size="1"><p style="color:grey">cofad-app &copy; 2021 Johannes Titz & Markus Burkhardt, license AGPL</p></font></footer>')
       ),
-     dashboardBody(
+     shinydashboard::dashboardBody(
               tags$script(HTML("$(document).on('shiny:sessioninitialized', function(event) {
   var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
                navigator.userAgent &&
@@ -59,16 +52,16 @@ shinyUI(
 });")),
 
        #includeScript("checkbrowser.js"),
-       useShinyalert(), # for manual error handling, has to be in dashboardBody
+       shinyalert::useShinyalert(), # for manual error handling, has to be in dashboardBody
         # Model spec and model display -----------------------------------------
         fluidRow(
           shinyjs::useShinyjs(),
           div(id = "help",
-              box(title = "Help", status = "primary",
+              shinydashboard::box(title = "Help", status = "primary",
                       HTML('<p>How to use cofad? See <a href="https://github.com/johannes-titz/cofad/blob/master/README.md" target="_blank">README</a> for a short introduction.</p>
                   <p>Bugtracker: <a href="https://github.com/johannes-titz/cofad/issues" target="_blank">https://github.com/johannes-titz/cofad/issues</a></p>'))),
           shinyjs::hidden(div(id = "create_model",
-          box(title = "2. Create model", status = "primary", collapsible = T,
+          shinydashboard::box(title = "2. Create model", status = "primary", collapsible = T,
               width = 6,
               uiOutput("variables"),
 
@@ -78,7 +71,7 @@ shinyUI(
     # )
     )),
           shinyjs::hidden(div(id = "display_model",
-            box(title = "Model", status = "primary", collapsible = T, width = 4,
+            shinydashboard::box(title = "Model", status = "primary", collapsible = T, width = 4,
                 # level 1
                 strong("Level 1"),
                 br(),
@@ -94,7 +87,7 @@ shinyUI(
         # Output Table, Download -----------------------------------------------
        column(width = 6,
          shinyjs::hidden(div(id = "output_region",
-                    box(title = "3. Result",
+                    shinydashboard::box(title = "3. Result",
                         status = "primary",
                         width = 6,
                         uiOutput("table_region"))#,
