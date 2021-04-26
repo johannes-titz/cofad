@@ -28,4 +28,8 @@ Imports:
     stringr,
     utils,
     readr,
-    stringr
+    stringr,
+    sortable,
+    htmlwidgets,
+    magrittr,
+    rhandsontable
