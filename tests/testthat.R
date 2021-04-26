@@ -90,28 +90,24 @@ expect_equal(round(t16_2$sig[1], 3), 6.519)
 ###### Test within (no between)
 # Example for within-subjects-design calculation 16.6 from
 # Sedlmeier and Renkewitz (2018, p. 537)
-tab16_6 <- data.frame(
-  Var = c(27, 25, 30, 29, 30, 33, 31, 35,
-          25, 26, 32, 29, 28, 30, 32, 34,
-          21, 25, 23, 26, 27, 26, 29, 31,
-          23, 24, 24, 28, 24, 26, 27, 32),
-  within = as.factor(
-    rep(c("om", "wr", "kl", "ja"),c(8,8,8,8))),
-  ID = as.factor(rep(1:8,4))
-)
-tab16_6 <- tab16_6[sample(1:32, 32, F), ]
+data("sedlmeier537")
 
-t16_6<- calc_contrast(
-  dv = Var,
-  within = within,
-  ID = ID,
-  lambda_within = sample(c("wr" = 0.25, "kl" = -.75,
-                    "om" = 1.25, "ja" = -.75), 4, F),
-  data=tab16_6
+# random row order
+sedlmeier537 <- sedlmeier537[sample(1:32, 32, F), ]
+
+# analysis
+contr_wi <- calc_contrast(
+  dv = reading_test, within = music,
+  lambda_within = c(
+    "without music" = 1.25, "white noise" = 0.25, "classic" = -0.75,
+    "jazz" = -0.75
+  ),
+  ID = participant, data = d
 )
-expect_equal(t16_6$desc[1], 5.875)
+
+expect_equal(contr_wi$desc[1], 5.875)
 expect_equal(
-  round(t16_6$sig,3), c(5.269,.001, 7)
+  round(contr_wi$sig, 3), c(5.269, .001, 7)
 )
 
 ######## Test wtihin + between (no between Lambda)
