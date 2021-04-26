@@ -101,6 +101,11 @@ calc_contrast <- function(dv,
     stop("data is not a data.frame")
   }
 
+  if (!is.null(ID) & !is.factor(ID)) {
+    warning("ID variable is not a factor. I will try to convert to factor.")
+    ID <- as.factor(ID)
+  }
+
   if (is.null(lambda_between) & is.null(lambda_within)) {
     stop("lambda is missing")
   }
