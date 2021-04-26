@@ -167,7 +167,7 @@ calc_contrast <- function(dv,
 
   if (sum(lambda_within) != 0) {
     lambda_within <- lambda_within - mean(lambda_within)
-    warning("lambdas are centered and rounded to 3 digits")
+    warning("within lambdas are centered and rounded to 3 digits")
   }
   if (anyNA(dv)) {
     indexNA <- which(is.na(dv))
@@ -310,7 +310,7 @@ calc_contrast <- function(dv,
     desc <- c(mean(L), sqrt(S2) / sqrt(sum(table(L))), sqrt(S2))
     r <- c(r_contrast, g_effect)
     out_l <- list(sig, desc, lambda_within, r)
-    names(out_l) <- c("sig", "desc", "lambda_between", "effects")
+    names(out_l) <- c("sig", "desc", "lambda_within", "effects")
     class(out_l) <- c("cofad_wi")
     structure(out_l)
     return(out_l)
@@ -401,7 +401,7 @@ if (!is.null(lambda_between)){
 }
   if (sum(lambda_between) != 0) {
     lambda_between <- lambda_between - mean(lambda_between)
-    warning("lambdas are centered and rounded to 3 digits")
+    warning("between lambdas are centered and rounded to 3 digits")
   }
   lambda_between
 }
