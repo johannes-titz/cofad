@@ -12,18 +12,16 @@ myserver <- shinyServer(function(input, output, session) {
   lambda_between = reactive({
     if (!is.null(input$hot_lambda_btw)) {
       df = rhandsontable::hot_to_r(input$hot_lambda_btw)
-      lambda <- df[,2]
+      lambda <- as.numeric(df[,2])
       names(lambda) <- df[,1]
-      reactive$data_lambda = df
       lambda
     }
   })
   lambda_within = reactive({
     if (!is.null(input$hot_lambda_wi)) {
       df = rhandsontable::hot_to_r(input$hot_lambda_wi)
-      lambda <- df[,2]
+      lambda <- as.numeric(df[,2])
       names(lambda) <- df[,1]
-      reactive$data_lambda_within = df
       lambda
     }
   })
@@ -239,7 +237,9 @@ myserver <- shinyServer(function(input, output, session) {
   output$hot_lambda_btw <- rhandsontable::renderRHandsontable({
     validate(need(between(), "Drag Variable to between."))
     btw <- sort(unique(between()))
-    DF <- data.frame(btw, lambda = 1:length(btw))
+    lambda_btw <- lambda_btw()
+    if (is.null(lambda_btw)) lambda_btw <- 1:length(btw)
+    DF <- data.frame(btw, lambda_btw)
     if (!is.null(DF))
       the_tab <- rhandsontable::rhandsontable(DF, stretchH = "all")
       rhandsontable::hot_col(the_tab, "btw", readOnly = T)
@@ -249,9 +249,12 @@ myserver <- shinyServer(function(input, output, session) {
   output$hot_lambda_wi <- rhandsontable::renderRHandsontable({
     validate(need(within(), "Drag Variable to within."))
     wi <- sort(unique(within()))
-    DF <- data.frame(wi, lambda = 1:length(wi))
+    lambda_within <- lambda_within()
+    if (is.null(lambda_within)) lambda_within <- 1:length(wi)
+    DF <- data.frame(wi, lambda = lambda_within)
     if (!is.null(DF))
-      the_tab <- rhandsontable::rhandsontable(DF, stretchH = "all")
+      the_tab <- rhandsontable::rhandsontable(DF, stretchH = "all",
+                                              rowHeaders = NULL)
       rhandsontable::hot_col(the_tab, "wi", readOnly = T)
   })
 
@@ -262,7 +265,8 @@ myserver <- shinyServer(function(input, output, session) {
         need(length(between()) > 0 | length(within()) > 0,
              "Drag at least one Variable to IV (between or within or both)."),
         need(length(lambda_between()) > 0 | length(lambda_within()) > 0,
-             "Specify Lambdas.")#,
+             "Specify Lambdas."),
+        if (length(lambda_within()) > 0) need(id(), "For within designs, an ID variable is required")
         #
         #need(length(id()) > 0 | is.null(id()), "id length 0")
       )
