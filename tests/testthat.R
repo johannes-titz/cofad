@@ -88,7 +88,7 @@ t16_2 <- calc_contrast(dv = lsg,
 expect_equal(round(t16_2$sig[1], 3), 6.519)
 
 ###### Test within (no between)
-# Exampel for within-subjects-design Calculation 16.6 from
+# Example for within-subjects-design calculation 16.6 from
 # Sedlmeier and Renkewitz (2018, p. 537)
 tab16_6 <- data.frame(
   Var = c(27, 25, 30, 29, 30, 33, 31, 35,
