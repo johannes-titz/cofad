@@ -19,21 +19,27 @@ myserver <- shinyServer(function(input, output, session) {
                              id_var = NULL,
                              lambda_between = NULL,
                              lambda_within = NULL)
-  lambda_between = reactive({
-    if (!is.null(input$hot_lambda_btw)) {
-      df = rhandsontable::hot_to_r(input$hot_lambda_btw)
+  observeEvent(input$hot_lambda_btw, {
+    df = rhandsontable::hot_to_r(input$hot_lambda_btw)
       lambda <- as.numeric(df[,2])
       names(lambda) <- df[,1]
-      lambda
-    } else NULL
+      reactive$lambda_between <- lambda
   })
-  lambda_within = reactive({
-    if (!is.null(input$hot_lambda_wi)) {
+
+
+  # lambda_between = reactive({
+  #   if (!is.null(input$hot_lambda_btw)) {
+  #     df = rhandsontable::hot_to_r(input$hot_lambda_btw)
+  #     lambda <- as.numeric(df[,2])
+  #     names(lambda) <- df[,1]
+  #     lambda
+  #   } else NULL
+  # })
+  observeEvent(input$hot_lambda_wi, {
       df = rhandsontable::hot_to_r(input$hot_lambda_wi)
       lambda <- as.numeric(df[,2])
       names(lambda) <- df[,1]
-      lambda
-    } else NULL
+      reactive$lambda_within <- lambda
   })
   # example data set for tutorial in paper -------------------------------------
   # observe({
@@ -138,8 +144,8 @@ myserver <- shinyServer(function(input, output, session) {
         )),
 
       # lambda between table ----
-      #if (length(y()) > 0) {
-        column(width = 5, rhandsontable::rHandsontableOutput("hot_lambda_btw", width = 250))#}
+        column(width = 5, rhandsontable::rHandsontableOutput("hot_lambda_btw",
+                                                             width = 250))
       ), fluidRow(
         # PANEL WITHIN --------------
         column(width = 4,
@@ -214,20 +220,20 @@ myserver <- shinyServer(function(input, output, session) {
     )
   })
 
-  id <- reactive({
-    if (length(input$sort_id) > 0){
-      sort_id <- input$sort_id
-      #if (is.character(dv_name)) dv_name
-      reactive$data[,sort_id]
-    } else NULL
-  })
+  # id <- reactive({
+  #   if (length(input$sort_id) > 0){
+  #     sort_id <- input$sort_id
+  #     #if (is.character(dv_name)) dv_name
+  #     reactive$data[,sort_id]
+  #   } else NULL
+  # })
 
-  dv <- reactive({
-    validate(need(length(input$sort_between_name) > 0, "select dv"))
-      dv_name <- input$sort_dv_name
-      #if (is.character(dv_name)) dv_name
-      reactive$data[,dv_name]
-  })
+  # dv <- reactive({
+  #   validate(need(length(input$sort_between_name) > 0, "select dv"))
+  #     dv_name <- input$sort_dv_name
+  #     #if (is.character(dv_name)) dv_name
+  #     reactive$data[,dv_name]
+  # })
 
   observeEvent(input$sort_between_name, {
     reactive$between_name <- input$sort_between_name
@@ -250,7 +256,8 @@ myserver <- shinyServer(function(input, output, session) {
   })
 
   observe({
-    print(reactive$between_name)
+    print(reactive$dv_name)
+    print(reactive$dv_var)
   })
 
   # between <- reactive({
@@ -272,7 +279,7 @@ myserver <- shinyServer(function(input, output, session) {
     validate(need(reactive$between_name %in% names(reactive$data), "select proper btw"))
     validate(need(length(reactive$between_var) > 0, "Drag Variable to between."))
     btw <- sort(unique(reactive$between_var))
-    lambda_btw <- lambda_between()
+    lambda_btw <- reactive$lambda_between
     if (is.null(lambda_btw)) lambda_btw <- 1:length(btw)
     DF <- data.frame(btw, lambda_btw)
     if (!is.null(DF))
@@ -285,7 +292,7 @@ myserver <- shinyServer(function(input, output, session) {
   output$hot_lambda_wi <- rhandsontable::renderRHandsontable({
     validate(need(reactive$within_var, "Drag Variable to within."))
     wi <- sort(unique(reactive$within_var))
-    lambda_within <- lambda_within()
+    lambda_within <- reactive$lambda_within
     if (is.null(lambda_within)) lambda_within <- 1:length(wi)
     DF <- data.frame(wi, lambda = lambda_within)
     if (!is.null(DF))
@@ -297,16 +304,16 @@ myserver <- shinyServer(function(input, output, session) {
   # create table ---------------------------------------------------------------
   output$table_region <- renderPrint({
     validate(
-        need(reactive$dv_var, "Drag a variable to Dependent Variable."),
+        need(length(reactive$dv_var) > 0, "Drag a variable to Dependent Variable."),
         need(length(reactive$between_var) > 0 | length(reactive$within_var) > 0,
              "Drag at least one Variable to IV (between or within or both)."),
-        need(length(lambda_between()) > 0 | length(lambda_within()) > 0,
+        need(length(reactive$lambda_between) > 0 | length(reactive$lambda_within) > 0,
              "Specify Lambdas."),
-        if (length(lambda_within()) > 0) need(id(), "For within designs, an ID variable is required"),
-        if (length(id()) > 0) need(reactive$within_var, "If you use an ID variable, cofad assumes you have a within-design, so please specify the within-variable."),
-        if (length(reactive$between_var > 0)) need(lambda_between(), "Specify b")
+        if (length(reactive$lambda_within) > 0) need(reactive$id_var, "For within designs, an ID variable is required"),
+        if (length(reactive$id_var) > 0) need(reactive$within_var, "If you use an ID variable, cofad assumes you have a within-design, so please specify the within-variable."),
+        if (length(reactive$between_var > 0)) need(reactive$lambda_between, "Specify b")
         #
-        #need(length(id()) > 0 | is.null(id()), "id length 0")
+        #need(length(reactive$id_var) > 0 | is.null(reactive$id_var), "id length 0")
       )
    #dat <- reactive$data[, c(dv_name(), between_name())]
    #names(dat) <- c("dv_name", "between_name")
@@ -316,10 +323,10 @@ myserver <- shinyServer(function(input, output, session) {
    contr <- calc_contrast(
    dv = reactive$dv_var,
    between = reactive$between_var,
-   lambda_between = lambda_between(),
-   ID = id(),
+   lambda_between = reactive$lambda_between,
+   ID = reactive$id_var,
    within = reactive$within_var,
-   lambda_within = lambda_within(),
+   lambda_within = reactive$lambda_within,
    data = NULL)
    print(contr)
   })
