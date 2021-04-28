@@ -76,6 +76,17 @@ tab59b <- data.frame(
   bw = as.factor(rep(rep(c("A", "B", "C"), c(2, 1, 4)), 2))
 )
 
+tab53 <- data.frame(
+    Var = c(3, 1, 4, 4, 5, 5, 6, 5, 7, 2, 2, 5,
+            5, 6, 7, 6, 6, 8, 3, 1, 5, 4, 5, 6,
+            7, 6, 8, 3, 2, 5, 6, 6, 7, 8, 8, 9),
+    age = as.factor(
+      rep(rep(c("Age 8", "Age 10", "Age 12"), c(3, 3, 3)), 4)
+      ),
+    time = as.factor(rep(1:4, c(9, 9, 9, 9))),
+    ID = as.factor(rep(1:9, 4 ))
+    )
+
 write.csv(tab31, "data-raw/tab31.csv", row.names = F)
 write.csv(sedlmeier537, "data-raw/sedlmeier537.csv", row.names = F)
 write.csv(tab53, "data-raw/tab53.csv", row.names = F)
