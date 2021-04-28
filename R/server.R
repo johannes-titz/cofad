@@ -4,43 +4,8 @@
 #' @importFrom sortable sortable_js
 #' @noRd
 myserver <- shinyServer(function(input, output, session) {
-
   # create reactive variables
-  reactive <- reactiveValues(data_lambda = data.frame(),
-                             data_lambda_within = data.frame(),
-                             data = data.frame(),
-                             between_name = NULL,
-                             within_name = NULL,
-                             dv_name = NULL,
-                             id_name = NULL,
-                             between_var = NULL,
-                             within_var = NULL,
-                             dv_var = NULL,
-                             id_var = NULL,
-                             lambda_between = NULL,
-                             lambda_within = NULL)
-  observeEvent(input$hot_lambda_btw, {
-    df = rhandsontable::hot_to_r(input$hot_lambda_btw)
-      lambda <- as.numeric(df[,2])
-      names(lambda) <- df[,1]
-      reactive$lambda_between <- lambda
-  })
-
-
-  # lambda_between = reactive({
-  #   if (!is.null(input$hot_lambda_btw)) {
-  #     df = rhandsontable::hot_to_r(input$hot_lambda_btw)
-  #     lambda <- as.numeric(df[,2])
-  #     names(lambda) <- df[,1]
-  #     lambda
-  #   } else NULL
-  # })
-  observeEvent(input$hot_lambda_wi, {
-      df = rhandsontable::hot_to_r(input$hot_lambda_wi)
-      lambda <- as.numeric(df[,2])
-      names(lambda) <- df[,1]
-      reactive$lambda_within <- lambda
-  })
+  reactive <- reactiveValues()
   # example data set for tutorial in paper -------------------------------------
   # observe({
   #       query <- parseQueryString(session$clientData$url_search)
@@ -76,13 +41,21 @@ myserver <- shinyServer(function(input, output, session) {
     data <- load_data(input$datafile)
     reactive$data <- data
     shinyjs::show("create_model")
-  #           shinyjs::show("reactive_mode_area")
-  #           shinyjs::hide("display_model")
-  #           shinyjs::hide("output_region")
     shinyjs::hide("help")
     shinyjs::show("output_region")
+
+    # set reactive values
     reactive$lambda_between <- NULL
     reactive$between_name <- NULL
+    reactive$within_name = NULL
+    reactive$dv_name <- NULL
+    reactive$id_name <- NULL
+    reactive$between_var <- NULL
+    reactive$within_var <- NULL
+    reactive$dv_var <- NULL
+    reactive$id_var <- NULL
+    reactive$lambda_between <- NULL
+    reactive$lambda_within <- NULL
     })
   })
   # USER INTERFACE --------------------
@@ -127,7 +100,7 @@ myserver <- shinyServer(function(input, output, session) {
             "ID Variable"
           ),
           tags$div(class = "panel-body",
-                   id = "sort_id")
+                   id = "sort_id_name")
         ))),
       fluidRow(
         # PANEL BETWEEN --------------
@@ -157,7 +130,7 @@ myserver <- shinyServer(function(input, output, session) {
             "IV, within"
           ),
           tags$div(class = "panel-body",
-                   id = "sort_within")
+                   id = "sort_within_name")
         )),
 
       # lambda within table ----
@@ -196,51 +169,38 @@ myserver <- shinyServer(function(input, output, session) {
         )
       ),
       sortable::sortable_js(
-        "sort_within",
+        "sort_within_name",
         options = sortable::sortable_options(
           group = list(
             group = "sortGroup1",
             put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
             pull = TRUE
           ),
-          onSort = sortable::sortable_js_capture_input("sort_within")
+          onSort = sortable::sortable_js_capture_input("sort_within_name")
         )
       ),
       sortable::sortable_js(
-        "sort_id",
+        "sort_id_name",
         options = sortable::sortable_options(
           group = list(
             group = "sortGroup1",
             put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
             pull = TRUE
           ),
-          onSort = sortable::sortable_js_capture_input("sort_id")
+          onSort = sortable::sortable_js_capture_input("sort_id_name")
         )
       )
     )
   })
 
-  # id <- reactive({
-  #   if (length(input$sort_id) > 0){
-  #     sort_id <- input$sort_id
-  #     #if (is.character(dv_name)) dv_name
-  #     reactive$data[,sort_id]
-  #   } else NULL
-  # })
-
-  # dv <- reactive({
-  #   validate(need(length(input$sort_between_name) > 0, "select dv"))
-  #     dv_name <- input$sort_dv_name
-  #     #if (is.character(dv_name)) dv_name
-  #     reactive$data[,dv_name]
-  # })
-
   observeEvent(input$sort_between_name, {
+    reactive$lambda_between <- NULL
     reactive$between_name <- input$sort_between_name
     reactive$between_var <- as.factor(reactive$data[, input$sort_between_name])
   })
 
   observeEvent(input$sort_within_name, {
+    reactive$lambda_within <- NULL
     reactive$within_name <- input$sort_within_name
     reactive$within_var <- as.factor(reactive$data[, input$sort_within_name])
   })
@@ -255,28 +215,23 @@ myserver <- shinyServer(function(input, output, session) {
     reactive$id_var <- reactive$data[, input$sort_id_name]
   })
 
+  # debugging
   observe({
-    print(reactive$dv_name)
-    print(reactive$dv_var)
+    print(reactive$lambda_betwe)
+    #lapply(reactive, function(x) print(x))
   })
 
-  # between <- reactive({
-  #   validate(need(length(input$sort_between_name) > 0, "select btw"))
-  #     between_var_name <- input$sort_between_name
-  #     as.factor(reactive$data[, between_var_name])
-  # })
-  #
-  # within <- reactive({
-  #   if (length(input$sort_within) > 0){
-  #     within_var_name <- input$sort_within
-  #     as.factor(reactive$data[, within_var_name])
-  #   } else NULL
-  # })
-
   # lambda labels
+  observeEvent(input$hot_lambda_btw, {
+    df = rhandsontable::hot_to_r(input$hot_lambda_btw)
+    lambda <- as.numeric(df[,2])
+    names(lambda) <- df[,1]
+    reactive$lambda_between <- lambda
+  })
+
   output$hot_lambda_btw <- rhandsontable::renderRHandsontable({
-    validate(need(length(reactive$between_name) > 0, "select btw"))
-    validate(need(reactive$between_name %in% names(reactive$data), "select proper btw"))
+    #validate(need(length(reactive$lambda_between) > 0, "select btw"))
+    # validate(need(reactive$between_name %in% names(reactive$data), "select proper btw"))
     validate(need(length(reactive$between_var) > 0, "Drag Variable to between."))
     btw <- sort(unique(reactive$between_var))
     lambda_btw <- reactive$lambda_between
@@ -299,6 +254,15 @@ myserver <- shinyServer(function(input, output, session) {
       the_tab <- rhandsontable::rhandsontable(DF, stretchH = "all",
                                               rowHeaders = NULL)
       rhandsontable::hot_col(the_tab, "wi", readOnly = T)
+  })
+
+
+
+  observeEvent(input$hot_lambda_wi, {
+      df = rhandsontable::hot_to_r(input$hot_lambda_wi)
+      lambda <- as.numeric(df[,2])
+      names(lambda) <- df[,1]
+      reactive$lambda_within <- lambda
   })
 
   # create table ---------------------------------------------------------------
