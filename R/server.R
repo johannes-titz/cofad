@@ -229,8 +229,8 @@ myserver <- shinyServer(function(input, output, session) {
       reactive$within_name <- NULL
       reactive$within_var <- NULL
       reactive$lambda_within <- NULL
-      reactive$id_name <- NULL
-      reactive$id_var <- NULL
+      # reactive$id_name <- NULL
+      # reactive$id_var <- NULL
     }
   })
 
@@ -245,13 +245,16 @@ myserver <- shinyServer(function(input, output, session) {
   })
 
   observeEvent(input$sort_id_name, {
-    print(input$sort_id_name)
+    # this is easier to handle because of the sortable (if you remove it, you
+    # need to set id_var to NULL, otherwise problems may arise. This also comes
+    # in handy when you reload the data. You can then simply set id_name to
+    # NULL)
     if (length(input$sort_id_name) > 0){
-    reactive$id_name <- input$sort_id_name
+      reactive$id_name <- input$sort_id_name
     reactive$id_var <- reactive$data[, input$sort_id_name]
     } else {
-       reactive$id_name <- NULL
        reactive$id_var <- NULL
+       input$sort_id_name <- NULL
     }
   })
 
