@@ -257,7 +257,7 @@ myserver <- shinyServer(function(input, output, session) {
     reactive$id_var <- reactive$data[, input$sort_id_name]
     } else {
        reactive$id_var <- NULL
-       input$sort_id_name <- NULL
+       reactive$sort_id_name <- NULL
     }
   })
 
