@@ -39,7 +39,9 @@ myserver <- shinyServer(function(input, output, session) {
     withProgress(message = "Loading data", value = 0, {
     req(input$datafile)
     data <- load_data(input$datafile)
+    validate(need(!identical(data, reactive$data), "same data"))
     reactive$data <- data
+
     shinyjs::show("create_model")
     shinyjs::hide("help")
     shinyjs::show("output_region")
@@ -227,27 +229,43 @@ myserver <- shinyServer(function(input, output, session) {
       reactive$within_name <- NULL
       reactive$within_var <- NULL
       reactive$lambda_within <- NULL
+      reactive$id_name <- NULL
+      reactive$id_var <- NULL
     }
   })
 
   observeEvent(input$sort_dv_name, {
+    print(input$sort_dv_name)
+    if (length(input$sort_dv_name) > 0){
     reactive$dv_name <- input$sort_dv_name
     reactive$dv_var <- reactive$data[, input$sort_dv_name]
+    } else {
+      reactive$dv_name <- NULL
+      reactive$dv_var <- NULL
+    }
   })
 
   observeEvent(input$sort_id_name, {
+    if (length(input$sort_id_name) > 0){
     reactive$id_name <- input$sort_id_name
     reactive$id_var <- reactive$data[, input$sort_id_name]
+    } else {
+       reactive$id_name <- NULL
+       reactive$id_var <- NULL
+    }
   })
 
   # debugging
   observe({
-    #print(reactive$lambda_betwe)
-    #lapply(reactive, function(x) print(x))
   })
 
   # lambda labels
   observeEvent(input$hot_lambda_btw, {
+        validate(need(length(reactive$lambda_between) > 0,
+                  "Drag Variable to between."))
+    res <- input$hot_lambda_btw
+    saveRDS(res, file = paste0("../tests/testthat/", input$datafile$name,
+                               "_hot_lambda_btw.RData"))
     df = rhandsontable::hot_to_r(input$hot_lambda_btw)
     lambda <- as.numeric(df[,2])
     names(lambda) <- df[,1]
@@ -281,13 +299,14 @@ myserver <- shinyServer(function(input, output, session) {
       rhandsontable::hot_col(the_tab, "wi", readOnly = T)
   })
 
-
-
   observeEvent(input$hot_lambda_wi, {
-      df = rhandsontable::hot_to_r(input$hot_lambda_wi)
-      lambda <- as.numeric(df[,2])
-      names(lambda) <- df[,1]
-      reactive$lambda_within <- lambda
+    res <- input$hot_lambda_wi
+    saveRDS(res, file = paste0("../tests/testthat/", input$datafile$name,
+                               "_hot_lambda_wi.RData"))
+    df = rhandsontable::hot_to_r(input$hot_lambda_wi)
+    lambda <- as.numeric(df[,2])
+    names(lambda) <- df[,1]
+    reactive$lambda_within <- lambda
   })
 
   # create table ---------------------------------------------------------------
