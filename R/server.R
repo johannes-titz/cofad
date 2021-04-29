@@ -193,16 +193,41 @@ myserver <- shinyServer(function(input, output, session) {
     )
   })
 
+  # When we have a between name, set reactive values between_name, between_var
+  # and lambda_between, otherwise set them all to NULL
   observeEvent(input$sort_between_name, {
-    reactive$lambda_between <- NULL
+    if (length(input$sort_between_name) > 0) {
     reactive$between_name <- input$sort_between_name
     reactive$between_var <- as.factor(reactive$data[, input$sort_between_name])
+    # make a function out of this
+    between_levels <- sort(unique(reactive$between_var))
+    lambda_between <- 1:length(between_levels)
+    lambda_between <- lambda_between - mean(lambda_between)
+    names(lambda_between) <- between_levels
+    reactive$lambda_between <- lambda_between
+    } else {
+      reactive$between_name <- NULL
+      reactive$between_var <- NULL
+      reactive$lambda_between <- NULL
+    }
   })
-
+  # When we have a within name, set reactive values within_name, within_var
+  # and lambda_within, otherwise set them all to NULL
   observeEvent(input$sort_within_name, {
-    reactive$lambda_within <- NULL
+    if (length(input$sort_within_name) > 0) {
     reactive$within_name <- input$sort_within_name
     reactive$within_var <- as.factor(reactive$data[, input$sort_within_name])
+    # make a function out of this
+    within_levels <- sort(unique(reactive$within_var))
+    lambda_within <- 1:length(within_levels)
+    lambda_within <- lambda_within - mean(lambda_within)
+    names(lambda_within) <- within_levels
+    reactive$lambda_within <- lambda_within
+    } else {
+      reactive$within_name <- NULL
+      reactive$within_var <- NULL
+      reactive$lambda_within <- NULL
+    }
   })
 
   observeEvent(input$sort_dv_name, {
@@ -217,7 +242,7 @@ myserver <- shinyServer(function(input, output, session) {
 
   # debugging
   observe({
-    print(reactive$lambda_betwe)
+    #print(reactive$lambda_betwe)
     #lapply(reactive, function(x) print(x))
   })
 
@@ -232,10 +257,10 @@ myserver <- shinyServer(function(input, output, session) {
   output$hot_lambda_btw <- rhandsontable::renderRHandsontable({
     #validate(need(length(reactive$lambda_between) > 0, "select btw"))
     # validate(need(reactive$between_name %in% names(reactive$data), "select proper btw"))
-    validate(need(length(reactive$between_var) > 0, "Drag Variable to between."))
+    validate(need(length(reactive$lambda_between) > 0,
+                  "Drag Variable to between."))
     btw <- sort(unique(reactive$between_var))
     lambda_btw <- reactive$lambda_between
-    if (is.null(lambda_btw)) lambda_btw <- 1:length(btw)
     DF <- data.frame(btw, lambda_btw)
     if (!is.null(DF))
       the_tab <- rhandsontable::rhandsontable(DF, stretchH = "all",
