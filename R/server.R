@@ -326,7 +326,7 @@ myserver <- shinyServer(function(input, output, session) {
    dv = reactive$dv_var,
    between = reactive$between_var,
    lambda_between = reactive$lambda_between,
-   ID = reactive$data[,input$sort_id_name],
+   ID = reactive$id_var,
    within = reactive$within_var,
    lambda_within = reactive$lambda_within,
    data = NULL)
