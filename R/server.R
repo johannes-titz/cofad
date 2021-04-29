@@ -235,7 +235,6 @@ myserver <- shinyServer(function(input, output, session) {
   })
 
   observeEvent(input$sort_dv_name, {
-    print(input$sort_dv_name)
     if (length(input$sort_dv_name) > 0){
     reactive$dv_name <- input$sort_dv_name
     reactive$dv_var <- reactive$data[, input$sort_dv_name]
@@ -246,6 +245,7 @@ myserver <- shinyServer(function(input, output, session) {
   })
 
   observeEvent(input$sort_id_name, {
+    print(input$sort_id_name)
     if (length(input$sort_id_name) > 0){
     reactive$id_name <- input$sort_id_name
     reactive$id_var <- reactive$data[, input$sort_id_name]
@@ -263,9 +263,9 @@ myserver <- shinyServer(function(input, output, session) {
   observeEvent(input$hot_lambda_btw, {
         validate(need(length(reactive$lambda_between) > 0,
                   "Drag Variable to between."))
-    res <- input$hot_lambda_btw
-    saveRDS(res, file = paste0("../tests/testthat/", input$datafile$name,
-                               "_hot_lambda_btw.RData"))
+    # res <- input$hot_lambda_btw
+    # saveRDS(res, file = paste0("../tests/testthat/", input$datafile$name,
+    #                            "_hot_lambda_btw.RData"))
     df = rhandsontable::hot_to_r(input$hot_lambda_btw)
     lambda <- as.numeric(df[,2])
     names(lambda) <- df[,1]
@@ -300,9 +300,9 @@ myserver <- shinyServer(function(input, output, session) {
   })
 
   observeEvent(input$hot_lambda_wi, {
-    res <- input$hot_lambda_wi
-    saveRDS(res, file = paste0("../tests/testthat/", input$datafile$name,
-                               "_hot_lambda_wi.RData"))
+    # res <- input$hot_lambda_wi
+    # saveRDS(res, file = paste0("../tests/testthat/", input$datafile$name,
+    #                            "_hot_lambda_wi.RData"))
     df = rhandsontable::hot_to_r(input$hot_lambda_wi)
     lambda <- as.numeric(df[,2])
     names(lambda) <- df[,1]
@@ -320,19 +320,13 @@ myserver <- shinyServer(function(input, output, session) {
         if (length(reactive$lambda_within) > 0) need(reactive$id_var, "For within designs, an ID variable is required"),
         if (length(reactive$id_var) > 0) need(reactive$within_var, "If you use an ID variable, cofad assumes you have a within-design, so please specify the within-variable."),
         if (length(reactive$between_var > 0)) need(reactive$lambda_between, "Specify b")
-        #
-        #need(length(reactive$id_var) > 0 | is.null(reactive$id_var), "id length 0")
       )
-   #dat <- reactive$data[, c(dv_name(), between_name())]
-   #names(dat) <- c("dv_name", "between_name")
 
-   # ID is needed for within, right?
-   #dat$between_name<- as.factor(dat$between_name)
    contr <- calc_contrast(
    dv = reactive$dv_var,
    between = reactive$between_var,
    lambda_between = reactive$lambda_between,
-   ID = reactive$id_var,
+   ID = reactive$data[,input$sort_id_name],
    within = reactive$within_var,
    lambda_within = reactive$lambda_within,
    data = NULL)
