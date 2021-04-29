@@ -27,10 +27,11 @@ myserver <- shinyServer(function(input, output, session) {
       if (as.character(input$isSafari) == "TRUE") {
         accepted_filetype <- "*"
       } else {
-         accepted_filetype <- c("text/csv", "text/comma-separated-values",
-                                "application/x-spss-sav", "application/x-spss-por",
-                                "application/spss", ".sav", ".csv")
-       }
+        accepted_filetype <- c("text/csv", "text/comma-separated-values",
+                               "application/x-spss-sav",
+                               "application/x-spss-por",
+                               "application/spss", ".sav", ".csv")
+      }
       fileInput("datafile", label = NULL, accept = accepted_filetype)
     }
   })
@@ -39,9 +40,12 @@ myserver <- shinyServer(function(input, output, session) {
     withProgress(message = "Loading data", value = 0, {
     req(input$datafile)
     data <- load_data(input$datafile)
+    # if same data, do not do anything
     validate(need(!identical(data, reactive$data), "same data"))
+
     reactive$data <- data
 
+    # activate some panels
     shinyjs::show("create_model")
     shinyjs::hide("help")
     shinyjs::show("output_region")
@@ -49,7 +53,7 @@ myserver <- shinyServer(function(input, output, session) {
     # set reactive values
     reactive$lambda_between <- NULL
     reactive$between_name <- NULL
-    reactive$within_name = NULL
+    reactive$within_name <- NULL
     reactive$dv_name <- NULL
     reactive$id_name <- NULL
     reactive$between_var <- NULL
@@ -213,6 +217,7 @@ myserver <- shinyServer(function(input, output, session) {
       reactive$lambda_between <- NULL
     }
   })
+
   # When we have a within name, set reactive values within_name, within_var
   # and lambda_within, otherwise set them all to NULL
   observeEvent(input$sort_within_name, {
@@ -234,6 +239,7 @@ myserver <- shinyServer(function(input, output, session) {
     }
   })
 
+  # same as above
   observeEvent(input$sort_dv_name, {
     if (length(input$sort_dv_name) > 0){
     reactive$dv_name <- input$sort_dv_name
@@ -244,11 +250,8 @@ myserver <- shinyServer(function(input, output, session) {
     }
   })
 
+  # same as above
   observeEvent(input$sort_id_name, {
-    # this is easier to handle because of the sortable (if you remove it, you
-    # need to set id_var to NULL, otherwise problems may arise. This also comes
-    # in handy when you reload the data. You can then simply set id_name to
-    # NULL)
     if (length(input$sort_id_name) > 0){
       reactive$id_name <- input$sort_id_name
     reactive$id_var <- reactive$data[, input$sort_id_name]
@@ -258,26 +261,20 @@ myserver <- shinyServer(function(input, output, session) {
     }
   })
 
-  # debugging
-  observe({
-  })
-
-  # lambda labels
+  # lambda labels between
   observeEvent(input$hot_lambda_btw, {
-        validate(need(length(reactive$lambda_between) > 0,
+    validate(need(length(reactive$lambda_between) > 0,
                   "Drag Variable to between."))
     # res <- input$hot_lambda_btw
     # saveRDS(res, file = paste0("../tests/testthat/", input$datafile$name,
     #                            "_hot_lambda_btw.RData"))
-    df = rhandsontable::hot_to_r(input$hot_lambda_btw)
+    df <- rhandsontable::hot_to_r(input$hot_lambda_btw)
     lambda <- as.numeric(df[,2])
     names(lambda) <- df[,1]
     reactive$lambda_between <- lambda
   })
 
   output$hot_lambda_btw <- rhandsontable::renderRHandsontable({
-    #validate(need(length(reactive$lambda_between) > 0, "select btw"))
-    # validate(need(reactive$between_name %in% names(reactive$data), "select proper btw"))
     validate(need(length(reactive$lambda_between) > 0,
                   "Drag Variable to between."))
     btw <- sort(unique(reactive$between_var))
@@ -315,14 +312,19 @@ myserver <- shinyServer(function(input, output, session) {
   # create table ---------------------------------------------------------------
   output$table_region <- renderPrint({
     validate(
-        need(length(reactive$dv_var) > 0, "Drag a variable to Dependent Variable."),
+        need(length(reactive$dv_var) > 0,
+             "Drag a variable to Dependent Variable."),
         need(length(reactive$between_var) > 0 | length(reactive$within_var) > 0,
              "Drag at least one Variable to IV (between or within or both)."),
-        need(length(reactive$lambda_between) > 0 | length(reactive$lambda_within) > 0,
+        need(length(reactive$lambda_between) > 0 |
+               length(reactive$lambda_within) > 0,
              "Specify Lambdas."),
-        if (length(reactive$lambda_within) > 0) need(reactive$id_var, "For within designs, an ID variable is required"),
-        if (length(reactive$id_var) > 0) need(reactive$within_var, "If you use an ID variable, cofad assumes you have a within-design, so please specify the within-variable."),
-        if (length(reactive$between_var > 0)) need(reactive$lambda_between, "Specify b")
+        if (length(reactive$lambda_within) > 0)
+          need(reactive$id_var, "For within designs, an ID variable is required"),
+        if (length(reactive$id_var) > 0)
+          need(reactive$within_var, "If you use an ID variable, cofad assumes you have a within-design, so please specify the within-variable."),
+        if (length(reactive$between_var > 0))
+          need(reactive$lambda_between, "Specify b")
       )
 
    contr <- calc_contrast(
