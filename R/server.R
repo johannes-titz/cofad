@@ -160,7 +160,10 @@ myserver <- shinyServer(function(input, output, session) {
             put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
             pull = TRUE
           ),
-          onSort = sortable::sortable_js_capture_input("sort_dv_name")
+          onSort = sortable::sortable_js_capture_input("sort_dv_name"),
+          # this one is crucial, otherwise the old value will remain
+          # for the capture
+          onLoad  = sortable::sortable_js_capture_input("sort_dv_name")
         )
       ),
       sortable::sortable_js(
