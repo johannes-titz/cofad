@@ -52,7 +52,6 @@ myserver <- shinyServer(function(input, output, session) {
 
     # set reactive values
     reactive$lambda_between <- NULL
-    reactive$between_name <- NULL
     reactive$within_name <- NULL
     reactive$dv_name <- NULL
     reactive$id_name <- NULL
@@ -205,18 +204,18 @@ myserver <- shinyServer(function(input, output, session) {
   # When we have a between name, set reactive values between_name, between_var
   # and lambda_between, otherwise set them all to NULL
   observeEvent(input$sort_between_name, {
-    if (length(input$sort_between_name) > 0) {
-    reactive$between_name <- input$sort_between_name
-    reactive$between_var <- as.factor(reactive$data[, input$sort_between_name])
+    if (nchar(input$sort_between_name) > 0) {
+    #reactive$between_name <- input$sort_between_name
+    between_var <- as.factor(reactive$data[, input$sort_between_name])
     # make a function out of this
-    between_levels <- sort(unique(reactive$between_var))
+    between_levels <- sort(unique(between_var))
     lambda_between <- 1:length(between_levels)
     lambda_between <- lambda_between - mean(lambda_between)
     names(lambda_between) <- between_levels
     reactive$lambda_between <- lambda_between
     } else {
-      reactive$between_name <- NULL
-      reactive$between_var <- NULL
+      #reactive$between_name <- NULL
+      #reactive$between_var <- NULL
       reactive$lambda_between <- NULL
     }
   })
@@ -280,7 +279,7 @@ myserver <- shinyServer(function(input, output, session) {
   output$hot_lambda_btw <- rhandsontable::renderRHandsontable({
     validate(need(length(reactive$lambda_between) > 0,
                   "Drag Variable to between."))
-    btw <- sort(unique(reactive$between_var))
+    btw <- sort(unique(reactive$data[, input$sort_between_name]))
     lambda_btw <- reactive$lambda_between
     DF <- data.frame(btw, lambda_btw)
     if (!is.null(DF))
@@ -317,7 +316,7 @@ myserver <- shinyServer(function(input, output, session) {
     validate(
         need(length(reactive$dv_var) > 0,
              "Drag a variable to Dependent Variable."),
-        need(length(reactive$between_var) > 0 | length(reactive$within_var) > 0,
+        need(nchar(input$sort_between_name) > 0 | length(reactive$within_var) > 0,
              "Drag at least one Variable to IV (between or within or both)."),
         need(length(reactive$lambda_between) > 0 |
                length(reactive$lambda_within) > 0,
@@ -325,14 +324,14 @@ myserver <- shinyServer(function(input, output, session) {
         if (length(reactive$lambda_within) > 0)
           need(reactive$id_var, "For within designs, an ID variable is required"),
         if (length(reactive$id_var) > 0)
-          need(reactive$within_var, "If you use an ID variable, cofad assumes you have a within-design, so please specify the within-variable."),
-        if (length(reactive$between_var > 0))
-          need(reactive$lambda_between, "Specify b")
+          need(reactive$within_var, "If you use an ID variable, cofad assumes you have a within-design, so please specify the within-variable.")#,
+        # if (length(reactive$between_var > 0))
+          # need(reactive$lambda_between, "Specify b")
       )
 
    contr <- calc_contrast(
    dv = reactive$dv_var,
-   between = reactive$between_var,
+   between = as.factor(reactive$data[, input$sort_between_name]),
    lambda_between = reactive$lambda_between,
    ID = reactive$id_var,
    within = reactive$within_var,
