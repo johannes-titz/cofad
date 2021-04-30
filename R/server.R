@@ -204,7 +204,8 @@ myserver <- shinyServer(function(input, output, session) {
   # When we have a between name, set reactive values between_name, between_var
   # and lambda_between, otherwise set them all to NULL
   observeEvent(input$sort_between_name, {
-    if (nchar(input$sort_between_name) > 0) {
+    print(input$sort_between_name)
+    if (length(input$sort_between_name) > 0) {
     #reactive$between_name <- input$sort_between_name
     between_var <- as.factor(reactive$data[, input$sort_between_name])
     # make a function out of this
@@ -277,8 +278,7 @@ myserver <- shinyServer(function(input, output, session) {
   })
 
   output$hot_lambda_btw <- rhandsontable::renderRHandsontable({
-    validate(need(length(reactive$lambda_between) > 0,
-                  "Drag Variable to between."))
+    validate(need(length(input$sort_between_name) > 0, "Drag Variable to between"))
     btw <- sort(unique(reactive$data[, input$sort_between_name]))
     lambda_btw <- reactive$lambda_between
     DF <- data.frame(btw, lambda_btw)
@@ -316,7 +316,7 @@ myserver <- shinyServer(function(input, output, session) {
     validate(
         need(length(reactive$dv_var) > 0,
              "Drag a variable to Dependent Variable."),
-        need(nchar(input$sort_between_name) > 0 | length(reactive$within_var) > 0,
+        need(length(input$sort_between_name) > 0 | length(reactive$within_var) > 0,
              "Drag at least one Variable to IV (between or within or both)."),
         need(length(reactive$lambda_between) > 0 |
                length(reactive$lambda_within) > 0,
