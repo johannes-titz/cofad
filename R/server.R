@@ -58,7 +58,7 @@ myserver <- shinyServer(function(input, output, session) {
     reactive$between_var <- NULL
     reactive$within_var <- NULL
     reactive$dv_var <- NULL
-    reactive$id_var <- NULL
+    #reactive$id_var <- NULL
     reactive$lambda_between <- NULL
     reactive$lambda_within <- NULL
     })
@@ -148,7 +148,8 @@ myserver <- shinyServer(function(input, output, session) {
           group = list(name = "sortGroup1",
                        put = TRUE),
           sort = FALSE,
-          onSort = sortable::sortable_js_capture_input("sort_vars")
+          onSort = sortable::sortable_js_capture_input("sort_vars"),
+          onLoad = sortable::sortable_js_capture_input("sort_vars")
         )
       ),
       sortable::sortable_js(
@@ -197,7 +198,8 @@ myserver <- shinyServer(function(input, output, session) {
             put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
             pull = TRUE
           ),
-          onSort = sortable::sortable_js_capture_input("sort_id_name")
+          onSort = sortable::sortable_js_capture_input("sort_id_name"),
+          onLoad = sortable::sortable_js_capture_input("sort_id_name")
         )
       )
     )
@@ -211,6 +213,12 @@ myserver <- shinyServer(function(input, output, session) {
 
   within_var <- reactive({
     var <- as.factor(reactive$data[, input$sort_within_name])
+    if (length(var) == 0) var <- NULL
+    var
+  })
+
+  id_var <- reactive({
+    var <- as.factor(reactive$data[, input$sort_id_name])
     if (length(var) == 0) var <- NULL
     var
   })
@@ -267,15 +275,15 @@ myserver <- shinyServer(function(input, output, session) {
   })
 
   # same as above
-  observeEvent(input$sort_id_name, {
-    if (length(input$sort_id_name) > 0){
-      reactive$id_name <- input$sort_id_name
-    reactive$id_var <- reactive$data[, input$sort_id_name]
-    } else {
-       reactive$id_var <- NULL
-       reactive$sort_id_name <- NULL
-    }
-  })
+  # observeEvent(input$sort_id_name, {
+  #   if (length(input$sort_id_name) > 0){
+  #     reactive$id_name <- input$sort_id_name
+  #   reactive$id_var <- reactive$data[, input$sort_id_name]
+  #   } else {
+  #      reactive$id_var <- NULL
+  #      reactive$sort_id_name <- NULL
+  #   }
+  # })
 
   # lambda labels between
   observeEvent(input$hot_lambda_btw, {
@@ -335,7 +343,7 @@ myserver <- shinyServer(function(input, output, session) {
                length(reactive$lambda_within) > 0,
              "Specify Lambdas."),
         if (length(reactive$lambda_within) > 0)
-          need(reactive$id_var, "For within designs, an ID variable is required")
+          need(length(input$sort_id_name) > 0, "For within designs, an ID variable is required")
         # if (length(reactive$id_var) > 0)
         #   need(reactive$within_var, "If you use an ID variable, cofad assumes you have a within-design, so please specify the within-variable.")#,
         # if (length(reactive$between_var > 0))
@@ -350,7 +358,7 @@ myserver <- shinyServer(function(input, output, session) {
    dv = reactive$dv_var,
    between = between_var(),
    lambda_between = reactive$lambda_between,
-   ID = reactive$id_var,
+   ID = id_var(),
    within = within_var(),
    lambda_within = reactive$lambda_within,
    data = NULL)
