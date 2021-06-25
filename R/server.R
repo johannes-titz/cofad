@@ -35,7 +35,7 @@ myserver <- shinyServer(function(input, output, session) {
       fileInput("datafile", label = NULL, accept = accepted_filetype)
     }
   })
-  # read in data file, determine ID and level of variables----------------------
+  # read in data file-----------------------------------------------------------
   observeEvent(input$datafile, {
     withProgress(message = "Loading data", value = 0, {
     req(input$datafile)
