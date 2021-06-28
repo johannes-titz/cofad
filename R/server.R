@@ -63,147 +63,157 @@ myserver <- shinyServer(function(input, output, session) {
     reactive$lambda_within <- NULL
     })
   })
-  # USER INTERFACE --------------------
+  # USER INTERFACE -------------------------------------------------------------
   # this is here because data changes, so variables for first panel are not
   # fixed; the other two panels do not have to be here, but this makes it
   # easier to construct the fluid layout
   output$variables <- renderUI({
-    fluidRow(
-      # PANEL VARIABLES --------------
-      column(
-        width = 3,
-        tags$div(
-          class = "panel panel-default",
-          tags$div(class = "panel-heading", "Variables"),
-          tags$div(
-            class = "panel-body",
-            id = "sort_variables",
-            colnames_to_tags(reactive$data)
-          )
-        )
-      ),
-      column(width=8,
-        fluidRow(
-          column(width = 4,
-        # PANEL DEPENDENT VARIABLES --------------
-        tags$div(
-          class = "panel panel-default",
-          tags$div(
-            class = "panel-heading",
-            tags$span(class = "glyphicon"),
-            "DV"
-          ),
-          tags$div(class = "panel-body",
-                   id = "sort_dv_name")
-        )),
-        column(width=5,
-               tags$div(
-          class = "panel panel-default",
-          tags$div(
-            class = "panel-heading",
-            tags$span(class = "glyphicon"),
-            "ID Variable"
-          ),
-          tags$div(class = "panel-body",
-                   id = "sort_id_name")
-        ))),
-      fluidRow(
-        # PANEL BETWEEN --------------
-        column(width = 4,
-        tags$div(
-          class = "panel panel-default",
-          tags$div(
-            class = "panel-heading",
-            tags$span(class = "glyphicon"),
-            "IV, between"
-          ),
-          tags$div(class = "panel-body",
-                   id = "sort_between_name")
-        )),
-
-      # lambda between table ----
-        column(width = 5, rhandsontable::rHandsontableOutput("hot_lambda_btw",
-                                                             width = 250))
-      ), fluidRow(
-        # PANEL WITHIN --------------
-        column(width = 4,
-        tags$div(
-          class = "panel panel-default",
-          tags$div(
-            class = "panel-heading",
-            tags$span(class = "glyphicon"),
-            "IV, within"
-          ),
-          tags$div(class = "panel-body",
-                   id = "sort_within_name")
-        )),
-
-      # lambda within table ----
-      #if (length(y()) > 0) {
-        column(width = 5, rhandsontable::rHandsontableOutput("hot_lambda_wi", width = 200))#}
-      )),
-      sortable::sortable_js(
-        "sort_variables",
-        options = sortable::sortable_options(
-          group = list(name = "sortGroup1",
-                       put = TRUE),
-          sort = FALSE,
-          onSort = sortable::sortable_js_capture_input("sort_vars"),
-          onLoad = sortable::sortable_js_capture_input("sort_vars")
-        )
-      ),
-      sortable::sortable_js(
-        "sort_dv_name",
-        options = sortable::sortable_options(
-          group = list(
-            group = "sortGroup1",
-            put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
-            pull = TRUE
-          ),
-          onSort = sortable::sortable_js_capture_input("sort_dv_name"),
-          # this one is crucial, otherwise the old value will remain
-          # for the capture
-          onLoad  = sortable::sortable_js_capture_input("sort_dv_name")
-        )
-      ),
-      sortable::sortable_js(
-        "sort_between_name",
-        options = sortable::sortable_options(
-          group = list(
-            group = "sortGroup1",
-            put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
-            pull = TRUE
-          ),
-          onSort = sortable::sortable_js_capture_input("sort_between_name"),
-          onLoad = sortable::sortable_js_capture_input("sort_between_name")
-        )
-      ),
-      sortable::sortable_js(
-        "sort_within_name",
-        options = sortable::sortable_options(
-          group = list(
-            group = "sortGroup1",
-            put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
-            pull = TRUE
-          ),
-          onSort = sortable::sortable_js_capture_input("sort_within_name"),
-          onLoad = sortable::sortable_js_capture_input("sort_within_name")
-        )
-      ),
-      sortable::sortable_js(
-        "sort_id_name",
-        options = sortable::sortable_options(
-          group = list(
-            group = "sortGroup1",
-            put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
-            pull = TRUE
-          ),
-          onSort = sortable::sortable_js_capture_input("sort_id_name"),
-          onLoad = sortable::sortable_js_capture_input("sort_id_name")
-        )
-      )
-    )
-  })
+   fluidRow(
+     # PANEL VARIABLES --------------
+     column(
+       width = 3,
+       tags$div(
+         class = "panel panel-default",
+         tags$div(class = "panel-heading", "Variables"),
+         tags$div(
+           class = "panel-body",
+           id = "sort_variables",
+           colnames_to_tags(reactive$data)
+         )
+       )
+     ),
+     column(
+       width = 8,
+       fluidRow(
+         column(
+           # PANEL DEPENDENT VARIABLES --------------
+           width = 4,
+           tags$div(
+             class = "panel panel-default",
+             tags$div(
+               class = "panel-heading",
+               tags$span(class = "glyphicon"),
+               "DV"
+             ),
+             tags$div(class = "panel-body", id = "sort_dv_name")
+           )
+         ),
+         column(
+           width = 5,
+           tags$div(
+             class = "panel panel-default",
+             tags$div(
+               class = "panel-heading",
+               tags$span(class = "glyphicon"),
+               "ID Variable"
+             ),
+             tags$div(class = "panel-body", id = "sort_id_name")
+           )
+         )
+       ),
+       fluidRow(
+         # PANEL BETWEEN --------------
+         column(
+           width = 4,
+           tags$div(
+             class = "panel panel-default",
+             tags$div(
+               class = "panel-heading",
+               tags$span(class = "glyphicon"),
+               "IV, between"
+             ),
+             tags$div(class = "panel-body", id = "sort_between_name")
+           )
+         ),
+         # lambda between table ----
+         column(
+           width = 5,
+           rhandsontable::rHandsontableOutput("hot_lambda_btw", width = 250)
+         )
+       ),
+       fluidRow(
+         # PANEL WITHIN --------------
+         column(
+           width = 4,
+           tags$div(
+             class = "panel panel-default",
+             tags$div(
+               class = "panel-heading",
+               tags$span(class = "glyphicon"),
+               "IV, within"
+             ),
+             tags$div(class = "panel-body", id = "sort_within_name")
+           )
+         ),
+         # lambda within table ----
+         column(
+           width = 5,
+           rhandsontable::rHandsontableOutput("hot_lambda_wi", width = 200)
+         )
+       )
+     ),
+     # main part of UI finished, now add the sortable_js configuration--------
+     sortable::sortable_js(
+       "sort_variables",
+       options = sortable::sortable_options(
+         group = list(name = "sortGroup1", put = TRUE),
+         sort = FALSE,
+         onSort = sortable::sortable_js_capture_input("sort_vars"),
+         # onLoad is crucial, otherwise the old value will remain for the
+         # capture
+         onLoad = sortable::sortable_js_capture_input("sort_vars")
+       )
+     ),
+     sortable::sortable_js(
+       "sort_dv_name",
+       options = sortable::sortable_options(
+         group = list(
+           group = "sortGroup1",
+           put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
+           pull = TRUE
+         ),
+         onSort = sortable::sortable_js_capture_input("sort_dv_name"),
+         onLoad = sortable::sortable_js_capture_input("sort_dv_name")
+       )
+     ),
+     sortable::sortable_js(
+       "sort_between_name",
+       options = sortable::sortable_options(
+         group = list(
+           group = "sortGroup1",
+           put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
+           pull = TRUE
+         ),
+         onSort = sortable::sortable_js_capture_input("sort_between_name"),
+         onLoad = sortable::sortable_js_capture_input("sort_between_name")
+       )
+     ),
+     sortable::sortable_js(
+       "sort_within_name",
+       options = sortable::sortable_options(
+         group = list(
+           group = "sortGroup1",
+           put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
+           pull = TRUE
+         ),
+         onSort = sortable::sortable_js_capture_input("sort_within_name"),
+         onLoad = sortable::sortable_js_capture_input("sort_within_name")
+       )
+     ),
+     sortable::sortable_js(
+       "sort_id_name",
+       options = sortable::sortable_options(
+         group = list(
+           group = "sortGroup1",
+           put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
+           pull = TRUE
+         ),
+         onSort = sortable::sortable_js_capture_input("sort_id_name"),
+         onLoad = sortable::sortable_js_capture_input("sort_id_name")
+       )
+     )
+   )
+ })
 
   between_var <- reactive({
     between_var <- as.factor(reactive$data[, input$sort_between_name])
