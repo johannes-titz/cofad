@@ -64,7 +64,7 @@ myserver <- shinyServer(function(input, output, session) {
     })
   })
   # USER INTERFACE -------------------------------------------------------------
-  # this is here because data changes, so variables for first panel are not
+  # this is here because data changes, so variables for the first panel are not
   # fixed; the other two panels do not have to be here, but this makes it
   # easier to construct the fluid layout
   output$variables <- renderUI({
@@ -152,7 +152,7 @@ myserver <- shinyServer(function(input, output, session) {
          )
        )
      ),
-     # main part of UI finished, now add the sortable_js configuration--------
+     # main part of UI finished, now add the sortable_js configuration----------
      sortable::sortable_js(
        "sort_variables",
        options = sortable::sortable_options(
@@ -213,24 +213,29 @@ myserver <- shinyServer(function(input, output, session) {
        )
      )
    )
- })
+  })
+
+  dv_var <- reactive({
+    reactive$data[, input$sort_dv_name]
+  })
 
   between_var <- reactive({
     between_var <- as.factor(reactive$data[, input$sort_between_name])
+    # is this necessary?
     if (length(between_var) == 0) between_var <- NULL
     between_var
   })
 
   within_var <- reactive({
-    var <- as.factor(reactive$data[, input$sort_within_name])
-    if (length(var) == 0) var <- NULL
-    var
+    within_var <- as.factor(reactive$data[, input$sort_within_name])
+    if (length(within_var) == 0) within_var <- NULL
+    within_var
   })
 
   id_var <- reactive({
-    var <- as.factor(reactive$data[, input$sort_id_name])
-    if (length(var) == 0) var <- NULL
-    var
+    id_var <- as.factor(reactive$data[, input$sort_id_name])
+    if (length(id_var) == 0) id_var <- NULL
+    id_var
   })
 
   # When we have a between name, set reactive values between_name, between_var
@@ -344,34 +349,37 @@ myserver <- shinyServer(function(input, output, session) {
 
   # create table ---------------------------------------------------------------
   output$table_region <- renderPrint({
+    # first check that a minimum of parameters is set
     validate(
-        need(length(reactive$dv_var) > 0,
-             "Drag a variable to Dependent Variable."),
-        need(length(input$sort_between_name) > 0 | length(input$sort_within_name) > 0,
-             "Drag at least one Variable to IV (between or within or both)."),
+        need(
+          length(input$sort_dv_name) > 0,
+          "Drag a variable to Dependent Variable."
+        ),
+        need(
+          length(input$sort_between_name) > 0 |
+            length(input$sort_within_name) > 0,
+          "Drag at least one Variable to IV (between or within or both)."
+        ),
         need(length(reactive$lambda_between) > 0 |
                length(reactive$lambda_within) > 0,
-             "Specify Lambdas."),
-        if (length(reactive$lambda_within) > 0)
-          need(length(input$sort_id_name) > 0, "For within designs, an ID variable is required")
-        # if (length(reactive$id_var) > 0)
-        #   need(reactive$within_var, "If you use an ID variable, cofad assumes you have a within-design, so please specify the within-variable.")#,
-        # if (length(reactive$between_var > 0))
-          # need(reactive$lambda_between, "Specify b")
-      )
-   # print(reactive$lambda_within)
-   # print(reactive$within_var)
+             "Specify Lambdas."
+        ),
+        if (length(reactive$lambda_within) > 0) {
+          need(
+            length(input$sort_id_name) > 0,
+            "For within designs, an ID variable is required"
+          )
+        }
+    )
 
-   #as.factor(reactive$data[, input$sort_between_name])
-
-   contr <- calc_contrast(
-   dv = reactive$dv_var,
-   between = between_var(),
-   lambda_between = reactive$lambda_between,
-   ID = id_var(),
-   within = within_var(),
-   lambda_within = reactive$lambda_within,
-   data = NULL)
-   print(contr)
+    contr <- calc_contrast(
+      dv = dv_var(),
+      between = between_var(),
+      lambda_between = reactive$lambda_between,
+      ID = id_var(),
+      within = within_var(),
+      lambda_within = reactive$lambda_within,
+      data = NULL)
+    print(contr)
   })
 })
