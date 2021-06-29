@@ -235,36 +235,72 @@ myserver <- shinyServer(function(input, output, session) {
     id_var
   })
 
-  # lambda labels within
+  # lambda within --------------------------------------------------------------
+  # set default lambdas when a new iv is set, otherwise the last inputs
+  # will be kept; if there is no iv set lambdas to NULL, this looks a bit hacky
+  # but rhandsontable needs an observeEvent, otherwise it will not work, so it
+  # appears the easiest to use a reactive value
+  observeEvent(input$sort_within_name, {
+    if (length(input$sort_within_name) > 0) {
+    within_levels <- stringr::str_sort(unique(within_var()), numeric = TRUE)
+    lambda_within <- create_default_lambdas(within_levels)
+    reactive$lambda_within <- lambda_within
+    } else {
+      reactive$lambda_within <- NULL
+    }
+  })
+
+  # render the rhandsontable
   output$hot_lambda_within <- rhandsontable::renderRHandsontable({
     validate(need(input$sort_within_name, "Drag Variable to within."))
-    within_levels <- sort(unique(within_var()))
-    create_table(within_levels)
+    lambda_within <- reactive$lambda_within
+    df <- data.frame("level" = names(lambda_within), lambda = lambda_within)
+    if (!is.null(df))
+      the_tab <- rhandsontable::rhandsontable(df, stretchH = "all",
+                                              rowHeaders = NULL)
+      rhandsontable::hot_col(the_tab, "level", readOnly = T)
   })
 
-  lambda_within <- reactive({
-    df <- rhandsontable::hot_to_r(input$hot_lambda_within)
-    print(df)
-    lambda <- as.numeric(df[, 2])
-    names(lambda) <- df[, 1]
-    lambda
+  # set lambda values when the rhandsontable changes
+  observeEvent(input$hot_lambda_within, {
+    df = rhandsontable::hot_to_r(input$hot_lambda_within)
+    lambda <- as.numeric(df[,2])
+    names(lambda) <- df[,1]
+    reactive$lambda_within <- lambda
   })
 
-  # lambda labels between
+  # lambda between --------------------------------------------------------------
+  # same as for within
+  observeEvent(input$sort_between_name, {
+    if (length(input$sort_between_name) > 0) {
+    between_levels <- stringr::str_sort(unique(between_var()), numeric = TRUE)
+    lambda_between <- create_default_lambdas(between_levels)
+    reactive$lambda_between <- lambda_between
+    } else {
+      reactive$lambda_between <- NULL
+    }
+  })
+
+  # render the rhandsontable
   output$hot_lambda_between <- rhandsontable::renderRHandsontable({
-    validate(need(input$sort_between_name, "Drag Variable to within."))
-    between_levels <- sort(unique(between_var()))
-    create_table(between_levels)
+    validate(need(input$sort_between_name, "Drag Variable to between."))
+    lambda_between <- reactive$lambda_between
+    df <- data.frame("level" = names(lambda_between), lambda = lambda_between)
+    if (!is.null(df))
+      the_tab <- rhandsontable::rhandsontable(df, stretchH = "all",
+                                              rowHeaders = NULL)
+      rhandsontable::hot_col(the_tab, "level", readOnly = T)
   })
 
-  lambda_between <- reactive({
-    df <- rhandsontable::hot_to_r(input$hot_lambda_between)
-    lambda <- as.numeric(df[, 2])
-    names(lambda) <- df[, 1]
-    lambda
+  # set lambda values when the rhandsontable changes
+  observeEvent(input$hot_lambda_between, {
+    df = rhandsontable::hot_to_r(input$hot_lambda_between)
+    lambda <- as.numeric(df[,2])
+    names(lambda) <- df[,1]
+    reactive$lambda_between <- lambda
   })
 
-  # create table ---------------------------------------------------------------
+  # create output---------------------------------------------------------------
   output$table_region <- renderPrint({
     # first check that a minimum of parameters is set
     validate(
@@ -277,11 +313,11 @@ myserver <- shinyServer(function(input, output, session) {
             length(input$sort_within_name) > 0,
           "Drag at least one Variable to IV (between or within or both)."
         ),
-        need(length(lambda_between()) > 0 |
-               length(lambda_within()) > 0,
+        need(length(reactive$lambda_between) > 0 |
+               length(reactive$lambda_within) > 0,
              "Specify Lambdas."
         ),
-        if (length(lambda_within()) > 0) {
+        if (length(reactive$lambda_within) > 0) {
           need(
             length(input$sort_id_name) > 0,
             "For within designs, an ID variable is required"
@@ -292,10 +328,10 @@ myserver <- shinyServer(function(input, output, session) {
     contr <- calc_contrast(
       dv = dv_var(),
       between = between_var(),
-      lambda_between = lambda_between(),
+      lambda_between = reactive$lambda_between,
       ID = id_var(),
       within = within_var(),
-      lambda_within = lambda_within(),
+      lambda_within = reactive$lambda_within,
       data = NULL)
     # print output
     print(contr)
