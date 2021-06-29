@@ -212,15 +212,19 @@ myserver <- shinyServer(function(input, output, session) {
    )
   })
 
-  dv_var <- reactive({
-    reactive$data[, input$sort_dv_name]
-  })
-
   between_var <- reactive({
     between_var <- as.factor(reactive$data[, input$sort_between_name])
-    # is this necessary?
+    # this is necessary because of how cofad works, if you drag a variable
+    # out of the field, the variable has to change to NULL, otherwise cofad
+    # gives an error
     if (length(between_var) == 0) between_var <- NULL
     between_var
+  })
+
+  dv_var <- reactive({
+    dv_var <- reactive$data[, input$sort_dv_name]
+    if (length(dv_var) == 0) dv_var <- NULL
+    dv_var
   })
 
   within_var <- reactive({
