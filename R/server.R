@@ -6,24 +6,23 @@
 myserver <- shinyServer(function(input, output, session) {
   # create reactive variables
   reactive <- reactiveValues()
-  # example data set for tutorial in paper -------------------------------------
-  # observe({
-  #       query <- parseQueryString(session$clientData$url_search)
-  #       if (!is.null(query[['example']])) {
-  #         if (query[['example']] == "school") {
-  #           data <- mlmRev::Exam
-  #           reactive$data <- data
-  #           shinyjs::show("create_model")
-  #           shinyjs::show("reactive_mode_area")
-  #           shinyjs::hide("display_model")
-  #           shinyjs::hide("output_region")
-  #           shinyjs::hide("help")
-  #         }
-  #       }
-  #   })
+  # example data sets ----------------------------------------------------------
+  observe({
+        query <- parseQueryString(session$clientData$url_search)
+        print(query)
+        if (!is.null(query[["example"]])) {
+          file <- paste(query[["example"]], sep = "")
+          data(list = file, package = "cofad")
+          eval(parse(text = paste("data <- ", query[["example"]], sep = "")))
+          reactive$data <- data
+          shinyjs::show("create_model")
+          shinyjs::hide("output_region")
+          shinyjs::hide("help")
+        }
+    })
   # upload file area -----------------------------------------------------------
   output$file_area <- renderUI({
-    if(!is.null(input$isSafari)){
+    if (!is.null(input$isSafari)) {
       if (as.character(input$isSafari) == "TRUE") {
         accepted_filetype <- "*"
       } else {
@@ -161,7 +160,9 @@ myserver <- shinyServer(function(input, output, session) {
        options = sortable::sortable_options(
          group = list(
            group = "sortGroup1",
-           put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
+           put = htmlwidgets::JS(
+             "function (to) { return to.el.children.length < 1; }"
+           ),
            pull = TRUE
          ),
          onSort = sortable::sortable_js_capture_input("sort_dv_name"),
@@ -173,7 +174,9 @@ myserver <- shinyServer(function(input, output, session) {
        options = sortable::sortable_options(
          group = list(
            group = "sortGroup1",
-           put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
+           put = htmlwidgets::JS(
+             "function (to) { return to.el.children.length < 1; }"
+           ),
            pull = TRUE
          ),
          onSort = sortable::sortable_js_capture_input("sort_between_name"),
@@ -185,7 +188,9 @@ myserver <- shinyServer(function(input, output, session) {
        options = sortable::sortable_options(
          group = list(
            group = "sortGroup1",
-           put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
+           put = htmlwidgets::JS(
+             "function (to) { return to.el.children.length < 1; }"
+           ),
            pull = TRUE
          ),
          onSort = sortable::sortable_js_capture_input("sort_within_name"),
@@ -197,7 +202,9 @@ myserver <- shinyServer(function(input, output, session) {
        options = sortable::sortable_options(
          group = list(
            group = "sortGroup1",
-           put = htmlwidgets::JS("function (to) { return to.el.children.length < 1; }"),
+           put = htmlwidgets::JS(
+             "function (to) { return to.el.children.length < 1; }"
+           ),
            pull = TRUE
          ),
          onSort = sortable::sortable_js_capture_input("sort_id_name"),
@@ -263,8 +270,8 @@ myserver <- shinyServer(function(input, output, session) {
       )
     )
     df <- rhandsontable::hot_to_r(input$hot_lambda_btw)
-    lambda <- as.numeric(df[,2])
-    names(lambda) <- df[,1]
+    lambda <- as.numeric(df[, 2])
+    names(lambda) <- df[, 1]
     # this is why lambda_between needs to be a reactive value
     reactive$lambda_between <- lambda
   })
@@ -280,13 +287,11 @@ myserver <- shinyServer(function(input, output, session) {
 
     # is this not just the name of lambda_between?
     lambda_btw <- reactive$lambda_between
-    #print(lambda_btw)
-    #btw <- colnames(lambda_btw)
     btw <- stringr::str_sort(unique(between_var()), numeric = TRUE)
 
-    DF <- data.frame(btw, lambda_btw)
-    if (!is.null(DF))
-      the_tab <- rhandsontable::rhandsontable(DF, stretchH = "all",
+    df <- data.frame(btw, lambda_btw)
+    if (!is.null(df))
+      the_tab <- rhandsontable::rhandsontable(df, stretchH = "all",
                                               rowHeaders = NULL)
     rhandsontable::hot_col(the_tab, "btw", readOnly = T)
   })
@@ -294,21 +299,25 @@ myserver <- shinyServer(function(input, output, session) {
   # lambda labels within
   output$hot_lambda_wi <- rhandsontable::renderRHandsontable({
     validate(need(input$sort_within_name, "Drag Variable to within."))
-    wi <- sort(unique(within_var()))
-    lambda_within <- reactive$lambda_within
-    if (is.null(lambda_within)) lambda_within <- 1:length(wi)
-    DF <- data.frame(wi, lambda = lambda_within)
-    if (!is.null(DF))
-      the_tab <- rhandsontable::rhandsontable(DF, stretchH = "all",
-                                              rowHeaders = NULL)
-      rhandsontable::hot_col(the_tab, "wi", readOnly = T)
+    within_levels <- sort(unique(within_var()))
+    df <- data.frame(
+      levels = within_levels,
+      lambda = create_default_lambdas(within_levels)
+    )
+    the_tab <- rhandsontable::rhandsontable(
+      df,
+      stretchH = "all",
+      rowHeaders = NULL
+    )
+    # make first column read only
+    rhandsontable::hot_col(the_tab, "levels", readOnly = T)
   })
 
-  observeEvent(input$hot_lambda_wi, {
-    df = rhandsontable::hot_to_r(input$hot_lambda_wi)
-    lambda <- as.numeric(df[,2])
-    names(lambda) <- df[,1]
-    reactive$lambda_within <- lambda
+  lambda_within <- reactive({
+    df <- rhandsontable::hot_to_r(input$hot_lambda_wi)
+    lambda <- as.numeric(df[, 2])
+    names(lambda) <- df[, 1]
+    lambda
   })
 
   # create table ---------------------------------------------------------------
@@ -325,10 +334,10 @@ myserver <- shinyServer(function(input, output, session) {
           "Drag at least one Variable to IV (between or within or both)."
         ),
         need(length(reactive$lambda_between) > 0 |
-               length(reactive$lambda_within) > 0,
+               length(lambda_within()) > 0,
              "Specify Lambdas."
         ),
-        if (length(reactive$lambda_within) > 0) {
+        if (length(lambda_within()) > 0) {
           need(
             length(input$sort_id_name) > 0,
             "For within designs, an ID variable is required"
@@ -342,7 +351,7 @@ myserver <- shinyServer(function(input, output, session) {
       lambda_between = reactive$lambda_between,
       ID = id_var(),
       within = within_var(),
-      lambda_within = reactive$lambda_within,
+      lambda_within = lambda_within(),
       data = NULL)
     print(contr)
   })
