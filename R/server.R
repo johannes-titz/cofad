@@ -300,17 +300,7 @@ myserver <- shinyServer(function(input, output, session) {
   output$hot_lambda_wi <- rhandsontable::renderRHandsontable({
     validate(need(input$sort_within_name, "Drag Variable to within."))
     within_levels <- sort(unique(within_var()))
-    df <- data.frame(
-      levels = within_levels,
-      lambda = create_default_lambdas(within_levels)
-    )
-    the_tab <- rhandsontable::rhandsontable(
-      df,
-      stretchH = "all",
-      rowHeaders = NULL
-    )
-    # make first column read only
-    rhandsontable::hot_col(the_tab, "levels", readOnly = T)
+    create_table(within_levels)
   })
 
   lambda_within <- reactive({
