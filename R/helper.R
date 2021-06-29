@@ -56,3 +56,17 @@ create_default_lambdas <- function(levels){
   names(lambdas) <- names(levels)
   lambdas
 }
+
+create_table <- function(within_levels){
+    df <- data.frame(
+      levels = within_levels,
+      lambda = create_default_lambdas(within_levels)
+    )
+    the_tab <- rhandsontable::rhandsontable(
+      df,
+      stretchH = "all",
+      rowHeaders = NULL
+    )
+    # make first column read only
+    rhandsontable::hot_col(the_tab, "levels", readOnly = T)
+    }
