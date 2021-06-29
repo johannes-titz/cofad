@@ -43,8 +43,8 @@ myui <- function(request){
                navigator.userAgent.indexOf('FxiOS') == -1;
   Shiny.onInputChange('isSafari', isSafari);
 });")),
-
-        shinyalert::useShinyalert(), # for manual error handling, has to be in dashboardBody
+        # for manual error handling, has to be in dashboardBody
+        shinyalert::useShinyalert(),
         # Model spec and model display -----------------------------------------
         fluidRow(
           shinyjs::useShinyjs(),
