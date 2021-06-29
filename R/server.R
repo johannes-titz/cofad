@@ -1,7 +1,9 @@
 #' @importFrom shinyjs show hide
 #' @importFrom shinyalert shinyalert
 #' @importFrom rhandsontable renderRHandsontable rHandsontableOutput hot_col
-#' @importFrom sortable sortable_js
+#'   hot_to_r
+#' @importFrom sortable sortable_js sortable_options sortable_js_capture_input
+#' @importFrom htmlwidgets JS
 #' @noRd
 myserver <- shinyServer(function(input, output, session) {
   # create reactive variables
@@ -44,14 +46,10 @@ myserver <- shinyServer(function(input, output, session) {
 
     reactive$data <- data
 
-    # activate some panels
+    # show/hide some panels
     shinyjs::show("create_model")
     shinyjs::hide("help")
     shinyjs::show("output_region")
-
-    # set reactive values
-    reactive$lambda_between <- NULL
-    reactive$lambda_within <- NULL
     })
   })
   # USER INTERFACE -------------------------------------------------------------
@@ -119,7 +117,7 @@ myserver <- shinyServer(function(input, output, session) {
          # lambda between table ----
          column(
            width = 5,
-           rhandsontable::rHandsontableOutput("hot_lambda_btw", width = 250)
+           rhandsontable::rHandsontableOutput("hot_lambda_between", width = 250)
          )
        ),
        fluidRow(
@@ -139,7 +137,7 @@ myserver <- shinyServer(function(input, output, session) {
          # lambda within table ----
          column(
            width = 5,
-           rhandsontable::rHandsontableOutput("hot_lambda_wi", width = 200)
+           rhandsontable::rHandsontableOutput("hot_lambda_within", width = 200)
          )
        )
      ),
@@ -238,28 +236,29 @@ myserver <- shinyServer(function(input, output, session) {
   })
 
   # lambda labels within
-  output$hot_lambda_wi <- rhandsontable::renderRHandsontable({
+  output$hot_lambda_within <- rhandsontable::renderRHandsontable({
     validate(need(input$sort_within_name, "Drag Variable to within."))
     within_levels <- sort(unique(within_var()))
     create_table(within_levels)
   })
 
   lambda_within <- reactive({
-    df <- rhandsontable::hot_to_r(input$hot_lambda_wi)
+    df <- rhandsontable::hot_to_r(input$hot_lambda_within)
+    print(df)
     lambda <- as.numeric(df[, 2])
     names(lambda) <- df[, 1]
     lambda
   })
 
   # lambda labels between
-  output$hot_lambda_btw <- rhandsontable::renderRHandsontable({
+  output$hot_lambda_between <- rhandsontable::renderRHandsontable({
     validate(need(input$sort_between_name, "Drag Variable to within."))
-    within_levels <- sort(unique(within_var()))
-    create_table(within_levels)
+    between_levels <- sort(unique(between_var()))
+    create_table(between_levels)
   })
 
   lambda_between <- reactive({
-    df <- rhandsontable::hot_to_r(input$hot_lambda_btw)
+    df <- rhandsontable::hot_to_r(input$hot_lambda_between)
     lambda <- as.numeric(df[, 2])
     names(lambda) <- df[, 1]
     lambda
@@ -289,7 +288,7 @@ myserver <- shinyServer(function(input, output, session) {
           )
         }
     )
-
+    # do the analysis
     contr <- calc_contrast(
       dv = dv_var(),
       between = between_var(),
@@ -298,6 +297,7 @@ myserver <- shinyServer(function(input, output, session) {
       within = within_var(),
       lambda_within = lambda_within(),
       data = NULL)
+    # print output
     print(contr)
   })
 })
