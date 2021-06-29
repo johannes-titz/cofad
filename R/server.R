@@ -52,14 +52,6 @@ myserver <- shinyServer(function(input, output, session) {
 
     # set reactive values
     reactive$lambda_between <- NULL
-    #reactive$within_name <- NULL
-    reactive$dv_name <- NULL
-    reactive$id_name <- NULL
-    reactive$between_var <- NULL
-    reactive$within_var <- NULL
-    reactive$dv_var <- NULL
-    #reactive$id_var <- NULL
-    reactive$lambda_between <- NULL
     reactive$lambda_within <- NULL
     })
   })
@@ -238,90 +230,65 @@ myserver <- shinyServer(function(input, output, session) {
     id_var
   })
 
-  # When we have a between name, set reactive values between_name, between_var
-  # and lambda_between, otherwise set them all to NULL
+  # is this necessary?
+  # why not set lambda from table?
+  # set default lambdas when a new iv is set
   observeEvent(input$sort_between_name, {
     if (length(input$sort_between_name) > 0) {
-    #reactive$between_name <- input$sort_between_name
-    between_var <- as.factor(reactive$data[, input$sort_between_name])
-    # make a function out of this
-    between_levels <- sort(unique(between_var))
-    lambda_between <- 1:length(between_levels)
-    lambda_between <- lambda_between - mean(lambda_between)
-    names(lambda_between) <- between_levels
+    between_levels <- stringr::str_sort(unique(between_var()), numeric = TRUE)
+    lambda_between <- create_default_lambdas(between_levels)
     reactive$lambda_between <- lambda_between
     } else {
-      #reactive$between_name <- NULL
-      #reactive$between_var <- NULL
       reactive$lambda_between <- NULL
     }
   })
 
-  # When we have a within name, set reactive values within_name, within_var
-  # and lambda_within, otherwise set them all to NULL
+  # set default lambdas when a new iv is set
   observeEvent(input$sort_within_name, {
     if (length(input$sort_within_name) > 0) {
-    within_name <- input$sort_within_name
-    within_var <- as.factor(reactive$data[, input$sort_within_name])
-    # make a function out of this
-    within_levels <- sort(unique(within_var))
-    lambda_within <- 1:length(within_levels)
-    lambda_within <- lambda_within - mean(lambda_within)
-    names(lambda_within) <- within_levels
+    within_levels <- stringr::str_sort(unique(within_var()), numeric = TRUE)
+    lambda_within <- create_default_lambdas(within_levels)
     reactive$lambda_within <- lambda_within
     } else {
-      #reactive$within_name <- NULL
-      #reactive$within_var <- NULL
       reactive$lambda_within <- NULL
-      # reactive$id_name <- NULL
-      # reactive$id_var <- NULL
     }
   })
 
-  # same as above
-  observeEvent(input$sort_dv_name, {
-    if (length(input$sort_dv_name) > 0){
-    reactive$dv_name <- input$sort_dv_name
-    reactive$dv_var <- reactive$data[, input$sort_dv_name]
-    } else {
-      reactive$dv_name <- NULL
-      reactive$dv_var <- NULL
-    }
-  })
-
-  # same as above
-  # observeEvent(input$sort_id_name, {
-  #   if (length(input$sort_id_name) > 0){
-  #     reactive$id_name <- input$sort_id_name
-  #   reactive$id_var <- reactive$data[, input$sort_id_name]
-  #   } else {
-  #      reactive$id_var <- NULL
-  #      reactive$sort_id_name <- NULL
-  #   }
-  # })
-
-  # lambda labels between
+  # set lambdas when input table changes
   observeEvent(input$hot_lambda_btw, {
-    validate(need(length(input$sort_between_name) > 0,
-                  "Drag Variable to between."))
-    # res <- input$hot_lambda_btw
-    # saveRDS(res, file = paste0("../tests/testthat/", input$datafile$name,
-    #                            "_hot_lambda_btw.RData"))
+    validate(
+      need(
+        length(input$sort_between_name) > 0,
+        "Drag Variable to between."
+      )
+    )
     df <- rhandsontable::hot_to_r(input$hot_lambda_btw)
     lambda <- as.numeric(df[,2])
     names(lambda) <- df[,1]
+    # this is why lambda_between needs to be a reactive value
     reactive$lambda_between <- lambda
   })
 
+  # render table
   output$hot_lambda_btw <- rhandsontable::renderRHandsontable({
-    validate(need(length(input$sort_between_name) > 0, "Drag Variable to between"))
-    btw <- sort(unique(reactive$data[, input$sort_between_name]))
+    validate(
+      need(
+        length(input$sort_between_name) > 0,
+        "Drag Variable to between"
+      )
+    )
+
+    # is this not just the name of lambda_between?
     lambda_btw <- reactive$lambda_between
+    #print(lambda_btw)
+    #btw <- colnames(lambda_btw)
+    btw <- stringr::str_sort(unique(between_var()), numeric = TRUE)
+
     DF <- data.frame(btw, lambda_btw)
     if (!is.null(DF))
       the_tab <- rhandsontable::rhandsontable(DF, stretchH = "all",
                                               rowHeaders = NULL)
-      rhandsontable::hot_col(the_tab, "btw", readOnly = T)
+    rhandsontable::hot_col(the_tab, "btw", readOnly = T)
   })
 
   # lambda labels within
@@ -338,9 +305,6 @@ myserver <- shinyServer(function(input, output, session) {
   })
 
   observeEvent(input$hot_lambda_wi, {
-    # res <- input$hot_lambda_wi
-    # saveRDS(res, file = paste0("../tests/testthat/", input$datafile$name,
-    #                            "_hot_lambda_wi.RData"))
     df = rhandsontable::hot_to_r(input$hot_lambda_wi)
     lambda <- as.numeric(df[,2])
     names(lambda) <- df[,1]

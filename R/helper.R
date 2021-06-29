@@ -49,3 +49,10 @@ colnames_to_tags <- function(df){
     }
   )
 }
+
+create_default_lambdas <- function(levels){
+  lambdas <- 1:length(levels)
+  lambdas <- lambdas - mean(lambdas)
+  names(lambdas) <- names(levels)
+  lambdas
+}
