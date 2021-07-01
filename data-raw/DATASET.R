@@ -42,10 +42,10 @@ sedlmeier537 <- d <- data.frame(
   ))
 )
 
-# Exampel for mixed-designs Table 5.3 from
+# Example for mixed-designs Table 5.3 from
 # Rosenthal, Rosnow and Rubin (2001)
 rosenthal_tbl53 <- data.frame(
-  var = c(3, 1, 4, 4, 5, 5, 6, 5, 7, 2, 2, 5, 5, 6, 7, 6, 6, 8, 3, 1, 5, 4, 5,
+  dv = c(3, 1, 4, 4, 5, 5, 6, 5, 7, 2, 2, 5, 5, 6, 7, 6, 6, 8, 3, 1, 5, 4, 5,
           6, 7, 6, 8, 3, 2, 5, 6, 6, 7, 8, 8, 9),
   between = as.factor(rep(rep(c("age8", "age10", "age12"), c(3, 3, 3)), 4)),
   ID = as.factor(rep(1:9, 4)),
@@ -55,14 +55,14 @@ rosenthal_tbl53 <- data.frame(
 # Table 5.9. from Rosenthal, Chapter 5
 tab59 <- data.frame(
   ID = as.factor(rep(1:6, 2)),
-  var = c(12, 8, 4, 8, 6, 4, 8, 6, 4, 6, 2, 4),
+  dv = c(12, 8, 4, 8, 6, 4, 8, 6, 4, 6, 2, 4),
   med = as.factor(rep(c("T", "P"), c(6, 6))),
   pt = as.factor(rep(rep(c("PT", "PP"), c(3, 3)), 2))
 )
 
 # where is this from?
 chap5_Exercise2 <- data.frame(
-  var = c(8, 7, 8, 4, 4, 3, 11, 10, 12, 5, 4, 5, 13, 14, 16, 5, 6, 5),
+  dv = c(8, 7, 8, 4, 4, 3, 11, 10, 12, 5, 4, 5, 13, 14, 16, 5, 6, 5),
   ID = as.factor(c(1:6, 1:6, 1:6)),
   within = as.factor(rep(c("L", "M", "H"), c(6, 6, 6))),
   between = as.factor(rep(rep(c("ch", "cl"), c(3, 3)), 3))
@@ -71,13 +71,13 @@ chap5_Exercise2 <- data.frame(
 # where is this from?
 tab59b <- data.frame(
   ID = as.factor(rep(1:7, 2)),
-  var = c(0, 1, 0, 0, 0, 0, 1,3, 6, 6, 1, 1, 3, 4),
+  dv = c(0, 1, 0, 0, 0, 0, 1,3, 6, 6, 1, 1, 3, 4),
   med = as.factor(rep(c("T", "P"), c(7, 7))),
   bw = as.factor(rep(rep(c("A", "B", "C"), c(2, 1, 4)), 2))
 )
 
 tab53 <- data.frame(
-    Var = c(3, 1, 4, 4, 5, 5, 6, 5, 7, 2, 2, 5,
+    dv = c(3, 1, 4, 4, 5, 5, 6, 5, 7, 2, 2, 5,
             5, 6, 7, 6, 6, 8, 3, 1, 5, 4, 5, 6,
             7, 6, 8, 3, 2, 5, 6, 6, 7, 8, 8, 9),
     age = as.factor(
