@@ -15,7 +15,10 @@ t31 <- calc_contrast(
   ),
   data = tab31
 )
-expect_equal(t31$sig[1], 28.9)
+
+test_that("Rosenthal Chapter 3 is correct", {
+  expect_equal(t31$sig[1], 28.9)
+})
 
 ## furr -----
 data(furr)
