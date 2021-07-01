@@ -1,6 +1,7 @@
 options(shiny.sanitize.errors = FALSE) # (handle errors manually)
 
-#' @importFrom shinydashboard dashboardPage dashboardHeader dashboardSidebar dashboardBody box
+#' @importFrom shinydashboard dashboardPage dashboardHeader dashboardSidebar
+#'   dashboardBody box
 #' @importFrom shinyalert useShinyalert
 #' @importFrom shinyjs useShinyjs hidden
 #' @importFrom shinyBS bsTooltip
@@ -10,7 +11,7 @@ myui <- function(request){
   shinyUI(
     shinydashboard::dashboardPage(
       title = "cofad-app",
-      skin = "blue",
+      skin = "yellow",
       shinydashboard::dashboardHeader(
         title = "cofad-app"),
       # Sidebar-----------------------------------------------------------------
@@ -77,7 +78,7 @@ myui <- function(request){
               ),
             )
           ),
-          # Output  -----------------------------------------------
+          # Output  ------------------------------------------------------------
           column(
             width = 6,
             shinyjs::hidden(
