@@ -2,7 +2,7 @@
 # cofad
 
 [![Build
-Status](https://travis-ci.org/johannes-titz/cofad.svg?branch=master)](https://travis-ci.org/johannes-titz/cofad)
+Status](https://travis-ci.com/johannes-titz/cofad.svg?branch=master)](https://travis-ci.com/johannes-titz/cofad)
 <!-- [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116) -->
 
 <!-- To cite cofad in publications use: -->
