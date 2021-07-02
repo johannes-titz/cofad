@@ -1,0 +1,208 @@
+MotionNotify 960 539
+KeyStrRelease Escape
+MotionNotify 276 290
+ButtonPress 1
+MotionNotify 276 290
+MotionNotify 277 289
+MotionNotify 279 289
+MotionNotify 280 288
+MotionNotify 282 288
+MotionNotify 288 287
+MotionNotify 292 286
+MotionNotify 300 285
+MotionNotify 307 284
+MotionNotify 314 282
+MotionNotify 321 281
+MotionNotify 329 281
+MotionNotify 336 280
+MotionNotify 344 278
+MotionNotify 352 278
+MotionNotify 360 278
+MotionNotify 367 277
+MotionNotify 375 277
+MotionNotify 381 277
+MotionNotify 388 276
+MotionNotify 394 276
+MotionNotify 399 276
+MotionNotify 406 276
+MotionNotify 411 276
+MotionNotify 414 276
+MotionNotify 417 276
+MotionNotify 419 276
+MotionNotify 421 276
+MotionNotify 423 276
+MotionNotify 425 276
+MotionNotify 426 276
+MotionNotify 427 276
+MotionNotify 428 276
+MotionNotify 429 276
+MotionNotify 430 276
+MotionNotify 431 276
+MotionNotify 432 276
+MotionNotify 433 276
+MotionNotify 433 277
+MotionNotify 434 277
+MotionNotify 435 277
+MotionNotify 436 277
+MotionNotify 437 277
+MotionNotify 438 277
+MotionNotify 439 277
+MotionNotify 440 277
+MotionNotify 442 278
+MotionNotify 445 278
+MotionNotify 447 278
+MotionNotify 449 278
+MotionNotify 450 278
+MotionNotify 452 278
+MotionNotify 454 279
+MotionNotify 455 279
+MotionNotify 457 279
+MotionNotify 458 279
+MotionNotify 459 279
+MotionNotify 460 279
+MotionNotify 462 279
+MotionNotify 463 279
+MotionNotify 464 279
+MotionNotify 465 279
+MotionNotify 467 279
+MotionNotify 469 279
+MotionNotify 471 279
+MotionNotify 473 280
+MotionNotify 474 280
+MotionNotify 475 280
+MotionNotify 476 280
+MotionNotify 477 280
+MotionNotify 478 281
+MotionNotify 479 281
+MotionNotify 480 281
+MotionNotify 481 281
+MotionNotify 482 281
+Delay 1076
+ButtonRelease 1
+Delay 772
+MotionNotify 278 293
+ButtonPress 1
+MotionNotify 278 293
+MotionNotify 279 293
+MotionNotify 280 293
+MotionNotify 281 293
+MotionNotify 284 294
+MotionNotify 289 295
+MotionNotify 293 298
+MotionNotify 299 300
+MotionNotify 307 303
+MotionNotify 316 307
+MotionNotify 325 312
+MotionNotify 334 318
+MotionNotify 345 322
+MotionNotify 355 330
+MotionNotify 367 339
+MotionNotify 377 345
+MotionNotify 395 358
+MotionNotify 408 364
+MotionNotify 418 370
+MotionNotify 425 376
+MotionNotify 434 381
+MotionNotify 440 385
+MotionNotify 444 387
+MotionNotify 449 391
+MotionNotify 453 393
+MotionNotify 456 395
+MotionNotify 458 396
+MotionNotify 460 398
+MotionNotify 462 399
+MotionNotify 463 400
+MotionNotify 464 401
+MotionNotify 465 401
+MotionNotify 466 402
+MotionNotify 466 403
+MotionNotify 467 403
+MotionNotify 467 404
+MotionNotify 468 404
+MotionNotify 469 405
+MotionNotify 469 406
+MotionNotify 470 406
+MotionNotify 470 407
+MotionNotify 471 407
+MotionNotify 471 408
+MotionNotify 472 408
+MotionNotify 472 409
+MotionNotify 473 409
+MotionNotify 474 410
+MotionNotify 476 411
+MotionNotify 478 412
+MotionNotify 479 413
+MotionNotify 481 414
+MotionNotify 483 415
+MotionNotify 485 416
+MotionNotify 486 417
+MotionNotify 487 418
+MotionNotify 488 418
+MotionNotify 489 419
+MotionNotify 490 419
+MotionNotify 491 420
+MotionNotify 492 420
+MotionNotify 492 420
+MotionNotify 493 420
+MotionNotify 493 421
+MotionNotify 494 421
+Delay 1284
+ButtonRelease 1
+Delay 6260
+MotionNotify 857 387
+ButtonPress 1
+Delay 52
+ButtonRelease 1
+MotionNotify 888 448
+Delay 1050
+KeyStrPress 0
+KeyStrRelease 0
+Delay 416
+KeyStrPress Return
+KeyStrRelease Return
+Delay 800
+KeyStrPress 0
+KeyStrRelease 0
+Delay 504
+KeyStrPress Return
+KeyStrRelease Return
+Delay 1536
+KeyStrPress minus
+KeyStrRelease minus
+Delay 400
+KeyStrPress 1
+KeyStrRelease 1
+Delay 408
+KeyStrPress Return
+KeyStrRelease Return
+Delay 472
+KeyStrPress 1
+KeyStrRelease 1
+Delay 352
+KeyStrPress Return
+KeyStrRelease Return
+MotionNotify 1024 458
+Delay 7264
+KeyStrPress Control_L
+Delay 912
+KeyStrPress s
+KeyStrRelease s
+KeyStrRelease Control_L
+Delay 4432
+KeyStrPress f
+Delay 88
+KeyStrPress u
+KeyStrRelease f
+KeyStrRelease u
+Delay 176
+KeyStrPress r
+KeyStrRelease r
+Delay 160
+KeyStrPress r
+KeyStrRelease r
+Delay 2280
+KeyStrPress Return
+KeyStrRelease Return
+Delay 1552
+KeyStrPress Return
+KeyStrRelease Return

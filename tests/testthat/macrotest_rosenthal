@@ -1,0 +1,458 @@
+MotionNotify 290 291
+ButtonPress 1
+MotionNotify 290 291
+MotionNotify 291 290
+MotionNotify 292 290
+MotionNotify 293 290
+MotionNotify 294 290
+MotionNotify 295 290
+MotionNotify 297 290
+MotionNotify 299 290
+MotionNotify 302 289
+MotionNotify 303 289
+MotionNotify 305 289
+MotionNotify 307 289
+MotionNotify 309 288
+MotionNotify 310 287
+MotionNotify 312 287
+MotionNotify 314 287
+MotionNotify 315 286
+MotionNotify 317 285
+MotionNotify 319 285
+MotionNotify 321 285
+MotionNotify 324 284
+MotionNotify 326 283
+MotionNotify 329 283
+MotionNotify 331 283
+MotionNotify 334 282
+MotionNotify 337 282
+MotionNotify 340 282
+MotionNotify 343 281
+MotionNotify 347 281
+MotionNotify 352 281
+MotionNotify 355 281
+MotionNotify 359 280
+MotionNotify 362 280
+MotionNotify 365 280
+MotionNotify 368 280
+MotionNotify 371 280
+MotionNotify 374 280
+MotionNotify 379 280
+MotionNotify 383 280
+MotionNotify 389 280
+MotionNotify 395 280
+MotionNotify 400 280
+MotionNotify 406 280
+MotionNotify 410 280
+MotionNotify 415 280
+MotionNotify 422 280
+MotionNotify 429 280
+MotionNotify 434 280
+MotionNotify 440 280
+MotionNotify 444 280
+MotionNotify 450 280
+MotionNotify 456 280
+MotionNotify 461 280
+MotionNotify 466 280
+MotionNotify 469 280
+MotionNotify 473 280
+MotionNotify 475 280
+MotionNotify 478 280
+MotionNotify 480 280
+MotionNotify 481 280
+MotionNotify 482 280
+MotionNotify 482 280
+MotionNotify 483 281
+MotionNotify 484 281
+MotionNotify 485 281
+MotionNotify 486 281
+MotionNotify 487 282
+MotionNotify 488 282
+MotionNotify 489 282
+MotionNotify 489 283
+Delay 956
+ButtonRelease 1
+Delay 644
+MotionNotify 318 287
+ButtonPress 1
+MotionNotify 320 287
+MotionNotify 320 287
+MotionNotify 322 288
+MotionNotify 324 289
+MotionNotify 327 290
+MotionNotify 332 292
+MotionNotify 336 295
+MotionNotify 346 298
+MotionNotify 352 300
+MotionNotify 358 301
+MotionNotify 364 304
+MotionNotify 370 305
+MotionNotify 380 308
+MotionNotify 391 310
+MotionNotify 406 311
+MotionNotify 422 313
+MotionNotify 439 315
+MotionNotify 453 317
+MotionNotify 466 318
+MotionNotify 482 322
+MotionNotify 491 323
+MotionNotify 500 325
+MotionNotify 506 325
+MotionNotify 511 326
+MotionNotify 517 327
+MotionNotify 523 329
+MotionNotify 528 330
+MotionNotify 534 332
+MotionNotify 538 333
+MotionNotify 541 335
+MotionNotify 545 338
+MotionNotify 550 341
+MotionNotify 552 343
+MotionNotify 554 344
+MotionNotify 555 346
+MotionNotify 556 348
+MotionNotify 556 350
+MotionNotify 557 352
+MotionNotify 557 354
+MotionNotify 557 357
+MotionNotify 557 359
+MotionNotify 557 361
+MotionNotify 557 364
+MotionNotify 557 369
+MotionNotify 557 371
+MotionNotify 556 373
+MotionNotify 556 375
+MotionNotify 555 377
+MotionNotify 554 378
+MotionNotify 553 380
+MotionNotify 552 381
+MotionNotify 551 383
+MotionNotify 550 384
+MotionNotify 549 386
+MotionNotify 549 388
+MotionNotify 547 389
+MotionNotify 546 391
+MotionNotify 546 392
+MotionNotify 545 393
+MotionNotify 544 394
+MotionNotify 543 396
+MotionNotify 543 397
+MotionNotify 542 398
+MotionNotify 541 399
+MotionNotify 541 401
+MotionNotify 540 401
+MotionNotify 540 402
+MotionNotify 540 403
+MotionNotify 539 403
+MotionNotify 539 404
+MotionNotify 539 404
+MotionNotify 538 404
+MotionNotify 538 405
+MotionNotify 537 405
+MotionNotify 537 406
+MotionNotify 537 407
+MotionNotify 537 408
+MotionNotify 537 408
+MotionNotify 537 409
+MotionNotify 537 409
+Delay 1268
+ButtonRelease 1
+Delay 1868
+MotionNotify 291 291
+ButtonPress 1
+MotionNotify 291 291
+MotionNotify 293 291
+MotionNotify 295 291
+MotionNotify 297 291
+MotionNotify 302 291
+MotionNotify 310 291
+MotionNotify 321 291
+MotionNotify 343 291
+MotionNotify 362 291
+MotionNotify 379 291
+MotionNotify 395 291
+MotionNotify 407 293
+MotionNotify 420 293
+MotionNotify 431 293
+MotionNotify 442 295
+MotionNotify 450 295
+MotionNotify 461 295
+MotionNotify 471 296
+MotionNotify 482 296
+MotionNotify 504 296
+MotionNotify 519 296
+MotionNotify 532 296
+MotionNotify 546 296
+MotionNotify 561 296
+MotionNotify 575 296
+MotionNotify 588 296
+MotionNotify 602 296
+MotionNotify 613 298
+MotionNotify 624 299
+MotionNotify 634 299
+MotionNotify 645 301
+MotionNotify 662 301
+MotionNotify 674 303
+MotionNotify 685 303
+MotionNotify 696 303
+MotionNotify 704 303
+MotionNotify 711 303
+MotionNotify 717 303
+MotionNotify 722 303
+MotionNotify 726 303
+MotionNotify 731 303
+MotionNotify 733 303
+MotionNotify 735 303
+MotionNotify 737 303
+MotionNotify 740 303
+MotionNotify 742 302
+MotionNotify 744 302
+MotionNotify 746 301
+MotionNotify 747 301
+MotionNotify 748 301
+MotionNotify 749 301
+MotionNotify 749 300
+MotionNotify 748 300
+MotionNotify 747 300
+MotionNotify 746 300
+MotionNotify 745 300
+MotionNotify 744 300
+MotionNotify 743 300
+MotionNotify 742 300
+MotionNotify 740 300
+MotionNotify 739 300
+MotionNotify 737 300
+MotionNotify 736 300
+MotionNotify 735 300
+MotionNotify 734 300
+MotionNotify 733 300
+Delay 948
+ButtonRelease 1
+Delay 764
+MotionNotify 316 291
+ButtonPress 1
+MotionNotify 317 291
+MotionNotify 318 291
+MotionNotify 319 291
+MotionNotify 320 291
+MotionNotify 321 291
+MotionNotify 322 291
+MotionNotify 325 293
+MotionNotify 328 294
+MotionNotify 333 297
+MotionNotify 339 304
+MotionNotify 347 310
+MotionNotify 354 317
+MotionNotify 360 325
+MotionNotify 369 332
+MotionNotify 378 342
+MotionNotify 388 352
+MotionNotify 396 361
+MotionNotify 402 370
+MotionNotify 410 378
+MotionNotify 416 385
+MotionNotify 421 392
+MotionNotify 428 403
+MotionNotify 432 411
+MotionNotify 436 416
+MotionNotify 440 421
+MotionNotify 444 426
+MotionNotify 447 431
+MotionNotify 451 436
+MotionNotify 453 439
+MotionNotify 457 443
+MotionNotify 460 447
+MotionNotify 463 451
+MotionNotify 466 454
+MotionNotify 471 461
+MotionNotify 475 464
+MotionNotify 477 468
+MotionNotify 480 471
+MotionNotify 484 474
+MotionNotify 489 478
+MotionNotify 492 482
+MotionNotify 496 484
+MotionNotify 500 486
+MotionNotify 503 488
+MotionNotify 507 490
+MotionNotify 510 492
+MotionNotify 516 495
+MotionNotify 518 496
+MotionNotify 521 497
+MotionNotify 523 499
+MotionNotify 525 500
+MotionNotify 528 502
+MotionNotify 530 504
+MotionNotify 533 506
+MotionNotify 536 508
+MotionNotify 539 510
+MotionNotify 541 513
+MotionNotify 543 515
+MotionNotify 546 519
+MotionNotify 551 522
+MotionNotify 553 524
+MotionNotify 557 528
+MotionNotify 559 529
+MotionNotify 562 531
+MotionNotify 564 533
+MotionNotify 566 535
+MotionNotify 567 536
+MotionNotify 568 537
+MotionNotify 569 538
+MotionNotify 570 538
+MotionNotify 570 539
+MotionNotify 569 539
+MotionNotify 569 540
+MotionNotify 568 540
+MotionNotify 568 541
+MotionNotify 567 541
+MotionNotify 566 542
+MotionNotify 564 543
+MotionNotify 562 543
+MotionNotify 558 545
+MotionNotify 554 545
+MotionNotify 552 546
+MotionNotify 550 547
+MotionNotify 548 547
+MotionNotify 546 548
+MotionNotify 544 548
+MotionNotify 542 548
+MotionNotify 541 548
+MotionNotify 540 548
+MotionNotify 540 547
+MotionNotify 540 546
+MotionNotify 540 546
+MotionNotify 540 545
+MotionNotify 540 544
+MotionNotify 540 545
+MotionNotify 539 545
+Delay 1172
+ButtonRelease 1
+Delay 5148
+MotionNotify 853 384
+ButtonPress 1
+Delay 76
+ButtonRelease 1
+MotionNotify 960 462
+Delay 3266
+KeyStrPress minus
+KeyStrRelease minus
+Delay 264
+KeyStrPress 1
+KeyStrRelease 1
+Delay 368
+KeyStrPress Return
+KeyStrRelease Return
+Delay 350
+KeyStrPress 0
+KeyStrRelease 0
+Delay 616
+KeyStrPress Return
+KeyStrRelease Return
+Delay 2752
+KeyStrPress 1
+KeyStrRelease 1
+Delay 240
+KeyStrPress Return
+KeyStrRelease Return
+Delay 1658
+MotionNotify 804 508
+ButtonPress 1
+Delay 92
+ButtonRelease 1
+MotionNotify 956 537
+Delay 2610
+KeyStrPress minus
+KeyStrRelease minus
+Delay 216
+KeyStrPress 3
+KeyStrRelease 3
+Delay 288
+KeyStrPress Return
+KeyStrRelease Return
+Delay 1320
+KeyStrPress minus
+KeyStrRelease minus
+Delay 272
+KeyStrPress 1
+KeyStrRelease 1
+Delay 272
+KeyStrPress Return
+KeyStrRelease Return
+Delay 752
+KeyStrPress 1
+KeyStrRelease 1
+Delay 1888
+KeyStrPress Return
+KeyStrRelease Return
+Delay 432
+KeyStrPress 3
+KeyStrRelease 3
+Delay 448
+KeyStrPress Return
+KeyStrRelease Return
+Delay 1320
+KeyStrPress Control_L
+Delay 352
+KeyStrPress s
+KeyStrRelease s
+KeyStrRelease Control_L
+Delay 1544
+KeyStrPress r
+KeyStrRelease r
+Delay 144
+KeyStrPress o
+KeyStrRelease o
+Delay 176
+KeyStrPress s
+Delay 64
+KeyStrPress e
+KeyStrRelease e
+KeyStrRelease s
+Delay 168
+KeyStrPress n
+KeyStrRelease n
+Delay 144
+KeyStrPress t
+KeyStrRelease t
+Delay 120
+KeyStrPress h
+KeyStrRelease h
+Delay 136
+KeyStrPress a
+KeyStrRelease a
+Delay 128
+KeyStrPress l
+KeyStrRelease l
+Delay 288
+KeyStrPress Shift_L
+Delay 328
+KeyStrPress minus
+KeyStrRelease minus
+KeyStrRelease Shift_L
+Delay 408
+KeyStrPress t
+KeyStrRelease t
+Delay 240
+KeyStrPress b
+KeyStrRelease b
+Delay 96
+KeyStrPress l
+KeyStrRelease l
+Delay 960
+KeyStrPress 5
+KeyStrRelease 5
+Delay 1568
+KeyStrPress 3
+KeyStrRelease 3
+Delay 1088
+KeyStrPress Return
+KeyStrRelease Return
+Delay 1032
+KeyStrPress Return
+KeyStrRelease Return
+Delay 2994
+MotionNotify 1133 534
+ButtonPress 1
+Delay 84
+ButtonRelease 1
