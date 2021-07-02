@@ -148,7 +148,7 @@ head(tab53)
 lambda_within <- c("1" = -3, "2" = -1, "3" = 1, "4" = 3)
 lambda_between <-c("Age 8" = -1, "Age 10" = 0, "Age 12" = 1)
 
-contr_mx <- calc_contrast(dv = Var, 
+contr_mx <- calc_contrast(dv = dv, 
                           between = age,
                           lambda_between = lambda_between,
                           within = time,

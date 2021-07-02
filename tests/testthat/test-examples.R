@@ -75,7 +75,7 @@ data("tab59b")
 
 tab59b <- tab59b[sample(1:14, 14, F), ]
 t_59b <- calc_contrast(
-  dv = var,
+  dv = dv,
   within = med,
   between = bw,
   ID = ID,
@@ -92,7 +92,7 @@ expect_setequal(
 data(rosenthal_tbl53)
 rosenthal_tbl53 <- rosenthal_tbl53[sample(1:36, 36, F), ]
 t_53 <- calc_contrast(
-  dv = var, between = between,
+  dv = dv, between = between,
   within = within,
   ID = ID,
   lambda_within = sample(c(
@@ -113,7 +113,7 @@ expect_equal(summary(t_53)$Effects[1], 0.871)
 data(chap5_Exercise2)
 
 c5_e2 <- calc_contrast(
-  dv = var,
+  dv = dv,
   within = within,
   ID = ID,
   lambda_within = c("L" = -1, "M" = 0, "H" = 1),
@@ -127,7 +127,7 @@ expect_equal(c5_e2$sig[1], 28.125)
 data(tab59)
 tab59 <- tab59[sample(1:12, 12, F), ]
 t59 <- calc_contrast(
-  dv = var,
+  dv = dv,
   within = med,
   between = pt,
   ID = ID,
