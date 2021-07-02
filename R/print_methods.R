@@ -14,7 +14,7 @@ print.cofad_bw <- function(x, ...) {
   p <- paste("F(1,", x[[1]][4], ") = ", round(x[[1]][1], 3),
              p_value, sep = "")
   lambda <- round(x[[3]], 3)
-  contr_1 <-  paste("Contrasts: ",
+  contr_1 <-  paste("Contrast: ",
                     paste(names(lambda), "=", lambda, collapse = "; "),
                     collapse = NULL)
   r_effect <- round(x[[4]][1], 3)
@@ -45,7 +45,7 @@ print.cofad_wi <- function(x, ...) {
   p <- paste("t(", x[[1]][3], ") = ", round(x[[1]][1], 3),
              p_value, sep = "")
   lambda <- round(x[[3]], 3)
-  contr_1 <-  paste("Contrasts: ",
+  contr_1 <-  paste("Contrast: ",
                     paste(names(lambda), "=", lambda, collapse = "; "),
                     collapse = NULL)
   g_effect <- round(x[[4]][2], 3)
@@ -68,8 +68,9 @@ print.cofad_mx <- function(x, ...) {
   )
   p <- paste("t(", x[[1]][3], ") = ", round(x[[1]][1], 3),
              p_value, sep = "")
+  # between lambdas
   lambda <- round(x[[3]], 3)
-  contr_1 <-  paste("Contrasts: ",
+  contr_1 <-  paste("Contrast between: ",
                     paste(names(lambda), "=", lambda, collapse = "; "),
                     collapse = NULL)
   p_value <- round(x[[1]][2], 3)
@@ -79,9 +80,10 @@ print.cofad_mx <- function(x, ...) {
   )
   p <- paste("F(1,", x[[1]][4], ") = ", round(x[[1]][1], 3),
              p_value, sep = "")
-  lambda <- x[[3]]
-  contr_1 <-  paste("Contrasts: ",
-                    paste(names(lambda), "=", lambda, collapse = " "),
+  # within lambdas
+  lambda <- round(x[[4]], 3)
+  contr_2 <-  paste("Contrast within: ",
+                    paste(names(lambda), "=", lambda, collapse = "; "),
                     collapse = NULL)
   r_effect <- round(x[[5]][1], 3)
   r_effect_1 <- ifelse (r_effect < 0,
@@ -91,5 +93,5 @@ print.cofad_mx <- function(x, ...) {
                         paste("r_effectsize = ", r_effect, sep = "")
   )
   cat("\nContrast Analysis for Mixed-Design:\n\n")
-  cat(p, contr_1, r_effect_1, sep = "\n" )
+  cat(p, contr_1, contr_2, r_effect_1, sep = "\n" )
 }
