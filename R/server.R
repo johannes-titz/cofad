@@ -18,7 +18,7 @@ myserver <- shinyServer(function(input, output, session) {
       eval(parse(text = paste("data <- ", query[["example"]], sep = "")))
       reactive$data <- data
       shinyjs::show("create_model")
-      shinyjs::hide("output_region")
+      shinyjs::show("output_region")
       shinyjs::hide("help")
     }
   })
