@@ -56,7 +56,7 @@ the factors must be connected.
 
 data(rosenthal_tbl31)
 contr_bw <- calc_contrast(
-   dv = Val,
+   dv = dv,
    between = Let,
    lambda_between = c("A" = -3, "B" = -1, "C" = 1, "D" = 3),
    data = rosenthal_tbl31)

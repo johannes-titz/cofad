@@ -5,7 +5,11 @@
 \alias{rosenthal_tbl31}
 \title{Data set by Rosenthal and Rosnow (2000)}
 \format{
-
+a data frame with 20 rows and 2 columns
+\describe{
+  \item{dv}{dependent variable}
+  \item{between}{group (A, B, C, D))}
+}
 }
 \source{
 Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
