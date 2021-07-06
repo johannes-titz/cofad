@@ -31,6 +31,8 @@ ca <- calc_contrast(
   data = furr_p4
 )
 expect_equal(round(ca$sig[1], 3), 6.154)
+# test effect sizes!
+expect_equal(round(ca$effects, 2), c(-0.28, -0.53, -0.31))
 
 ## Table 16.2 from Sedlmeier 525----
 data("sedlmeier_p525")
@@ -44,6 +46,7 @@ t16_2 <- calc_contrast(
   data = sedlmeier_p525
 )
 expect_equal(round(t16_2$sig[1], 3), 6.519)
+expect_equal(round(t16_2$effects[2], 2), 0.59)
 
 # within (no between)------
 #
@@ -68,6 +71,7 @@ expect_equal(contr_wi$desc[1], 5.875)
 expect_equal(
   round(contr_wi$sig, 3), c(5.269, .001, 7)
 )
+expect_equal(round(contr_wi$effects[2], 2), 1.86)
 
 # mixed ----
 ## (no between Lambda) -----

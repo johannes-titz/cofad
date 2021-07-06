@@ -97,19 +97,25 @@ calc_contrast <- function(dv,
     stop("data is not a data.frame")
   }
 
-  if (!is.null(id) & !is.factor(id)) {
-    warning("id variable is not a factor. I will try to convert to factor.")
-    id <- as.factor(id)
+  # check types
+  if (!is.numeric(dv)) {
+    stop("dependent variable must be numeric")
+  }
+
+  between <- check_if_factor(between)
+  within <- check_if_factor(within)
+  id <- check_if_factor(id)
+
+  if (is.null(between) & is.null(within)) {
+    stop(
+      "Independent Variable is missing, either set between or within or both."
+    )
   }
 
   if (is.null(lambda_between) & is.null(lambda_within)) {
-    stop("lambda is missing")
-  }
-  if (!is.numeric(dv)) {
-    stop("variable must be numeric")
-  }
-  if (!is.factor(between) & !is.null(between)) {
-    stop("between must be a factor")
+    stop(
+      "Lambdas are missing, either set lambda_between or lambda_within or both."
+    )
   }
 
   lambda_between <- check_lambda_between(lambda_between)
@@ -124,9 +130,6 @@ calc_contrast <- function(dv,
     if (anyNA(lambda_within)) {
       stop("NA in lambda is not allowed")
     }
-  }
-  if (!is.factor(within) & !is.null(within)) {
-    stop("within must be a factor")
   }
 
   check_labels(between, lambda_between)
@@ -218,10 +221,10 @@ calc_contrast <- function(dv,
     ms_within <- mean(var_within, na.rm = T)
     mean_i <- tapply(X = dv, INDEX = between, FUN = mean)
     se_i <- tapply(X = dv, INDEX = between, FUN = sd) / sqrt(ni)
-    l_value <- sum(mean_i * lambda_between)
+    prodsum <- sum(mean_i * lambda_between)
     ss_total <- sum((dv - mean(dv)) ** 2)
     ss_between <- sum(ni * (mean_i - mean(mean_i) ** 2))
-    f_contrast <- ((l_value ** 2) / (ms_within)) *
+    f_contrast <- ((prodsum ** 2) / (ms_within)) *
       (1 / sum((lambda_between ** 2) / ni))
     p_contrast <- pf(f_contrast, 1, df_inn, lower.tail = F)
     r_effectsize <- cor(lambda_between_row, dv)
@@ -231,7 +234,8 @@ calc_contrast <- function(dv,
       warning("SD of group means is zero")
     } else {
       r_alerting <- cor(lambda_between, mean_i)
-      r_contrast <- (r_effectsize * r_alerting) /
+      sign_r_contrast <- sign(r_effectsize)
+      r_contrast <- sign_r_contrast * (r_effectsize * r_alerting) /
       (sqrt(
         r_effectsize ** 2 * r_alerting ** 2 - r_effectsize ** 2
         + r_alerting ** 2))
@@ -302,7 +306,8 @@ calc_contrast <- function(dv,
     ss_total <- sum(((dv - mean(dv)) ** 2))
     p_contrast <- pt(t_value, df_id, lower.tail = F)
     g_effect <- mean(l_value) / (sqrt(s2))
-    r_contrast <- sqrt(f_contrast / (f_contrast + df_within))
+    sign_r_contrast <- sign(g_effect)
+    r_contrast <- sign_r_contrast * sqrt(f_contrast / (f_contrast + df_within))
     sig <- c(t_value, p_contrast, df_id)
     desc <- c(mean(l_value), sqrt(s2) / sqrt(sum(table(l_value))), sqrt(s2))
     r <- c(r_contrast, g_effect)
@@ -318,7 +323,6 @@ calc_contrast <- function(dv,
     ni_within <- table(within)
     ni_between <- table(between)
     n_total <- sum(ni_within)
-    #k_within <- length(ni_within)
     k_between <- length(ni_between)
     df_contrast <- 1
     l_value <- NULL
@@ -358,8 +362,6 @@ calc_contrast <- function(dv,
     df_within <- length(l_value) - k_between
     p_contrast <- pf(f_contrast, df1 = 1, df2 = df_within,
                      lower.tail = F)
-    r_contrast <- sqrt(f_contrast / (f_contrast + df_within))
-    r_alerting <- cor(l_value_group_mean, lambda_between)
     lambda_between_row <- rep(NA, length(l_value))
     for (i in seq(lambda_between)) {
     lambda_between_row  <- replace(lambda_between_row,
@@ -367,6 +369,9 @@ calc_contrast <- function(dv,
                lambda_between[i])
     }
     r_effectsize <- cor(l_value, lambda_between_row)
+    sign_r_contrast <- sign(r_effectsize)
+    r_contrast <- sign_r_contrast * sqrt(f_contrast / (f_contrast + df_within))
+    r_alerting <- cor(l_value_group_mean, lambda_between)
     sig <- c(f_contrast, p_contrast, df_contrast, df_within,
              ms_contrast, s2_pooled)
     r <- c(r_effectsize, r_contrast, r_alerting)
@@ -385,8 +390,8 @@ calc_contrast <- function(dv,
   }
 }
 
-# Validates that lambda_between is correct
-#
+#' Validates that lambda_between is correct
+#'
 check_lambda_between <- function(lambda_between) {
   if (!is.null(lambda_between)) {
     if (!is.numeric(lambda_between)) {
@@ -415,4 +420,15 @@ check_labels <- function(between, lambda_between) {
           stop("lambda names doesn't match all between labels")
         }
   }
+}
+
+check_if_factor <- function(variable){
+  if (!is.factor(variable) & !is.null(variable)) {
+    warning(
+      deparse(substitute(variable)),
+      " is not a factor. I will try to convert it to a factor."
+    )
+    variable <- as.factor(variable)
+  }
+  return(variable)
 }
