@@ -53,10 +53,10 @@ calc_contrast_aggregated <- function(means, sds, ns, between, lambda_between, da
   r_effectsize <- sign * sqrt(F_contrast / (F_between * df_between + df_within))
   r_contrast <- sqrt(F_contrast/(F_contrast + df_within))
   r_alerting <- sqrt(F_contrast/(F_contrast * df_between))
-  N <- sum(ns)
+  n_total <- sum(ns)
   p_contrast <- 1 - pf(F_contrast, 1, df_within)
   sig <- c(F_contrast, p_contrast, df_contrast = 1, df_within, sigma_within,
-           ss_between, ss_total = NA, N - 1)
+           ss_between, ss_total = NA, n_total - 1)
   r <- c(r_effectsize, r_contrast, r_alerting)
   desc <- matrix(c(means, sds / sqrt(ns)), ncol = 2, byrow = F)
   colnames(desc) <- c("M", "SE")

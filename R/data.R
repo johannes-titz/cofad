@@ -21,7 +21,7 @@
 #' \describe{
 #'   \item{dv}{dependent variable}
 #'   \item{between}{age group (8, 10, 12 years)}
-#'   \item{ID}{unique identifier for child}
+#'   \item{id}{unique identifier for child}
 #'   \item{within}{measurement (1, 2, 3, 4)}
 #' }
 #'
