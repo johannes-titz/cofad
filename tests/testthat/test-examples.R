@@ -6,7 +6,7 @@ library(cofad)
 data(rosenthal_tbl31)
 t31 <- calc_contrast(
   dv = dv,
-  between = Let,
+  between = between,
   lambda_between = sample(
     c(
       "A" = -3, "B" = -1,
@@ -34,7 +34,7 @@ expect_equal(round(ca$sig[1], 3), 6.154)
 
 ## Table 16.2 from Sedlmeier 525----
 data("sedlmeier_p525")
-sedlmeier525 <- sedlmeier525[sample(1:15, 15, F), ]
+sedlmeier525 <- sedlmeier_p525[sample(1:15, 15, F), ]
 t16_2 <- calc_contrast(
   dv = lsg,
   between = between,
@@ -61,7 +61,7 @@ contr_wi <- calc_contrast(
     "without music" = 1.25, "white noise" = 0.25, "classic" = -0.75,
     "jazz" = -0.75
   ),
-  ID = participant, data = sedlmeier_p537
+  id = participant, data = sedlmeier_p537
 )
 
 expect_equal(contr_wi$desc[1], 5.875)
@@ -78,7 +78,7 @@ t_59b <- calc_contrast(
   dv = dv,
   within = med,
   between = bw,
-  ID = ID,
+  id = id,
   lambda_within = c("T" = -1, "P" = +1),
   data = tbl59b
 )
@@ -94,7 +94,7 @@ rosenthal_tbl53 <- rosenthal_tbl53[sample(1:36, 36, F), ]
 t_53 <- calc_contrast(
   dv = dv, between = between,
   within = within,
-  ID = ID,
+  id = id,
   lambda_within = sample(c(
     "1" = -3, "2" = -1,
     "3" = 1, "4" = 3
@@ -115,7 +115,7 @@ data(chap5_Exercise2)
 c5_e2 <- calc_contrast(
   dv = dv,
   within = within,
-  ID = ID,
+  id = id,
   lambda_within = c("L" = -1, "M" = 0, "H" = 1),
   between = between,
   data = chap5_Exercise2,
@@ -124,13 +124,13 @@ c5_e2 <- calc_contrast(
 expect_equal(c5_e2$sig[1], 28.125)
 
 ## this is what?----
-data(tbl59)
-tbl59 <- tbl59[sample(1:12, 12, F), ]
+data(rosenthal_tbl59)
+tbl59 <- rosenthal_tbl59[sample(1:12, 12, F), ]
 t59 <- calc_contrast(
   dv = dv,
   within = med,
   between = pt,
-  ID = ID,
+  id = id,
   lambda_within = c("T" = 1, "P" = -1),
   data = tbl59
 )

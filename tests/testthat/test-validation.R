@@ -13,7 +13,7 @@ test_that("constructor checks work", {
                   between = as.factor(rep(1:2,4)),
                   lambda_between = NULL,
                   within = NULL,
-                  lambda_within = NULL, ID = NULL,
+                  lambda_within = NULL, id = NULL,
                   data = NULL),
     "lambda is missing"
   )
@@ -22,7 +22,7 @@ test_that("constructor checks work", {
     calc_contrast(dv = 1:8,
                   lambda_between = 1:2,
                   within = NULL,
-                  lambda_within = NULL, ID = NULL,
+                  lambda_within = NULL, id = NULL,
                   data = NULL),
     "lambda must be a named numeric"
   )
@@ -31,7 +31,7 @@ test_that("constructor checks work", {
     calc_contrast(dv = 1:8,
                   lambda_between = c("1" = 1, "foo" = 2),
                   within = NULL,
-                  lambda_within = NULL, ID = NULL,
+                  lambda_within = NULL, id = NULL,
                   data = NULL),
     "Missing arguments"
   )
@@ -42,7 +42,7 @@ test_that("constructor checks work", {
                   between = 1:2,
                   within = NULL,
                   lambda_within = NULL,
-                  ID = NULL,
+                  id = NULL,
                   data = NULL),
     "between must be a factor"
   )
@@ -53,7 +53,7 @@ test_that("constructor checks work", {
                   lambda_between =  c("1" = 1, "2" = 2),
                   within = as.factor(rep(1:4,2)),
                   lambda_within = NULL,
-                  ID = NULL,
+                  id = NULL,
                   data = NULL),
     "lambdas are centered and rounded to 3 digits"
   )
@@ -63,7 +63,7 @@ test_that("constructor checks work", {
                   between = as.factor(rep(1:2,4)),
                   lambda_between =  c("1" = -1, "2" = 1),
                   within = as.factor(rep(1:4,2)),
-                  ID = NULL,
+                  id = NULL,
                   data = NULL),
     "SD of group means is zero"
   )
