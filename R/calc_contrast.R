@@ -28,16 +28,12 @@
 #' # Example for between-subjects design Table 3.1 from
 #' # Rosenthal, Rosnow and Rubin (2001)
 #'
-#' tab31 <- data.frame(
-#'   Val = c(2, 6, 8, 4,10, 6, 8, 10, 4, 12, 8,
-#'     16, 10, 14, 12, 12,  18, 14, 20, 16),
-#'   Let = as.factor(rep(c("A", "B", "C", "D"), c(5, 5, 5, 5)))
-#'   )
+#' data(rosenthal_tbl31)
 #' contr_bw <- calc_contrast(
 #'    dv = Val,
 #'    between = Let,
 #'    lambda_between = c("A" = -3, "B" = -1, "C" = 1, "D" = 3),
-#'    data = tab31)
+#'    data = rosenthal_tbl31)
 #' contr_bw
 #' summary(contr_bw)
 #'

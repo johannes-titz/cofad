@@ -11,7 +11,7 @@ sleep 3
 xdotool mousemove 67 240 click 1
 sleep 2
 xdotool key Control_L+l
-xdotool type '/home/jt/programming/cofad/data-raw/furr.csv'
+xdotool type '/home/jt/programming/cofad/data-raw/furr_p4.csv'
 sleep 1
 xdotool key "Return"
 sleep 4
@@ -32,7 +32,7 @@ sleep 1
 xdotool mousemove 67 240 click 1
 sleep 2
 xdotool key Control_L+l
-xdotool type '/home/jt/programming/cofad/data-raw/sedlmeier537.csv'
+xdotool type '/home/jt/programming/cofad/data-raw/sedlmeier_p537.csv'
 xdotool key "Return"
 sleep  2
 # works better than manual commands

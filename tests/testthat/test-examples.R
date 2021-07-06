@@ -3,9 +3,9 @@ library(cofad)
 # between -----------
 
 ## Table 3.1 from Rosenthal Chapter 3 -------
-data(tab31)
+data(rosenthal_tbl31)
 t31 <- calc_contrast(
-  dv = Val,
+  dv = dv,
   between = Let,
   lambda_between = sample(
     c(
@@ -13,7 +13,7 @@ t31 <- calc_contrast(
       "C" = 1, "D" = 3
     ), 4, F
   ),
-  data = tab31
+  data = rosenthal_tbl31
 )
 
 test_that("Rosenthal Chapter 3 is correct", {
@@ -21,19 +21,19 @@ test_that("Rosenthal Chapter 3 is correct", {
 })
 
 ## furr -----
-data(furr)
+data("furr_p4")
 ca <- calc_contrast(
   dv = empathy, between = major,
   lambda_between = c(
     "psychology" = 1, "education" = -1,
     "business" = 0, "chemistry" = 0
   ),
-  data = furr
+  data = furr_p4
 )
 expect_equal(round(ca$sig[1], 3), 6.154)
 
 ## Table 16.2 from Sedlmeier 525----
-data(sedlmeier525)
+data("sedlmeier_p525")
 sedlmeier525 <- sedlmeier525[sample(1:15, 15, F), ]
 t16_2 <- calc_contrast(
   dv = lsg,
@@ -41,7 +41,7 @@ t16_2 <- calc_contrast(
   lambda_between = sample(
     c("KT" = -2, "JT" = 3, "MT" = -1), 3, F
   ),
-  data = sedlmeier525
+  data = sedlmeier_p525
 )
 expect_equal(round(t16_2$sig[1], 3), 6.519)
 
@@ -49,10 +49,10 @@ expect_equal(round(t16_2$sig[1], 3), 6.519)
 #
 # Example for within-subjects-design calculation 16.6 from
 ## Sedlmeier and Renkewitz (2018, p. 537) -----
-data("sedlmeier537")
+data("sedlmeier_p537")
 
 # random row order
-sedlmeier537 <- sedlmeier537[sample(1:32, 32, F), ]
+sedlmeier_p537 <- sedlmeier_p537[sample(1:32, 32, F), ]
 
 # analysis
 contr_wi <- calc_contrast(
@@ -61,7 +61,7 @@ contr_wi <- calc_contrast(
     "without music" = 1.25, "white noise" = 0.25, "classic" = -0.75,
     "jazz" = -0.75
   ),
-  ID = participant, data = sedlmeier537
+  ID = participant, data = sedlmeier_p537
 )
 
 expect_equal(contr_wi$desc[1], 5.875)
@@ -71,16 +71,16 @@ expect_equal(
 
 # mixed ----
 ## (no between Lambda) -----
-data("tab59b")
+data("tbl59b")
 
-tab59b <- tab59b[sample(1:14, 14, F), ]
+tbl59b <- tbl59b[sample(1:14, 14, F), ]
 t_59b <- calc_contrast(
   dv = dv,
   within = med,
   between = bw,
   ID = ID,
   lambda_within = c("T" = -1, "P" = +1),
-  data = tab59b
+  data = tbl59b
 )
 expect_setequal(
   round(t_59b$sig, 2),
@@ -124,14 +124,14 @@ c5_e2 <- calc_contrast(
 expect_equal(c5_e2$sig[1], 28.125)
 
 ## this is what?----
-data(tab59)
-tab59 <- tab59[sample(1:12, 12, F), ]
+data(tbl59)
+tbl59 <- tbl59[sample(1:12, 12, F), ]
 t59 <- calc_contrast(
   dv = dv,
   within = med,
   between = pt,
   ID = ID,
   lambda_within = c("T" = 1, "P" = -1),
-  data = tab59
+  data = tbl59
 )
 expect_equal(round(t59$sig, 3)[1], 2.449)
