@@ -17,7 +17,7 @@ furr_p4 <- data.frame(
   )
 )
 
-# Sedlmeier p. 525 table 16.2
+# Sedlmeier p. 525 table 16.2------
 sedlmeier_p525 <- data.frame(
   lsg = c(1, 2, 2, 2, 3, 4, 2, 3, 4, 3, 2, 3, 3, 1, 2),
   between = as.factor(rep(c("KT", "JT", "MT"), c(5, 5, 5))),

@@ -57,24 +57,16 @@
 #' contr_wi
 #' summary(contr_wi, ci=.90)
 #'
-#' # Exampel for mixed-designs Table 5.3 from
+#' # Example for mixed-design Table 5.3 from
 #' # Rosenthal, Rosnow and Rubin (2001)
-#' tab53 <- data.frame(
-#'    Var = c(3, 1, 4, 4, 5, 5, 6, 5, 7, 2, 2, 5,
-#'            5, 6, 7, 6, 6, 8, 3, 1, 5, 4, 5, 6,
-#'            7, 6, 8, 3, 2, 5, 6, 6, 7, 8, 8, 9),
-#'            bw = as.factor(rep(rep(LETTERS[1:3], c(3, 3, 3)), 4)),
-#'            wi = as.factor(rep(1:4, c(9, 9, 9, 9))),
-#'            id = as.factor(rep(1:9, 4 ))
-#'    )
-#'    lambda_within <- c("1" = -3, "2" = -1, "3" = 1, "4" = 3)
-#'    lambda_between <-c("A" = -1, "B" = 0, "C" = 1)
 #'
-#' contr_mx <- calc_contrast(dv = Var, between = bw,
-#'               lambda_between = lambda_between,
-#'               within = wi,
-#'                lambda_within = lambda_within,
-#'               id = id, data = tab53
+#' data(rosenthal_tbl53)
+#'
+#' contr_mx <- calc_contrast(dv = dv, between = between,
+#'               lambda_between = c("age8" = -1, "age10" = 0, "age12" = 1),
+#'               within = within,
+#'               lambda_within = c("1" = -3, "2" = -1,"3" = 1, "4" = 3),
+#'               id = id, data = rosenthal_tbl53
 #'               )
 #' contr_mx
 #' summary(contr_mx)
@@ -236,9 +228,9 @@ calc_contrast <- function(dv,
       r_alerting <- cor(lambda_between, mean_i)
       sign_r_contrast <- sign(r_effectsize)
       r_contrast <- sign_r_contrast * (r_effectsize * r_alerting) /
-      (sqrt(
-        r_effectsize ** 2 * r_alerting ** 2 - r_effectsize ** 2
-        + r_alerting ** 2))
+        (sqrt(
+          r_effectsize ** 2 * r_alerting ** 2 - r_effectsize ** 2
+          + r_alerting ** 2))
     }
     sig <- c(f_contrast, p_contrast, df_contrast, df_inn, ms_within,
              ss_between, ss_total, n_total - 1)
@@ -257,10 +249,10 @@ calc_contrast <- function(dv,
     n_total <- sum(ni_within)
     l_value <- NULL
     for (i in seq(table(id))) {
-     var_i <- dv[which(id == levels(id)[i])]
-    l_value[i] <- sum(
-      var_i[order(within[which(id == levels(id)[i])])] * lambda_within
-    )
+      var_i <- dv[which(id == levels(id)[i])]
+      l_value[i] <- sum(
+        var_i[order(within[which(id == levels(id)[i])])] * lambda_within
+      )
     }
     if (!is.null(between)) {
       ni_bw <- table(between)
@@ -276,14 +268,14 @@ calc_contrast <- function(dv,
           bw_wide[i, 2] <- id_bw
         }
       }
-     ni_l_value <- table(bw_wide[, 2])
-     s2i <- tapply(l_value, as.factor(bw_wide[, 2]), var)
-     if (anyNA(s2i)) {
-       s2i[which(is.na(s2i))] <- 0
-     }
-     s2 <- sum((ni_l_value - 1) * s2i) / sum(ni_l_value - 1)
-     k_bw <- length(ni_bw)
-     df_within <- n_total - k_bw
+      ni_l_value <- table(bw_wide[, 2])
+      s2i <- tapply(l_value, as.factor(bw_wide[, 2]), var)
+      if (anyNA(s2i)) {
+        s2i[which(is.na(s2i))] <- 0
+      }
+      s2 <- sum((ni_l_value - 1) * s2i) / sum(ni_l_value - 1)
+      k_bw <- length(ni_bw)
+      df_within <- n_total - k_bw
     } else {
       s2 <- var(l_value)
       k_bw <- 1
@@ -342,13 +334,13 @@ calc_contrast <- function(dv,
       } else {
         bw_wide[i, 1] <- levels(id)[i]
         bw_wide[i, 2] <- id_bw
-        }
+      }
     }
     df_id <- length(l_value) - 1
     l_value_group_mean <- tapply(l_value, bw_wide[, 2], mean)
     l_value_group_var <- tapply(l_value, bw_wide[, 2], var)
     l_value_group_n <- tapply(l_value,  bw_wide[, 2],
-                        function(x) sum(table(x)))
+                              function(x) sum(table(x)))
     ni_cell <- table(within, between)
     harm_n <- 1 / mean(1 / ni_cell)
     ms_contrast <- harm_n *
@@ -364,9 +356,11 @@ calc_contrast <- function(dv,
                      lower.tail = F)
     lambda_between_row <- rep(NA, length(l_value))
     for (i in seq(lambda_between)) {
-    lambda_between_row  <- replace(lambda_between_row,
-               which(bw_wide[, 2] == names(lambda_between)[i]),
-               lambda_between[i])
+      lambda_between_row  <- replace(
+        lambda_between_row,
+        which(bw_wide[, 2] == names(lambda_between)[i]),
+        lambda_between[i]
+      )
     }
     r_effectsize <- cor(l_value, lambda_between_row)
     sign_r_contrast <- sign(r_effectsize)
@@ -416,9 +410,9 @@ check_lambda_between <- function(lambda_between) {
 # @noRd
 check_labels <- function(between, lambda_between) {
   if (!is.null(between) & !is.null(lambda_between)) {
-        if (anyNA(match(levels(between), names(lambda_between)))) {
-          stop("lambda names doesn't match all between labels")
-        }
+    if (anyNA(match(levels(between), names(lambda_between)))) {
+      stop("lambda names doesn't match all between labels")
+    }
   }
 }
 

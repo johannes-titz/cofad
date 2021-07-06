@@ -4,12 +4,12 @@
 #' @param sds numeric vector of standard deviation values for every condition
 #' @param ns numeric vector of sample size values for every condition
 #' @param between factor for the independent variable that divides the data into
-#' independent groups
+#'   independent groups
 #' @param lambda_between numeric vector for contrast weights. Names must match
 #'   the levels of \code{between}. If \code{lambda_between} does not sum up to
 #'   zero, this will be done automatically (centering).
-#' @param data optional argument for the \code{data.frame} containing all variables
-#' except for lambda_between
+#' @param data optional argument for the \code{data.frame} containing all
+#'   variables except for lambda_between
 #' @return an object of type cofad_bw, including p-value, F-value, contrast
 #'   weights, different effect sizes
 #'
@@ -20,42 +20,45 @@
 #' @examples
 #'
 #' @export
-calc_contrast_aggregated <- function(means, sds, ns, between, lambda_between, data){
+calc_contrast_aggregated <- function(means, sds, ns, between, lambda_between,
+                                     data) {
   if (!is.null(data) & (is.data.frame(data))) {
     arguments <- as.list(match.call())
     means <- eval(arguments$means, data)
     sds <- eval(arguments$sds, data)
     ns <- eval(arguments$ns, data)
-    #lambda_between <- eval(arguments$lambda_between, data)
     between <- eval(arguments$between, data)
-  } else if (!is.null(data) & !is.data.frame(data)){
+  } else if (!is.null(data) & !is.data.frame(data)) {
     stop("data is not a data.frame")
   }
   lambda_between <- check_lambda_between(lambda_between)
   check_labels(between, lambda_between)
   # correctly sort lambda_between
-  lambda_between_pos <- sapply(between, function(x) which(x == names(lambda_between)))
+  lambda_between_pos <- sapply(
+    between,
+    function(x) which(x == names(lambda_between))
+  )
   lambda_between <- lambda_between[lambda_between_pos]
 
   df_between <- length(means) - 1
   df_within <- sum(ns) - length(means)
-  sigma_within <- sum(sds^2*ns) / (sum(ns))
+  sigma_within <- sum(sds^2 * ns) / (sum(ns))
   ss_between <- ss(means, ns)
   sigma_between <- ss_between / df_between
-  F_between <- sigma_between / sigma_within
+  f_between <- sigma_between / sigma_within
   # contrast
   kov <- sum(lambda_between * means)
   ss_contrast <- kov^2 / (sum((lambda_between^2) / ns))
   # ss contrast is the same as sigma contrast
-  F_contrast <- ss_contrast / sigma_within
+  f_contrast <- ss_contrast / sigma_within
   # which direction?
   sign <- ifelse(kov > 0, 1, -1)
-  r_effectsize <- sign * sqrt(F_contrast / (F_between * df_between + df_within))
-  r_contrast <- sign * sqrt(F_contrast/(F_contrast + df_within))
-  r_alerting <- sign * sqrt(F_contrast/(F_contrast * df_between))
+  r_effectsize <- sign * sqrt(f_contrast / (f_between * df_between + df_within))
+  r_contrast <- sign * sqrt(f_contrast / (f_contrast + df_within))
+  r_alerting <- sign * sqrt(f_contrast / (f_contrast * df_between))
   n_total <- sum(ns)
-  p_contrast <- 1 - pf(F_contrast, 1, df_within)
-  sig <- c(F_contrast, p_contrast, df_contrast = 1, df_within, sigma_within,
+  p_contrast <- 1 - pf(f_contrast, 1, df_within)
+  sig <- c(f_contrast, p_contrast, df_contrast = 1, df_within, sigma_within,
            ss_between, ss_total = NA, n_total - 1)
   r <- c(r_effectsize, r_contrast, r_alerting)
   desc <- matrix(c(means, sds / sqrt(ns)), ncol = 2, byrow = F)
@@ -73,5 +76,5 @@ calc_contrast_aggregated <- function(means, sds, ns, between, lambda_between, da
 #' @param n vector of sample sizes values
 #' @noRd
 ss <- function(x, n) {
-  sum(n*(x-mean(x))^2)
+  sum(n * (x - mean(x))^2)
 }
