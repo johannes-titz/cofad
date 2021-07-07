@@ -16,7 +16,7 @@ t31 <- calc_contrast(
   data = rosenthal_tbl31
 )
 
-test_that("Rosenthal Chapter 3 is correct", {
+test_that("Rosenthal Chapter 3 F-value is correct", {
   expect_equal(t31$sig[1], 28.9)
 })
 
@@ -33,9 +33,15 @@ ca <- calc_contrast(
 expect_equal(round(ca$sig[1], 3), 6.154)
 # test effect sizes!
 expect_equal(round(ca$effects, 2), c(-0.28, -0.53, -0.31))
-expect_equal(calc_r_alerting(ca$effects[2], ca$effects[1]), ca$effects[3])
-expect_equal(calc_r_contrast(ca$effects[3], ca$effects[1]), ca$effects[2])
-expect_equal(calc_r_effectsize(ca$effects[3], ca$effects[2]), ca$effects[1])
+
+# test convert functions
+test_that(
+  "converting effect sizes works for furr", {
+    expect_equal(calc_r_alerting(ca$effects[2], ca$effects[1]), ca$effects[3])
+    expect_equal(calc_r_contrast(ca$effects[3], ca$effects[1]), ca$effects[2])
+    expect_equal(calc_r_effectsize(ca$effects[3], ca$effects[2]), ca$effects[1])
+  }
+)
 
 ## Table 16.2 from Sedlmeier 525----
 data("sedlmeier_p525")
