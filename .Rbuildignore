@@ -3,3 +3,12 @@
 ^cran-comments.md
 ^data-raw$
 ^README\.Rmd$
+^TODO.Rmd$
+^apa.csl$
+^clean_bib.R$
+^clean_library.bib$
+^gui1.png$
+^gui2.png$
+^library.bib$
+^rosenthal_tbl53.png$
+^.travis.yml$
