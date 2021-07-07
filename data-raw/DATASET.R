@@ -1,12 +1,3 @@
-# Example for between-subjects design Table 3.1 from
-# Rosenthal, Rosnow and Rubin (2001)
-
-rosenthal_tbl31 <- data.frame(
-  dv = c(2, 6, 8, 4, 10, 6, 8, 10, 4, 12, 8, 16, 10, 14, 12, 12, 18, 14, 20,
-          16),
-  between = as.factor(rep(c("A", "B", "C", "D"), c(5, 5, 5, 5)))
-)
-
 # between from furr
 furr_p4 <- data.frame(
   empathy = c(51, 56, 61, 58, 54, 62, 67, 57, 65, 59, 50, 49, 47, 45, 44, 50,
@@ -40,6 +31,16 @@ sedlmeier_p537 <- d <- data.frame(
   ),
   each = 8
   ))
+)
+
+
+# Example for between-subjects design Table 3.1 from
+# Rosenthal, Rosnow and Rubin (2001)
+
+rosenthal_tbl31 <- data.frame(
+  dv = c(2, 6, 8, 4, 10, 6, 8, 10, 4, 12, 8, 16, 10, 14, 12, 12, 18, 14, 20,
+          16),
+  between = as.factor(rep(c("A", "B", "C", "D"), c(5, 5, 5, 5)))
 )
 
 # Example for mixed-designs Table 5.3 from
