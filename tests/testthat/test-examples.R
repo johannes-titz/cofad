@@ -33,6 +33,9 @@ ca <- calc_contrast(
 expect_equal(round(ca$sig[1], 3), 6.154)
 # test effect sizes!
 expect_equal(round(ca$effects, 2), c(-0.28, -0.53, -0.31))
+expect_equal(calc_r_alerting(ca$effects[2], ca$effects[1]), ca$effects[3])
+expect_equal(calc_r_contrast(ca$effects[3], ca$effects[1]), ca$effects[2])
+expect_equal(calc_r_effectsize(ca$effects[3], ca$effects[2]), ca$effects[1])
 
 ## Table 16.2 from Sedlmeier 525----
 data("sedlmeier_p525")
@@ -92,7 +95,8 @@ expect_setequal(
 )
 
 ## (within_lambda & between_lambda) -----
-## Table 5.3. from Rosenthal, Chapter 5 (raw data) ----
+
+# Table 5.3. from Rosenthal, Chapter 5 (raw data)
 data(rosenthal_tbl53)
 rosenthal_tbl53 <- rosenthal_tbl53[sample(1:36, 36, F), ]
 t_53 <- calc_contrast(
@@ -113,6 +117,7 @@ t_53 <- calc_contrast(
 expect_equal(round(t_53$sig[c(1, 3, 4)], 3), c(20.211, 1, 6))
 expect_equal(summary(t_53)$Effects[1], 0.871)
 
+# unclear -----
 ## chap 5 exercise 2----
 data(chap5_Exercise2)
 
