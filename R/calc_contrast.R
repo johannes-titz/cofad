@@ -40,22 +40,21 @@
 #' # Example for within-subjects design Calculation 16.6 from
 #' # Sedlmeier and Renkewitz (2018, p. 537)
 #'
-#' sedlmeier537 <- data.frame(
-#'    Var = c(27, 25, 30, 29, 30, 33, 31, 35,
-#'            25, 26, 32, 29, 28, 30, 32, 34,
-#'            21, 25, 23, 26, 27, 26, 29, 31,
-#'            23, 24, 24, 28, 24, 26, 27, 32),
-#'    within = as.factor(rep(1:4,c(8,8,8,8))),
-#'    id = as.factor(rep(1:8,4)))
+#' data(sedlmeier_p537)
 #' contr_wi <- calc_contrast(
-#'    dv = Var,
-#'    within = within,
-#'    id = id,
-#'    lambda_within = c("1" = 0.25, "2" = -.75, "3" = 1.25, "4" = -.75),
-#'    data=sedlmeier537
+#'    dv = reading_test,
+#'    within = music,
+#'    id = participant,
+#'    lambda_within = c(
+#'      "without music" = 1.25,
+#'      "white noise" = 0.25,
+#'      "classic" = -0.75,
+#'      "jazz" = -0.75
+#'    ),
+#'    data = sedlmeier_p537
 #'  )
 #' contr_wi
-#' summary(contr_wi, ci=.90)
+#' summary(contr_wi, ci = .90)
 #'
 #' # Example for mixed-design Table 5.3 from
 #' # Rosenthal, Rosnow and Rubin (2001)
@@ -479,7 +478,6 @@ calc_r_contrast <- function(r_alerting, r_effectsize){
 #'
 #' @export
 calc_r_effectsize <- function(r_alerting, r_contrast){
-  #sign_r_effectsize <- sign(r_contrast)
   numerator <- - r_contrast * r_alerting
   denominator <- sqrt(
     -(r_contrast^2) * r_alerting^2 + r_contrast^2 + r_alerting^2
