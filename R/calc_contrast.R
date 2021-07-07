@@ -14,7 +14,7 @@
 #' \code{lambda_between}
 #' does not sum up to zero, this will be done automatically.
 #' @param id identifier for cases or subjects is needed
-#' for within- and mixed contrastanalysis.
+#' for within- and mixed contrast analysis.
 #' @param data optional argument for the \code{data.frame}
 #' containing \code{dv} and groups.
 #' @details For multi-factorial designs, the lambda weights of
@@ -386,6 +386,9 @@ calc_contrast <- function(dv,
 
 #' Validates that lambda_between is correct
 #'
+#' internal function
+#'
+#' @noRD
 check_lambda_between <- function(lambda_between) {
   if (!is.null(lambda_between)) {
     if (!is.numeric(lambda_between)) {
@@ -405,9 +408,11 @@ check_lambda_between <- function(lambda_between) {
   lambda_between
 }
 
-# Validates that every condition gets a lambda
-#
-# @noRd
+#' Validates that every condition gets a lambda
+#'
+#' internal function
+#'
+#' @noRd
 check_labels <- function(between, lambda_between) {
   if (!is.null(between) & !is.null(lambda_between)) {
     if (anyNA(match(levels(between), names(lambda_between)))) {
@@ -416,6 +421,11 @@ check_labels <- function(between, lambda_between) {
   }
 }
 
+#' Validates that variable is a factor
+#'
+#' internal function
+#'
+#' @noRd
 check_if_factor <- function(variable){
   if (!is.factor(variable) & !is.null(variable)) {
     warning(
@@ -425,4 +435,55 @@ check_if_factor <- function(variable){
     variable <- as.factor(variable)
   }
   return(variable)
+}
+
+#' Calculate r_alerting from r_contrast and r_effectsize
+#'
+#' Convenience function to transform effect sizes in contrast analyses.
+#'
+#' @param r_contrast what it says
+#' @param r_effectsize what it says
+#'
+#' @export
+calc_r_alerting <- function(r_contrast, r_effectsize){
+  numerator <- - r_effectsize * r_contrast
+  denominator <- sqrt((1 + r_effectsize^2) * r_contrast^2 - r_effectsize^2)
+  r_alerting <- numerator / denominator
+  return(r_alerting)
+}
+
+#' Calculate r_contrast from r_alerting and r_effectsize
+#'
+#' Convenience function to transform effect sizes in contrast analyses.
+#'
+#' @param r_alerting what it says
+#' @param r_effectsize what it says
+#'
+#' @export
+calc_r_contrast <- function(r_alerting, r_effectsize){
+  sign_r_contrast <- sign(r_effectsize)
+  numerator <- r_contrast <- sign_r_contrast * (r_effectsize * r_alerting)
+  denominator <- sqrt(
+    r_effectsize^2 * r_alerting^2 - r_effectsize^2 + r_alerting^2
+  )
+  r_contrast <- numerator / denominator
+  return(r_contrast)
+}
+
+#' Calculate r_effectsize from r_contrast and r_alerting
+#'
+#' Convenience function to transform effect sizes in contrast analyses.
+#'
+#' @param r_alerting what it says
+#' @param r_contrast what it says
+#'
+#' @export
+calc_r_effectsize <- function(r_alerting, r_contrast){
+  #sign_r_effectsize <- sign(r_contrast)
+  numerator <- - r_contrast * r_alerting
+  denominator <- sqrt(
+    -(r_contrast^2) * r_alerting^2 + r_contrast^2 + r_alerting^2
+  )
+  r_effectsize <- numerator / denominator
+  return(r_effectsize)
 }
