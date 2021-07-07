@@ -339,7 +339,8 @@ myserver <- shinyServer(function(input, output, session) {
       id = id_var(),
       within = within_var(),
       lambda_within = reactive$lambda_within,
-      data = NULL)
+      data = NULL
+    )
     # print output
     print(contr)
   })
