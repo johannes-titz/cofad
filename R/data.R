@@ -28,7 +28,7 @@
 #' @source Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
 #'   Effect Sizes in Behavioral Research: A Correlational Approach. Cambridge
 #'   University Press.
-"rosenthal_tbl59"
+"rosenthal_tbl53"
 
 #' Data set by Rosenthal and Rosnow (2000)
 #'
