@@ -109,20 +109,8 @@ calc_contrast <- function(dv,
     )
   }
 
-  lambda_between <- check_lambda_between(lambda_between)
-
-  if (!is.null(lambda_within)) {
-    if (!is.numeric(lambda_within)) {
-      stop("lambda must be a named numeric")
-    }
-    if (is.null(names(lambda_within))) {
-      stop("lambda must be a named numeric")
-    }
-    if (anyNA(lambda_within)) {
-      stop("NA in lambda is not allowed")
-    }
-  }
-
+  lambda_between <- check_lambda(lambda_between)
+  lambda_within <- check_lambda(lambda_within)
   check_labels(between, lambda_between)
 
   if (!is.null(within) & !is.null(lambda_within)) {
@@ -153,11 +141,6 @@ calc_contrast <- function(dv,
     is.null(id)) &
     case == "mixed-Analysis: between and within factors") {
     stop("Missing arguments")
-  }
-
-  if (sum(lambda_within) != 0) {
-    lambda_within <- lambda_within - mean(lambda_within)
-    warning("within lambdas are centered and rounded to 3 digits")
   }
 
   if (anyNA(dv)) {
@@ -383,28 +366,28 @@ calc_contrast <- function(dv,
   }
 }
 
-#' Validates that lambda_between is correct
+#' Validates that lambda is correct
 #'
 #' internal function
 #'
-#' @noRD
-check_lambda_between <- function(lambda_between) {
-  if (!is.null(lambda_between)) {
-    if (!is.numeric(lambda_between)) {
+#' @noRd
+check_lambda <- function(lambda) {
+  if (!is.null(lambda)) {
+    if (!is.numeric(lambda)) {
       stop("lambda must be a named numeric")
     }
-    if (is.null(names(lambda_between))) {
+    if (is.null(names(lambda))) {
       stop("lambda must be a named numeric")
     }
-    if (anyNA(lambda_between)) {
+    if (anyNA(lambda)) {
       stop("NA in lambda is not allowed")
     }
   }
-  if (sum(lambda_between) != 0) {
-    lambda_between <- lambda_between - mean(lambda_between)
-    warning("between lambdas are centered and rounded to 3 digits")
+  if (sum(lambda) != 0) {
+    lambda <- lambda - mean(lambda)
+    warning("lambdas are centered and rounded to 3 digits")
   }
-  lambda_between
+  lambda
 }
 
 #' Validates that every condition gets a lambda
@@ -425,7 +408,7 @@ check_labels <- function(between, lambda_between) {
 #' internal function
 #'
 #' @noRd
-check_if_factor <- function(variable){
+check_if_factor <- function(variable) {
   if (!is.factor(variable) & !is.null(variable)) {
     warning(
       deparse(substitute(variable)),
@@ -444,11 +427,23 @@ check_if_factor <- function(variable){
 #' @param r_effectsize what it says
 #'
 #' @export
-calc_r_alerting <- function(r_contrast, r_effectsize){
+calc_r_alerting <- function(r_contrast, r_effectsize) {
   numerator <- - r_effectsize * r_contrast
   denominator <- sqrt((1 + r_effectsize^2) * r_contrast^2 - r_effectsize^2)
   r_alerting <- numerator / denominator
   return(r_alerting)
+}
+
+#' Calculate r_alerting from F-values
+#'
+#' Convenience function to calculate effect sizes in contrast analyses.
+#'
+#' @param f_contrast F value from contrast analysis
+#' @param f_between F value from ANOVA (one between variable!)
+#' @param df_between degrees of freedom of ANOVA
+#' @export
+calc_r_alerting_from_f <- function(f_contrast, f_between, df_between) {
+  return(sqrt(f_contrast / (f_between * df_between)))
 }
 
 #' Calculate r_contrast from r_alerting and r_effectsize
@@ -459,7 +454,7 @@ calc_r_alerting <- function(r_contrast, r_effectsize){
 #' @param r_effectsize what it says
 #'
 #' @export
-calc_r_contrast <- function(r_alerting, r_effectsize){
+calc_r_contrast <- function(r_alerting, r_effectsize) {
   sign_r_contrast <- sign(r_effectsize)
   numerator <- r_contrast <- sign_r_contrast * (r_effectsize * r_alerting)
   denominator <- sqrt(
@@ -477,7 +472,7 @@ calc_r_contrast <- function(r_alerting, r_effectsize){
 #' @param r_contrast what it says
 #'
 #' @export
-calc_r_effectsize <- function(r_alerting, r_contrast){
+calc_r_effectsize <- function(r_alerting, r_contrast) {
   numerator <- - r_contrast * r_alerting
   denominator <- sqrt(
     -(r_contrast^2) * r_alerting^2 + r_contrast^2 + r_alerting^2
@@ -485,3 +480,4 @@ calc_r_effectsize <- function(r_alerting, r_contrast){
   r_effectsize <- numerator / denominator
   return(r_effectsize)
 }
+

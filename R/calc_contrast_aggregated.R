@@ -31,7 +31,7 @@ calc_contrast_aggregated <- function(means, sds, ns, between, lambda_between,
   } else if (!is.null(data) & !is.data.frame(data)) {
     stop("data is not a data.frame")
   }
-  lambda_between <- check_lambda_between(lambda_between)
+  lambda_between <- check_lambda(lambda_between)
   check_labels(between, lambda_between)
   # correctly sort lambda_between
   lambda_between_pos <- sapply(
