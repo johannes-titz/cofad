@@ -83,22 +83,19 @@ expect_equal(
 expect_equal(round(contr_wi$effects[2], 2), 1.86)
 
 # mixed ----
-## (no between Lambda) -----
-data("tbl59b")
+## unequal sample sizes for between -----
+data("rosenthal_p141")
 
-tbl59b <- tbl59b[sample(1:14, 14, F), ]
-t_59b <- calc_contrast(
+rosenthal_p141 <- rosenthal_p141[sample(1:14, 14, F), ]
+ca <- calc_contrast(
   dv = dv,
   within = med,
   between = bw,
   id = id,
-  lambda_within = c("T" = -1, "P" = +1),
-  data = tbl59b
+  lambda_within = c("treatment" = -1, "placebo" = +1),
+  data = rosenthal_p141
 )
-expect_setequal(
-  round(t_59b$sig, 2),
-  c(7.41, 0.00, 4.00)
-)
+expect_setequal(round(ca$sig, 2), c(7.41, 0.00, 4.00))
 
 ## (within_lambda & between_lambda) -----
 
@@ -123,22 +120,21 @@ t_53 <- calc_contrast(
 expect_equal(round(t_53$sig[c(1, 3, 4)], 3), c(20.211, 1, 6))
 expect_equal(summary(t_53)$Effects[1], 0.871)
 
-# unclear -----
-## chap 5 exercise 2----
-data(chap5_Exercise2)
+# Rosenthal chap 5 exercise 2
+data(rosenthal_chap5_q2)
 
 c5_e2 <- calc_contrast(
   dv = dv,
   within = within,
   id = id,
-  lambda_within = c("L" = -1, "M" = 0, "H" = 1),
+  lambda_within = c("low" = -1, "medium" = 0, "high" = 1),
   between = between,
-  data = chap5_Exercise2,
-  lambda_between = c("ch" = 1, "cl" = -1)
+  data = rosenthal_chap5_q2,
+  lambda_between = c("high" = 1, "low" = -1)
 )
 expect_equal(c5_e2$sig[1], 28.125)
 
-## this is what?----
+# Rosenthal table 5.9
 data(rosenthal_tbl59)
 tbl59 <- rosenthal_tbl59[sample(1:12, 12, F), ]
 t59 <- calc_contrast(
@@ -146,7 +142,7 @@ t59 <- calc_contrast(
   within = med,
   between = pt,
   id = id,
-  lambda_within = c("T" = 1, "P" = -1),
+  lambda_within = c("treatment" = 1, "placebo" = -1),
   data = tbl59
 )
 expect_equal(round(t59$sig, 3)[1], 2.449)
