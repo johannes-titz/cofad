@@ -45,7 +45,7 @@
 #'   University Press.
 "rosenthal_tbl31"
 
-#' Data set by Rosenthal and Rosnow (2000)
+#' Therapy data set by Rosenthal and Rosnow (2000)
 #'
 #' Table 5.9 in Rosenthal and Rosnow (2000)
 #'
@@ -53,14 +53,52 @@
 #' \describe{
 #'   \item{id}{unique identifier}
 #'   \item{dv}{dependent variable}
-#'   \item{med}{within variable}
-#'   \item{pt}{between variable}
+#'   \item{med}{within variable: medication (treatment or placebo)}
+#'   \item{pt}{between variable: psychotherapy (treatment or placebo)}
 #' }
 #'
 #' @source Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
 #'   Effect Sizes in Behavioral Research: A Correlational Approach. Cambridge
 #'   University Press.
 "rosenthal_tbl59"
+
+#' Complexity data set by Rosenthal and Rosnow (2000)
+#'
+#' Exercise 2 from Chapter 5 (table on p. 147) in Rosenthal and Rosnow (2000)
+#'
+#' @format a data frame with 12 rows and 4 columns
+#' \describe{
+#'   \item{dv}{dependent variable: rating of degree of complexity of social
+#'   interaction from a series of clips}
+#'   \item{id}{unique identifier of participant}
+#'   \item{within}{within variable: complexity of interaction (low, medium
+#'   high)}
+#'   \item{between}{between variable: cognitive complexity of participant (high
+#'   or low)}
+#' }
+#'
+#' @source Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
+#'   Effect Sizes in Behavioral Research: A Correlational Approach. Cambridge
+#'   University Press.
+"rosenthal_chap5_q2"
+
+#' Data set by Rosenthal and Rosnow (2000)
+#'
+#' Fictious example corresponding to aggregated data set on p. 141 in Rosenthal
+#' and Rosnow (2000)
+#'
+#' @format a data frame with 12 rows and 4 columns
+#' \describe{
+#'   \item{id}{unique identifier of participant}
+#'   \item{dv}{dependent variable}
+#'   \item{within}{within variable}
+#'   \item{between}{between variable}
+#' }
+#'
+#' @source Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
+#'   Effect Sizes in Behavioral Research: A Correlational Approach. Cambridge
+#'   University Press.
+"rosenthal_p141"
 
 #' Music data set by Sedlmeier & Renkewitz (2018)
 #'
