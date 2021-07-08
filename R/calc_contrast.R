@@ -21,9 +21,9 @@
 #' the factors must be connected.
 #' @return an object of type cofad_bw or cofad_wi or cofad_mx, including
 #'   p-value, F-value, contrast weights, different effect sizes
-#' @references Rosenthal, R., Rosnow, R.L., & Rubin, D.B. (2000).
-#' Contrasts and effect sizes in behavioral research:
-#' A correlational approach. New York: Cambridge University Press.
+#' @references Rosenthal, R., Rosnow, R.L., & Rubin, D.B. (2000). Contrasts and
+#'   effect sizes in behavioral research: A correlational approach. New York:
+#'   Cambridge University Press.
 #' @examples
 #' # Example for between-subjects design Table 3.1 from
 #' # Rosenthal, Rosnow and Rubin (2001)
@@ -480,4 +480,3 @@ calc_r_effectsize <- function(r_alerting, r_contrast) {
   r_effectsize <- numerator / denominator
   return(r_effectsize)
 }
-

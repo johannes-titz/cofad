@@ -7,7 +7,7 @@ options(shiny.sanitize.errors = FALSE) # (handle errors manually)
 #' @importFrom shinyBS bsTooltip
 #' @importFrom shinybusy add_busy_spinner
 #' @noRd
-myui <- function(request){
+myui <- function(request) {
   shinyUI(
     shinydashboard::dashboardPage(
       title = "cofad-app",
@@ -21,7 +21,7 @@ myui <- function(request){
           position = "bottom-right",
           margin = c(50, 0)
         ),
-        tags$head(tags$style(HTML('.sidebar {padding-left: 8px;}'))),
+        tags$head(tags$style(HTML(".sidebar {padding-left: 8px;}"))),
         # load data
         h4("1. Load data"),
         uiOutput("file_area"),
