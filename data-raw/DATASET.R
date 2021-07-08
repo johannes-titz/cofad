@@ -57,40 +57,41 @@ rosenthal_tbl53 <- data.frame(
 rosenthal_tbl59 <- data.frame(
   id = as.factor(rep(1:6, 2)),
   dv = c(12, 8, 4, 8, 6, 4, 8, 6, 4, 6, 2, 4),
-  med = as.factor(rep(c("T", "P"), c(6, 6))),
-  pt = as.factor(rep(rep(c("PT", "PP"), c(3, 3)), 2))
+  med = as.factor(rep(c("treatment", "placebo"), c(6, 6))),
+  pt = as.factor(rep(rep(c("psychotherapy", "placebo"), c(3, 3)), 2))
 )
 
-# where is this from?
-tbl59b <- data.frame(
+# Rosenthal example for unequal sample sizes for between condition (mixed ca),
+# p. 141
+rosenthal_p141 <- data.frame(
   id = as.factor(rep(1:7, 2)),
-  dv = c(0, 1, 0, 0, 0, 0, 1,3, 6, 6, 1, 1, 3, 4),
-  med = as.factor(rep(c("T", "P"), c(7, 7))),
+  dv = c(0, 1, 0, 0, 0, 0, 1, 3, 6, 6, 1, 1, 3, 4),
+  med = as.factor(rep(c("treatment", "placebo"), c(7, 7))),
   bw = as.factor(rep(rep(c("A", "B", "C"), c(2, 1, 4)), 2))
 )
 
-# where is this from?
-chap5_Exercise2 <- data.frame(
+# rosenthal Chapter 5 Review Question 2
+rosenthal_chap5_q2 <- data.frame(
   dv = c(8, 7, 8, 4, 4, 3, 11, 10, 12, 5, 4, 5, 13, 14, 16, 5, 6, 5),
   id = as.factor(c(1:6, 1:6, 1:6)),
-  within = as.factor(rep(c("L", "M", "H"), c(6, 6, 6))),
-  between = as.factor(rep(rep(c("ch", "cl"), c(3, 3)), 3))
+  within = as.factor(rep(c("low", "medium", "high"), c(6, 6, 6))),
+  between = as.factor(rep(rep(c("high", "low"), c(3, 3)), 3))
 )
 
 write.csv(rosenthal_tbl31, "data-raw/rosenthal_tbl31.csv", row.names = F)
 write.csv(sedlmeier_p537, "data-raw/sedlmeier_p537.csv", row.names = F)
 write.csv(rosenthal_tbl59, "data-raw/rosenthal_tbl59.csv", row.names = F)
-write.csv(tbl59b, "data-raw/tbl59b.csv", row.names = F)
+write.csv(rosenthal_p141, "data-raw/rosenthal_p141.csv", row.names = F)
 write.csv(furr_p4, "data-raw/furr_p4.csv", row.names = F)
 write.csv(sedlmeier_p525, "data-raw/sedlmeier_p525.csv", row.names = F)
 write.csv(rosenthal_tbl53, "data-raw/rosenthal_tbl53.csv", row.names = F)
-write.csv(chap5_Exercise2, "data-raw/chap5_Exercise2.csv", row.names = F)
+write.csv(rosenthal_chap5_q2, "data-raw/rosenthal_chap5_q2.csv", row.names = F)
 
 usethis::use_data(rosenthal_tbl31, overwrite = T)
 usethis::use_data(sedlmeier_p537, overwrite = T)
 usethis::use_data(rosenthal_tbl59, overwrite = T)
-usethis::use_data(tbl59b, overwrite = T)
+usethis::use_data(rosenthal_p141, overwrite = T)
 usethis::use_data(furr_p4, overwrite = T)
 usethis::use_data(sedlmeier_p525, overwrite = T)
 usethis::use_data(rosenthal_tbl53, overwrite = T)
-usethis::use_data(chap5_Exercise2, overwrite = T)
+usethis::use_data(rosenthal_chap5_q2, overwrite = T)
