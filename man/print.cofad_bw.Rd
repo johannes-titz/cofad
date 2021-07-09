@@ -12,9 +12,8 @@
 \item{...}{further arguments}
 }
 \value{
-Displays the significance of the contrast analysis.
-The contrastweights, the corresponding group and an effectsize are
-given.
+Displays the significance of the contrast analysis. The contrast
+  weights, the corresponding group and an effectsize are given.
 }
 \description{
 Output of between-subject design contrast analysis
