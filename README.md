@@ -59,8 +59,8 @@ Cofad has two components, the plain R-package and a shiny-app that
 offers a simple graphical user interface.
 
 If you just want to use the cofad-app, you do not need to install it.
-Just go to www.cofad.titz.science and use it there. An example data file
-is loaded when you go to www.cofad.titz.science/example.
+Just go to cofad.titz.science and use it there. An example data file is
+loaded when you go to cofad.titz.science/example.
 
 If you prefer the command line interface or want to use the cofad-app
 locally, install it from github (you need the package devtools for
