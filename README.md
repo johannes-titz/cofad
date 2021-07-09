@@ -59,8 +59,8 @@ Cofad has two components, the plain R-package and a shiny-app that
 offers a simple graphical user interface.
 
 If you just want to use the cofad-app, you do not need to install it.
-Just go to cofad.titz.science and use it there. An example data file is
-loaded when you go to cofad.titz.science/example.
+Just go to <https://cofad.titz.science> and use it there. An example
+data file is loaded when you go to <https://cofad.titz.science/example>.
 
 If you prefer the command line interface or want to use the cofad-app
 locally, install it from github (you need the package devtools for
@@ -101,10 +101,10 @@ The graphical-user-interface is self-explanatory. Just load your data
 and drag the variables to the correct position. At the moment you can
 only read .sav (SPSS) and .csv files.
 
-As an example go to www.cofad.titz.science?example=rosenthal_tbl53 which
-will load a data set from Rosenthal et al. (2000) (Table 5.3). Nine
-children were measured four times (within), but they also belong to
-different groups of age (between).
+As an example go to <https://cofad.titz.science/example> which will load
+a data set from Rosenthal et al. (2000) (Table 5.3). Nine children were
+measured four times (within), but they also belong to different groups
+of age (between).
 
 There are two hypotheses:
 
