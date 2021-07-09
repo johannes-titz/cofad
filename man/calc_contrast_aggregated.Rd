@@ -20,8 +20,8 @@ independent groups}
 the levels of \code{between}. If \code{lambda_between} does not sum up to
 zero, this will be done automatically (centering).}
 
-\item{data}{optional argument for the \code{data.frame} containing all variables
-except for lambda_between}
+\item{data}{optional argument for the \code{data.frame} containing all
+variables except for lambda_between}
 }
 \value{
 an object of type cofad_bw, including p-value, F-value, contrast
