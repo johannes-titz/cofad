@@ -144,8 +144,8 @@ Furr (2004), where we have different empathy ratings of students from
 different majors. This data set is available in the cofad package:
 
 ``` r
-data("furr")
-furr
+data("furr_p4")
+furr_p4
 #>    empathy      major
 #> 1       51 psychology
 #> 2       56 psychology
@@ -188,7 +188,7 @@ start. Let’s use cofad to conduct the contrast analysis:
 ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 1, "education" = -1,
                                        "business" = 0, "chemistry" = 0),
-                    data = furr)
+                    data = furr_p4)
 ca
 #> 
 #> Contrast Analysis for between factor design
@@ -212,7 +212,7 @@ summary(ca)
 #> $Effects
 #>              effects
 #> r_effectsize  -0.276
-#> r_contrast     0.527
+#> r_contrast    -0.527
 #> r_alerting    -0.309
 ```
 
@@ -224,7 +224,7 @@ calculated manually:
 
 ``` r
 lambdas <- rep(c(1, -1, 0, 0), each = 5)
-cor(furr$empathy, lambdas)
+cor(furr_p4$empathy, lambdas)
 #> [1] -0.2762895
 ```
 
@@ -234,7 +234,7 @@ The other two hypotheses can be tested accordingly:
 ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 0, "education" = 0,
                                        "business" = 1, "chemistry" = -1),
-                    data = furr)
+                    data = furr_p4)
 ca
 #> 
 #> Contrast Analysis for between factor design
@@ -245,7 +245,7 @@ ca
 ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 1, "education" = 1,
                                        "business" = -1, "chemistry" = -1),
-                    data = furr)
+                    data = furr_p4)
 ca
 #> 
 #> Contrast Analysis for between factor design
@@ -266,8 +266,8 @@ mean of the lambdas has to be 0):
 ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 73, "education" = 61,
                                        "business" = 51, "chemistry" = 38),
-                    data = furr)
-#> Warning in check_lambda_between(lambda_between): between lambdas are centered and rounded to 3 digits
+                    data = furr_p4)
+#> Warning in check_lambda(lambda_between): lambdas are centered and rounded to 3 digits
 ca
 #> 
 #> Contrast Analysis for between factor design
@@ -281,7 +281,7 @@ The manual test shows the same effect size:
 
 ``` r
 lambdas <- rep(c(73, 61, 51, 38), each = 5)
-cor(furr$empathy, lambdas)
+cor(furr_p4$empathy, lambdas)
 #> [1] 0.6817294
 ```
 
@@ -299,8 +299,8 @@ your reading ability and music (independent of type) reduces it even
 further.
 
 ``` r
-data("sedlmeier537")
-head(sedlmeier537)
+data("sedlmeier_p537")
+head(sedlmeier_p537)
 #>   reading_test participant         music
 #> 1           27           1 without music
 #> 2           25           2 without music
@@ -313,7 +313,7 @@ calc_contrast(dv = reading_test, within = music,
                                 "white noise" = 0.25,
                                 "classic" = -0.75,
                                 "jazz" = -0.75),
-             ID = participant, data = sedlmeier537)
+              id = participant, data = sedlmeier_p537)
 #> 
 #> Contrast Analysis for within factor design
 #> 
@@ -332,7 +332,7 @@ because contrast analysis has always a specific hypotheses.) When
 conducting the analysis manually, we can see why:
 
 ``` r
-mtr <- matrix(sedlmeier537$reading_test, ncol = 4)
+mtr <- matrix(sedlmeier_p537$reading_test, ncol = 4)
 lambdas <- c(1.25, 0.25, -0.75, -0.75)
 lc1 <- mtr %*% lambdas
 t.test(lc1)
@@ -375,32 +375,32 @@ There are two hypotheses:
 Let’s have a look at the data and calculation:
 
 ``` r
-data("tab53")
-head(tab53)
-#>   dv    age time ID
-#> 1  3  Age 8    1  1
-#> 2  1  Age 8    1  2
-#> 3  4  Age 8    1  3
-#> 4  4 Age 10    1  4
-#> 5  5 Age 10    1  5
-#> 6  5 Age 10    1  6
+data("rosenthal_tbl53")
+head(rosenthal_tbl53)
+#>   dv between id within
+#> 1  3    age8  1      1
+#> 2  1    age8  2      1
+#> 3  4    age8  3      1
+#> 4  4   age10  4      1
+#> 5  5   age10  5      1
+#> 6  5   age10  6      1
 lambda_within <- c("1" = -3, "2" = -1, "3" = 1, "4" = 3)
-lambda_between <-c("Age 8" = -1, "Age 10" = 0, "Age 12" = 1)
+lambda_between <-c("age8" = -1, "age10" = 0, "age12" = 1)
 
 contr_mx <- calc_contrast(dv = dv, 
-                          between = age,
+                          between = between,
                           lambda_between = lambda_between,
-                          within = time,
+                          within = within,
                           lambda_within = lambda_within,
-                          ID = ID, 
-                          data = tab53
+                          id = id, 
+                          data = rosenthal_tbl53
                           )
 contr_mx
 #> 
 #> Contrast Analysis for Mixed-Design:
 #> 
 #> F(1,6) = 20.211; p = 0.004
-#> Contrast between:  Age 10 = 0; Age 12 = 1; Age 8 = -1
+#> Contrast between:  age10 = 0; age12 = 1; age8 = -1
 #> Contrast within:  1 = -3; 2 = -1; 3 = 1; 4 = 3
 #> r_effectsize = 0.871
 ```
@@ -424,10 +424,10 @@ summary(contr_mx)
 #> r_alerting    0.990
 #> 
 #> $Within_Groups
-#>               M        SE
-#> Age 10 4.000000 1.0000000
-#> Age 12 7.333333 0.8819171
-#> Age 8  2.000000 0.5773503
+#>              M        SE
+#> age10 4.000000 1.0000000
+#> age12 7.333333 0.8819171
+#> age8  2.000000 0.5773503
 ```
 
 ## Aggregated Data
@@ -448,10 +448,10 @@ library(dplyr)
 #> The following objects are masked from 'package:base':
 #> 
 #>     intersect, setdiff, setequal, union
-furr_agg <- furr %>% group_by(major) %>% summarize(mean = mean(empathy),
-                                             sd = sd(empathy), n = n())
-lambdas = c("psychology" = 1, "education" = -1,
-            "business" = 0, "chemistry" = 0)
+furr_agg <- furr_p4 %>% 
+  group_by(major) %>% 
+  summarize(mean = mean(empathy), sd = sd(empathy), n = n())
+lambdas = c("psychology" = 1, "education" = -1, "business" = 0, "chemistry" = 0)
 calc_contrast_aggregated(mean, sd, n, major, lambdas, furr_agg)
 #> 
 #> Contrast Analysis for between factor design
@@ -468,7 +468,7 @@ raw data:
 ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 1, "education" = -1,
                                        "business" = 0, "chemistry" = 0),
-                    data = furr)
+                    data = furr_p4)
 ca
 #> 
 #> Contrast Analysis for between factor design

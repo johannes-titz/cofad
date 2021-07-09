@@ -132,8 +132,8 @@ library(cofad)
 Now we need some data and hypotheses. We can simply take the data from @furr2004, where we have different empathy ratings of students from different majors. This data set is available in the cofad package:
 
 ```{r}
-data("furr")
-furr
+data("furr_p4")
+furr_p4
 ```
 
 Furr states three hypotheses:
@@ -148,7 +148,7 @@ These hypotheses are only mean comparisons, but this is a good way to start. Let
 ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 1, "education" = -1,
                                        "business" = 0, "chemistry" = 0),
-                    data = furr)
+                    data = furr_p4)
 ca
 ```
 
@@ -161,7 +161,7 @@ From this table, $r_\mathrm{effectsize}$ is probably the most useful statistic. 
 
 ```{r}
 lambdas <- rep(c(1, -1, 0, 0), each = 5)
-cor(furr$empathy, lambdas)
+cor(furr_p4$empathy, lambdas)
 ```
 
 The other two hypotheses can be tested accordingly:
@@ -170,12 +170,12 @@ The other two hypotheses can be tested accordingly:
 ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 0, "education" = 0,
                                        "business" = 1, "chemistry" = -1),
-                    data = furr)
+                    data = furr_p4)
 ca
 ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 1, "education" = 1,
                                        "business" = -1, "chemistry" = -1),
-                    data = furr)
+                    data = furr_p4)
 ca
 ```
 
@@ -185,7 +185,7 @@ You will find that the numbers are identical to the ones presented in @furr2004.
 ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 73, "education" = 61,
                                        "business" = 51, "chemistry" = 38),
-                    data = furr)
+                    data = furr_p4)
 ca
 ```
 
@@ -193,7 +193,7 @@ The manual test shows the same effect size:
 
 ```{r}
 lambdas <- rep(c(73, 61, 51, 38), each = 5)
-cor(furr$empathy, lambdas)
+cor(furr_p4$empathy, lambdas)
 ```
 
 Let us now do an analysis for within-subjects designs.
@@ -203,20 +203,20 @@ Let us now do an analysis for within-subjects designs.
 For within designs the calculations are quite different, but cofad takes care of it and we just have to use the within parameters *within* and *lambda_within* instead of the between equivalents. As an example we use Table 16.5 from @sedlmeier2018. Reading ability was assessed for eight participants under four different conditions. The hypothesis is that you can read best wihout music, white noise reduces your reading ability and music (independent of type) reduces it even further.
 
 ```{r}
-data("sedlmeier537")
-head(sedlmeier537)
+data("sedlmeier_p537")
+head(sedlmeier_p537)
 calc_contrast(dv = reading_test, within = music,
               lambda_within = c("without music" = 1.25, 
                                 "white noise" = 0.25,
                                 "classic" = -0.75,
                                 "jazz" = -0.75),
-             ID = participant, data = sedlmeier537)
+              id = participant, data = sedlmeier_p537)
 ```
 
 You can see that the siginifance test is just a $t$-test and the reported effect size is also for a mean comparison ($g$). (The $t$-test is one-tailed, because contrast analysis has always a specific hypotheses.) When conducting the analysis manually, we can see why:
 
 ```{r}
-mtr <- matrix(sedlmeier537$reading_test, ncol = 4)
+mtr <- matrix(sedlmeier_p537$reading_test, ncol = 4)
 lambdas <- c(1.25, 0.25, -0.75, -0.75)
 lc1 <- mtr %*% lambdas
 t.test(lc1)
@@ -238,18 +238,18 @@ There are two hypotheses:
 Let's have a look at the data and calculation:
 
 ```{r}
-data("tab53")
-head(tab53)
+data("rosenthal_tbl53")
+head(rosenthal_tbl53)
 lambda_within <- c("1" = -3, "2" = -1, "3" = 1, "4" = 3)
-lambda_between <-c("Age 8" = -1, "Age 10" = 0, "Age 12" = 1)
+lambda_between <-c("age8" = -1, "age10" = 0, "age12" = 1)
 
 contr_mx <- calc_contrast(dv = dv, 
-                          between = age,
+                          between = between,
                           lambda_between = lambda_between,
-                          within = time,
+                          within = within,
                           lambda_within = lambda_within,
-                          ID = ID, 
-                          data = tab53
+                          id = id, 
+                          data = rosenthal_tbl53
                           )
 contr_mx
 ```
@@ -266,10 +266,10 @@ Sometimes you would like to run a contrast analysis on aggregated data (e.g. whe
 
 ```{r}
 library(dplyr)
-furr_agg <- furr %>% group_by(major) %>% summarize(mean = mean(empathy),
-                                             sd = sd(empathy), n = n())
-lambdas = c("psychology" = 1, "education" = -1,
-            "business" = 0, "chemistry" = 0)
+furr_agg <- furr_p4 %>% 
+  group_by(major) %>% 
+  summarize(mean = mean(empathy), sd = sd(empathy), n = n())
+lambdas = c("psychology" = 1, "education" = -1, "business" = 0, "chemistry" = 0)
 calc_contrast_aggregated(mean, sd, n, major, lambdas, furr_agg)
 ```
 
@@ -279,7 +279,7 @@ And the result is indeed the same when compared to the analysis with the raw dat
 ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 1, "education" = -1,
                                        "business" = 0, "chemistry" = 0),
-                    data = furr)
+                    data = furr_p4)
 ca
 ```
 
