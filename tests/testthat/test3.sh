@@ -56,7 +56,7 @@ xdotool type '/home/jt/programming/cofad/data-raw/rosenthal_tbl53.csv'
 xdotool key "Return"
 sleep  2
 # works better than manual commands
-xmacroplay "$Display" < macrotest_rosenthal
+xmacroplay "$Display" < macrotest_rosenthal2
 xdotool key Control_L+s
 sleep 0.5
 xdotool key Shift_L+End
