@@ -176,121 +176,15 @@ calc_contrast <- function(dv,
     id <- id[-index_na]
     warning("NAs in id are omitted")
   }
+
   if (case == "Analysis between groups") {
-    lambda_between <- lambda_between[order(names(lambda_between))]
-    ni <- table(between)
-    n_total <- sum(table(dv))
-    k <- length(ni)
-    df_inn <- n_total - k
-    df_contrast <- 1
-    lambda_between_row <- rep(NA, sum(ni))
-    for (i in seq(lambda_between)) {
-      lambda_between_row <- replace(
-        x = lambda_between_row,
-        list = which(between == names(lambda_between)[i]),
-        lambda_between[i]
-      )
-    }
-    var_within <- tapply(X = dv, INDEX = between, FUN = var)
-    ms_within <- mean(var_within, na.rm = T)
-    mean_i <- tapply(X = dv, INDEX = between, FUN = mean)
-    se_i <- tapply(X = dv, INDEX = between, FUN = sd) / sqrt(ni)
-    prodsum <- sum(mean_i * lambda_between)
-    ss_total <- sum((dv - mean(dv)) ** 2)
-    ss_between <- sum(ni * (mean_i - mean(mean_i) ** 2))
-    f_contrast <- ((prodsum ** 2) / (ms_within)) *
-      (1 / sum((lambda_between ** 2) / ni))
-    p_contrast <- pf(f_contrast, 1, df_inn, lower.tail = F)
-    r_effectsize <- cor(lambda_between_row, dv)
-    if (sd(mean_i) == 0) {
-      r_alerting <- NA
-      r_contrast <- NA
-      warning("SD of group means is zero")
-    } else {
-      r_alerting <- cor(lambda_between, mean_i)
-      sign_r_contrast <- sign(r_effectsize)
-      r_contrast <- sign_r_contrast * (r_effectsize * r_alerting) /
-        (sqrt(
-          r_effectsize ** 2 * r_alerting ** 2 - r_effectsize ** 2
-          + r_alerting ** 2))
-    }
-    sig <- c(f_contrast, p_contrast, df_contrast, df_inn, ms_within,
-             ss_between, ss_total, n_total - 1)
-    r <- c(r_effectsize, r_contrast, r_alerting)
-    desc <- matrix(c(mean_i, se_i), ncol = 2, byrow = F)
-    colnames(desc) <- c("M", "SE")
-    out_l <- list(sig, desc, lambda_between, r)
-    names(out_l) <- c("sig", "desc", "lambda_between", "effects")
-    class(out_l) <- c("cofad_bw")
-    structure(out_l)
-    return(out_l)
+    return(run_between_analysis(dv, between, lambda_between))
   }
+
   if (case == "Analysis within cases") {
-    lambda_within <- lambda_within[order(names(lambda_within))]
-    ni_within <- table(within)
-    n_total <- sum(ni_within)
-    l_value <- NULL
-    for (i in seq(table(id))) {
-      var_i <- dv[which(id == levels(id)[i])]
-      l_value[i] <- sum(
-        var_i[order(within[which(id == levels(id)[i])])] * lambda_within
-      )
-    }
-    if (!is.null(between)) {
-      ni_bw <- table(between)
-      bw_wide <- matrix(NA, ncol = 2, nrow = length(levels(id)))
-      for (i in seq(levels(id))) {
-        id_bw <- as.character(unique(
-          between[which(id == levels(id)[i])]
-        ))
-        if (length(id_bw) > 1) {
-          stop("some id's are in more than one between group")
-        } else {
-          bw_wide[i, 1] <- levels(id)[i]
-          bw_wide[i, 2] <- id_bw
-        }
-      }
-      ni_l_value <- table(bw_wide[, 2])
-      s2i <- tapply(l_value, as.factor(bw_wide[, 2]), var)
-      if (anyNA(s2i)) {
-        s2i[which(is.na(s2i))] <- 0
-      }
-      s2 <- sum((ni_l_value - 1) * s2i) / sum(ni_l_value - 1)
-      k_bw <- length(ni_bw)
-      df_within <- n_total - k_bw
-    } else {
-      s2 <- var(l_value)
-      k_bw <- 1
-      df_id <- length(l_value) - 1
-      df_within <- n_total - k_bw
-    }
-    df_contrast <- 1
-    if (!is.null(between)) {
-      df_id <- sum(ni_l_value) - k_bw
-      ni_cell <- table(within, between)
-    } else {
-      ni_cell <- ni_within
-    }
-    harm_n <- 1 / mean(1 / ni_cell)
-    if (!is.null(between)) {
-      l_value <- tapply(l_value, bw_wide[, 2], mean)
-    }
-    t_value <- mean(l_value) / sqrt((1 / (k_bw * harm_n)) * s2)
-    f_contrast <- t_value ** 2
-    ss_total <- sum(((dv - mean(dv)) ** 2))
-    p_contrast <- pt(t_value, df_id, lower.tail = F)
-    g_effect <- mean(l_value) / (sqrt(s2))
-    sign_r_contrast <- sign(g_effect)
-    r_contrast <- sign_r_contrast * sqrt(f_contrast / (f_contrast + df_within))
-    sig <- c(t_value, p_contrast, df_id)
-    desc <- c(mean(l_value), sqrt(s2) / sqrt(sum(table(l_value))), sqrt(s2))
-    r <- c(r_contrast, g_effect)
-    out_l <- list(sig, desc, lambda_within, r)
-    names(out_l) <- c("sig", "desc", "lambda_within", "effects")
-    class(out_l) <- c("cofad_wi")
-    structure(out_l)
-    return(out_l)
+    return(run_within_analysis(dv, within, between, lambda_within, id))
   }
+
   if (case == "mixed-Analysis: between and within factors") {
     lambda_within <- lambda_within[order(names(lambda_within))]
     lambda_between <- lambda_between[order(names(lambda_between))]
@@ -364,6 +258,135 @@ calc_contrast <- function(dv,
     structure(out_l)
     return(out_l)
   }
+}
+
+#' Between contrast analysis
+#'
+#' internal function
+#'
+#' @inheritParams calc_contrast
+#' @noRd
+run_between_analysis <- function(dv, between, lambda_between) {
+  lambda_between <- lambda_between[order(names(lambda_between))]
+  ni <- table(between)
+  n_total <- sum(table(dv))
+  k <- length(ni)
+  df_inn <- n_total - k
+  df_contrast <- 1
+  lambda_between_row <- rep(NA, sum(ni))
+  for (i in seq(lambda_between)) {
+    lambda_between_row <- replace(
+      x = lambda_between_row,
+      list = which(between == names(lambda_between)[i]),
+      lambda_between[i]
+    )
+  }
+  var_within <- tapply(X = dv, INDEX = between, FUN = var)
+  ms_within <- mean(var_within, na.rm = T)
+  mean_i <- tapply(X = dv, INDEX = between, FUN = mean)
+  se_i <- tapply(X = dv, INDEX = between, FUN = sd) / sqrt(ni)
+  prodsum <- sum(mean_i * lambda_between)
+  ss_total <- sum((dv - mean(dv)) ** 2)
+  ss_between <- sum(ni * (mean_i - mean(mean_i) ** 2))
+  f_contrast <- ((prodsum ** 2) / (ms_within)) *
+    (1 / sum((lambda_between ** 2) / ni))
+  p_contrast <- pf(f_contrast, 1, df_inn, lower.tail = F)
+  r_effectsize <- cor(lambda_between_row, dv)
+  if (sd(mean_i) == 0) {
+    r_alerting <- NA
+    r_contrast <- NA
+    warning("SD of group means is zero")
+  } else {
+    r_alerting <- cor(lambda_between, mean_i)
+    sign_r_contrast <- sign(r_effectsize)
+    r_contrast <- sign_r_contrast * (r_effectsize * r_alerting) /
+      (sqrt(
+        r_effectsize ** 2 * r_alerting ** 2 - r_effectsize ** 2
+        + r_alerting ** 2))
+  }
+  sig <- c(f_contrast, p_contrast, df_contrast, df_inn, ms_within,
+           ss_between, ss_total, n_total - 1)
+  r <- c(r_effectsize, r_contrast, r_alerting)
+  desc <- matrix(c(mean_i, se_i), ncol = 2, byrow = F)
+  colnames(desc) <- c("M", "SE")
+  out_l <- list(sig, desc, lambda_between, r)
+  names(out_l) <- c("sig", "desc", "lambda_between", "effects")
+  class(out_l) <- c("cofad_bw")
+  structure(out_l)
+  return(out_l)
+}
+
+#' Within contrast analysis
+#'
+#' internal function
+#'
+#' @inheritParams calc_contrast
+#' @noRd
+run_within_analysis <- function(dv, within, between, lambda_within, id) {
+  lambda_within <- lambda_within[order(names(lambda_within))]
+  ni_within <- table(within)
+  n_total <- sum(ni_within)
+  l_value <- NULL
+  for (i in seq(table(id))) {
+    var_i <- dv[which(id == levels(id)[i])]
+    l_value[i] <- sum(
+      var_i[order(within[which(id == levels(id)[i])])] * lambda_within
+    )
+  }
+  if (!is.null(between)) {
+    ni_bw <- table(between)
+    bw_wide <- matrix(NA, ncol = 2, nrow = length(levels(id)))
+    for (i in seq(levels(id))) {
+      id_bw <- as.character(unique(
+        between[which(id == levels(id)[i])]
+      ))
+      if (length(id_bw) > 1) {
+        stop("some id's are in more than one between group")
+      } else {
+        bw_wide[i, 1] <- levels(id)[i]
+        bw_wide[i, 2] <- id_bw
+      }
+    }
+    ni_l_value <- table(bw_wide[, 2])
+    s2i <- tapply(l_value, as.factor(bw_wide[, 2]), var)
+    if (anyNA(s2i)) {
+      s2i[which(is.na(s2i))] <- 0
+    }
+    s2 <- sum((ni_l_value - 1) * s2i) / sum(ni_l_value - 1)
+    k_bw <- length(ni_bw)
+    df_within <- n_total - k_bw
+  } else {
+    s2 <- var(l_value)
+    k_bw <- 1
+    df_id <- length(l_value) - 1
+    df_within <- n_total - k_bw
+  }
+  df_contrast <- 1
+  if (!is.null(between)) {
+    df_id <- sum(ni_l_value) - k_bw
+    ni_cell <- table(within, between)
+  } else {
+    ni_cell <- ni_within
+  }
+  harm_n <- 1 / mean(1 / ni_cell)
+  if (!is.null(between)) {
+    l_value <- tapply(l_value, bw_wide[, 2], mean)
+  }
+  t_value <- mean(l_value) / sqrt((1 / (k_bw * harm_n)) * s2)
+  f_contrast <- t_value ** 2
+  ss_total <- sum(((dv - mean(dv)) ** 2))
+  p_contrast <- pt(t_value, df_id, lower.tail = F)
+  g_effect <- mean(l_value) / (sqrt(s2))
+  sign_r_contrast <- sign(g_effect)
+  r_contrast <- sign_r_contrast * sqrt(f_contrast / (f_contrast + df_within))
+  sig <- c(t_value, p_contrast, df_id)
+  desc <- c(mean(l_value), sqrt(s2) / sqrt(sum(table(l_value))), sqrt(s2))
+  r <- c(r_contrast, g_effect)
+  out_l <- list(sig, desc, lambda_within, r)
+  names(out_l) <- c("sig", "desc", "lambda_within", "effects")
+  class(out_l) <- c("cofad_wi")
+  structure(out_l)
+  return(out_l)
 }
 
 #' Validates that lambda is correct
