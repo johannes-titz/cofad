@@ -57,11 +57,16 @@ myui <- function(request) {
               HTML(
                 paste(
                   "<p>How to use cofad? See <a href='https://github.com/",
-                  "johannes-titz/cofad/blob/master/README.md' target='_blank'>",
+                  "johannes-titz/cofad#readme' target='_blank'>",
                   "README</a> for a short introduction.</p>",
                   "<p>Bugtracker: <a href='https://github.com/johannes-titz/",
                   "cofad/issues' target='_blank'>https://github.com/",
-                  "johannes-titz/cofad/issues</a></p>"
+                  "johannes-titz/cofad/issues</a></p>",
+                  "<p>Example data set (Table 5.3 from Rosenthal and Rosnow",
+                  ", 2000): <a href='https://cofad.titz.science/example' ",
+                  "target='_blank'>https://cofad.titz.science/example</a>",
+                  "<p>Citation: [coming soon]</p>",
+                  sep = ""
                 )
               )
             )
