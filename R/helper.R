@@ -54,7 +54,7 @@ colnames_to_tags <- function(df) {
       tag(
         "p",
         list(
-          class = class(df[, co]),
+          class = tail(class(df[, co]), 1),
           tags$span(class = "glyphicon glyphicon-move"),
           tags$strong(co)
         )
