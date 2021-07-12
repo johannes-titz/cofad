@@ -1,5 +1,4 @@
 options(shiny.sanitize.errors = FALSE) # (handle errors manually)
-
 #' @importFrom shinydashboard dashboardPage dashboardHeader dashboardSidebar
 #'   dashboardBody box
 #' @importFrom shinyalert useShinyalert
