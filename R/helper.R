@@ -44,6 +44,7 @@ load_data <- function(datafile) {
 #' This is a sortable helper that covert column names of a data frame to
 #' proper html tags for use with sortable_js
 #'
+#' @importFrom utils tail
 #' @param df the data frame to convert
 #' @return html object with column names of the df
 #' @noRd
@@ -54,7 +55,7 @@ colnames_to_tags <- function(df) {
       tag(
         "p",
         list(
-          class = tail(class(df[, co]), 1),
+          class = utils::tail(class(df[, co]), 1),
           tags$span(class = "glyphicon glyphicon-move"),
           tags$strong(co)
         )
