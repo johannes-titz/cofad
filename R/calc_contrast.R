@@ -215,6 +215,13 @@ calc_contrast <- function(dv,
     df_id <- length(l_value) - 1
     l_value_group_mean <- tapply(l_value, bw_wide[, 2], mean)
     l_value_group_var <- tapply(l_value, bw_wide[, 2], var)
+    if (anyNA(l_value_group_var)) {
+      pos <- which(is.na(l_value_group_var))
+      stop("Some groups have a variance of 0 for the dependent variable. ",
+           "Check group ",
+           names(l_value_group_var)[pos][1],
+           ". Maybe you want to remove this group.")
+    }
     l_value_group_n <- tapply(l_value,  bw_wide[, 2],
                               function(x) sum(table(x)))
     ni_cell <- table(within, between)
