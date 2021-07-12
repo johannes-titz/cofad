@@ -13,7 +13,7 @@
 }
 \value{
 Displays the significance of the contrast analysis. The
-  contrastweights, the corresponding group and an effectsize are given.
+contrastweights, the corresponding group and an effectsize are given.
 }
 \description{
 Output of a mixed design contrast analysis

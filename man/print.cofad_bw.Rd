@@ -13,7 +13,7 @@
 }
 \value{
 Displays the significance of the contrast analysis. The contrast
-  weights, the corresponding group and an effectsize are given.
+weights, the corresponding group and an effectsize are given.
 }
 \description{
 Output of between-subject design contrast analysis
