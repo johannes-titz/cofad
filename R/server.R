@@ -341,6 +341,8 @@ myserver <- shinyServer(function(input, output, session) {
       lambda_within = reactive$lambda_within,
       data = NULL
     )
+    if (sum(reactive$lambda_between) != 0) showNotification("Your between lambdas do not sum up to 0. They are automatically centered.", type = "warning")
+    if (sum(reactive$lambda_within) != 0) showNotification("Your within lambdas do not sum up to 0. They are automatically centered.", type = "warning")
     # print output
     print(contr)
   })
