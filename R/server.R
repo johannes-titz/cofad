@@ -261,7 +261,7 @@ myserver <- shinyServer(function(input, output, session) {
   output$hot_lambda_within <- rhandsontable::renderRHandsontable({
     validate(need(input$sort_within_name, "Drag Variable to within."))
     lambda_within <- reactive$lambda_within
-    df <- data.frame("level" = names(lambda_within), lambda = lambda_within)
+    df <- prepare_table(lambda_within, within_var())
     if (!is.null(df))
       the_tab <- rhandsontable::rhandsontable(df, stretchH = "all",
                                               rowHeaders = NULL)
@@ -292,11 +292,11 @@ myserver <- shinyServer(function(input, output, session) {
   output$hot_lambda_between <- rhandsontable::renderRHandsontable({
     validate(need(input$sort_between_name, "Drag Variable to between."))
     lambda_between <- reactive$lambda_between
-    df <- data.frame("level" = names(lambda_between), lambda = lambda_between)
+    df <- prepare_table(lambda_between, between_var())
     if (!is.null(df))
       the_tab <- rhandsontable::rhandsontable(df, stretchH = "all",
                                               rowHeaders = NULL)
-    rhandsontable::hot_col(the_tab, "level", readOnly = T)
+    rhandsontable::hot_col(the_tab, c("level", "n"), readOnly = T)
   })
 
   # set lambda values when the rhandsontable changes

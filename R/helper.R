@@ -98,3 +98,13 @@ create_table <- function(levels) {
   # make first column read only
   rhandsontable::hot_col(the_tab, "levels", readOnly = T)
 }
+
+prepare_table <- function(lambda, var) {
+  df <- data.frame("level" = names(lambda), lambda = lambda)
+  freq_between <- as.data.frame(table(var))
+  freq_between <- freq_between %>%
+    dplyr::transmute(level = as.character(var), n = Freq)
+  df$level <- as.character(df$level)
+  df <- dplyr::left_join(df, freq_between, by = "level")
+  df
+}
