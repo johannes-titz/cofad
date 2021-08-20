@@ -10,8 +10,8 @@ Status](https://travis-ci.com/johannes-titz/cofad.svg?branch=main)](https://trav
 <!-- A BibTeX entry for LaTeX users is -->
 <!-- ``` -->
 <!-- @article{titz2020, -->
-<!--   title = {cofad: {A} modern graphical user interface for 2-level mixed models}, -->
-<!--   author = {Titz, Johannes}, -->
+<!--   title = {cofad: {A} }, -->
+<!--   author = {Titz, Johannes and Burkhardt, Markus}, -->
 <!--   year = {2020}, -->
 <!--   journal = {Journal of Open Source Software}, -->
 <!--   volume = {5}, -->
@@ -56,7 +56,7 @@ applications for within designs and mixed designs.
 ## Installation
 
 Cofad has two components, the plain R-package and a shiny-app that
-offers a simple graphical user interface.
+offers an intuitive graphical user interface.
 
 If you just want to use the cofad-app, you do not need to install it.
 Just go to <https://cofad.titz.science> and use it there. An example
@@ -82,7 +82,7 @@ cofad::run_app()
 Yes, it is that easy—at least under GNU/Linux!
 
 If you have any problems installing cofad, check that your R version is
-up to date (currently R version 4.1.0 (2021-05-18)). If you are using
+up to date (currently R version 4.1.1 (2021-08-10)). If you are using
 Windows, enable TLS 1.2 in the Internet Options Advanced tab (see
 <https://github.com/r-lib/remotes/issues/130#issuecomment-423830669>).
 Under Windows, you will also need Rtools to build the package:
@@ -93,7 +93,10 @@ or at johannes.titz at gmail.com.
 
 ## Using cofad
 
-Before we start: Your data has to be in the long-format!
+Before we start: Your data has to be in the long-format (also refered to
+as narrow or tidy)! If you do not know what this means, please check the
+short description of the Wikipedia-article:
+<https://en.wikipedia.org/wiki/Wide_and_narrow_data>
 
 ### Graphical-User-Interface
 
