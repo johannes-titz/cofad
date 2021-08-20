@@ -83,20 +83,20 @@ myui <- function(request) {
             )
           ),
           # Output  ------------------------------------------------------------
-          column(
-            width = 6,
+          # column(
+          #   width = 8,
             shinyjs::hidden(
               div(
                 id = "output_region",
                 shinydashboard::box(
                   title = "3. Result",
                   status = "primary",
-                  width = 6,
+                  width = 4,
                   uiOutput("table_region")
                 )
               )
             )
-          )
+          # )
         )
       )
     )

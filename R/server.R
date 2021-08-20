@@ -349,6 +349,6 @@ myserver <- shinyServer(function(input, output, session) {
     output <- gsub("F\\(", "<i>F</i>\\(", output)
     output <- gsub("p =", "<i>p </i>=", output)
     output <- gsub("r_effectsize", "<i>r</i><sub>effect size</sub>", output)
-    HTML(output)
+    HTML(c(output, "<br><br>", cite()))
   })
 })
