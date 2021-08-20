@@ -22,7 +22,7 @@ print.cofad_bw <- function(x, ...) {
   r_effect <- round(x[[4]][1], 3)
   r_effect_1 <- ifelse(
     r_effect < 0,
-    paste("r_effectsize = ", r_effect, "  CAVE: F-Value for opposite contrast",
+    paste("r_effectsize = ", r_effect, "  Attention: Contrast fits in the opposite direction!",
           sep = ""),
     paste("r_effectsize = ", r_effect, sep = "")
   )
@@ -97,7 +97,7 @@ print.cofad_mx <- function(x, ...) {
   r_effect <- round(x[[5]][1], 3)
   r_effect_1 <- ifelse(
     r_effect < 0,
-    paste("r_effectsize = ", r_effect, "  CAVE: F-Value for opposite contrast",
+    paste("r_effectsize = ", r_effect, "  Attention: Contrast fits in the opposite direction!",
           sep = ""),
     paste("r_effectsize = ", r_effect, sep = "")
   )
