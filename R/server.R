@@ -140,7 +140,7 @@ myserver <- shinyServer(function(input, output, session) {
           # lambda within table ----
           column(
             width = 5,
-            rhandsontable::rHandsontableOutput("hot_lambda_within", width = 200)
+            rhandsontable::rHandsontableOutput("hot_lambda_within", width = 250)
           )
         )
       ),
@@ -265,7 +265,7 @@ myserver <- shinyServer(function(input, output, session) {
     if (!is.null(df))
       the_tab <- rhandsontable::rhandsontable(df, stretchH = "all",
                                               rowHeaders = NULL)
-    rhandsontable::hot_col(the_tab, "level", readOnly = T)
+    rhandsontable::hot_col(the_tab, c("level", "n"), readOnly = T)
   })
 
   # set lambda values when the rhandsontable changes
@@ -345,10 +345,12 @@ myserver <- shinyServer(function(input, output, session) {
     if (sum(reactive$lambda_within) != 0) showNotification("Your within lambdas do not sum up to 0. They are automatically centered.", type = "warning")
     # print output
 
-    output <- capture.output(print(contr))[2]
+    output <- utils::capture.output(print(contr))
     output <- gsub("F\\(", "<i>F</i>\\(", output)
+    output <- gsub("t\\(", "<i>t</i>\\(", output)
     output <- gsub("p =", "<i>p </i>=", output)
     output <- gsub("r_effectsize", "<i>r</i><sub>effect size</sub>", output)
+    output <- gsub("g_effectsize", "<i>g</i><sub>effect size</sub>", output)
     HTML(c(output, "<br><br>", cite()))
   })
 })
