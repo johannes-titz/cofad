@@ -99,6 +99,13 @@ create_table <- function(levels) {
   rhandsontable::hot_col(the_tab, "levels", readOnly = T)
 }
 
+#' prepares lambda table
+#'
+#' Used in shiny to pepare a UI for setting lambda values.
+#'
+#' @param levels levels to create default lambdas for
+#' @return data frame with levels, lambda values and n per group
+#' @noRd
 prepare_table <- function(lambda, var) {
   df <- data.frame("level" = names(lambda), lambda = lambda)
   freq_between <- as.data.frame(table(var))
@@ -109,6 +116,12 @@ prepare_table <- function(lambda, var) {
   df
 }
 
+#' Cites useful references for cofad in html
+#'
+#' Used in shiny to list some references for contrast analysis.
+#'
+#' @return HTML character
+#' @noRd
 cite <- function() {
   '<p>References for method: </p>
   <div class="csl-bib-body" style="line-height: 1.5; margin-left: 2em; text-indent:-2em;">
