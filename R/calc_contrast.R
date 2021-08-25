@@ -76,14 +76,21 @@ calc_contrast <- function(dv,
                           between = NULL,
                           lambda_between = NULL,
                           within = NULL,
-                          lambda_within = NULL, id = NULL,
+                          lambda_within = NULL,
+                          ID = NULL,
+                          id = NULL,
                           data = NULL) {
   if (!is.null(data) & is.data.frame(data)) {
     arguments <- as.list(match.call())
     dv <- eval(arguments$dv, data)
     between <- eval(arguments$between, data)
     within <- eval(arguments$within, data)
-    id <- eval(arguments$id, data)
+    if (!missing(ID)) {
+      warning("argument ID is deprecated; please use id instead.", call. = FALSE)
+      id <- eval(arguments$ID, data)
+    } else {
+      id <- eval(arguments$id, data)
+    }
   } else if (!is.null(data) & !is.data.frame(data)) {
     stop("data is not a data.frame")
   }
