@@ -10,6 +10,7 @@ calc_contrast(
   lambda_between = NULL,
   within = NULL,
   lambda_within = NULL,
+  ID = NULL,
   id = NULL,
   data = NULL
 )
@@ -32,6 +33,8 @@ dependent groups. This must be a factor.}
 Names must match the levels of \code{between}. If
 \code{lambda_between}
 does not sum up to zero, this will be done automatically.}
+
+\item{ID}{deprecated, use id instead}
 
 \item{id}{identifier for cases or subjects is needed
 for within- and mixed contrast analysis.}
