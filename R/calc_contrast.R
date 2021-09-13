@@ -17,6 +17,7 @@
 #' for within- and mixed contrast analysis.
 #' @param data optional argument for the \code{data.frame}
 #' containing \code{dv} and groups.
+#' @param ID deprecated, use id instead
 #' @details For multi-factorial designs, the lambda weights of
 #' the factors must be connected.
 #' @return an object of type cofad_bw or cofad_wi or cofad_mx, including
