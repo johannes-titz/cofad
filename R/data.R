@@ -136,3 +136,10 @@
 #'   Statistik für Psychologen und Sozialwissenschaftler (3rd ed.). Pearson
 #'   Studium.
 "sedlmeier_p525"
+
+#' Citations for contrast analysis
+#'
+#' This is just an html bibliography to show some useful citations for contrast
+#' analysis in the shiny app. Since it contains unicode characters it is saved
+#' as a data set.
+"citation"

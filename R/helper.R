@@ -106,28 +106,14 @@ create_table <- function(levels) {
 #' @param levels levels to create default lambdas for
 #' @return data frame with levels, lambda values and n per group
 #' @noRd
+#' @importFrom rlang .data
 prepare_table <- function(lambda, var) {
   df <- data.frame("level" = names(lambda), lambda = lambda)
   freq_between <- as.data.frame(table(var))
-  freq_between <- freq_between %>%
-    dplyr::transmute(level = as.character(var), n = Freq)
+  freq_between <- dplyr::transmute(freq_between,
+                                   level = as.character(.data$var),
+                                   n = .data$Freq)
   df$level <- as.character(df$level)
   df <- dplyr::left_join(df, freq_between, by = "level")
   df
-}
-
-#' Cites useful references for cofad in html
-#'
-#' Used in shiny to list some references for contrast analysis.
-#'
-#' @return HTML character
-#' @noRd
-cite <- function() {
-  '<p>References for method: </p>
-  <div class="csl-bib-body" style="line-height: 1.5; margin-left: 2em; text-indent:-2em;">
-  <div class="csl-entry">Furr, R. M. (2004). Interpreting effect sizes in contrast analysis. <i>Understanding Statistics</i>, <i>3</i>, 1–25. <a href="https://doi.org/10.1207/s15328031us0301_1">https://doi.org/10.1207/s15328031us0301_1</a></div>
-  <span class="Z3988" title="url_ver=Z39.88-2004&amp;ctx_ver=Z39.88-2004&amp;rfr_id=info%3Asid%2Fzotero.org%3A2&amp;rft_id=info%3Adoi%2F10.1207%2Fs15328031us0301_1&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Ajournal&amp;rft.genre=article&amp;rft.atitle=Interpreting%20effect%20sizes%20in%20contrast%20analysis&amp;rft.jtitle=Understanding%20Statistics&amp;rft.volume=3&amp;rft.aufirst=R.%20Michael&amp;rft.aulast=Furr&amp;rft.au=R.%20Michael%20Furr&amp;rft.date=2004&amp;rft.pages=1-25&amp;rft.spage=1&amp;rft.epage=25"></span>
-  <div class="csl-entry">Rosenthal, R., Rosnow, R. L., &amp; Rubin, D. B. (1999). <i>Contrasts and effect sizes in behavioral research: A correlational approach</i>. Cambridge University Press. <a href="https://doi.org/10.1017/CBO9780511804403">https://doi.org/10.1017/CBO9780511804403</a></div>
-  <span class="Z3988" title="url_ver=Z39.88-2004&amp;ctx_ver=Z39.88-2004&amp;rfr_id=info%3Asid%2Fzotero.org%3A2&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook&amp;rft.genre=book&amp;rft.btitle=Contrasts%20and%20effect%20sizes%20in%20behavioral%20research%3A%20A%20correlational%20approach&amp;rft.publisher=Cambridge%20University%20Press&amp;rft.aufirst=Robert&amp;rft.aulast=Rosenthal&amp;rft.au=Robert%20Rosenthal&amp;rft.au=Ralph%20L%20Rosnow&amp;rft.au=Donald%20B%20Rubin&amp;rft.date=1999"></span>
-</div>'
 }
