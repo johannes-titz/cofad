@@ -39,4 +39,5 @@ Imports:
     htmlwidgets,
     magrittr,
     rhandsontable,
-    dplyr
+    dplyr,
+    rlang
