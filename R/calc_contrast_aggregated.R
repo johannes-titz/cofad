@@ -18,6 +18,12 @@
 #'   Cambridge University Press.
 #'
 #' @examples
+#' library(dplyr)
+#' furr_agg <- furr_p4 %>%
+#'   group_by(major) %>%
+#'   summarize(mean = mean(empathy), sd = sd(empathy), n = n())
+#' lambdas = c("psychology" = 1, "education" = -1, "business" = 0, "chemistry" = 0)
+#' calc_contrast_aggregated(mean, sd, n, major, lambdas, furr_agg)
 #'
 #' @export
 calc_contrast_aggregated <- function(means, sds, ns, between, lambda_between,
