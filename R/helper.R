@@ -117,3 +117,14 @@ prepare_table <- function(lambda, var) {
   df <- dplyr::left_join(df, freq_between, by = "level")
   df
 }
+
+#' Cites useful references for cofad in html
+#'
+#' Used in shiny to list some references for contrast analysis.
+#'
+#' @return HTML character
+#' @noRd
+cite <- function() {
+  paste(readLines(system.file("extdata", "citation.txt", package = "cofad")),
+        collapse = "")
+}

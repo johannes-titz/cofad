@@ -351,7 +351,6 @@ myserver <- shinyServer(function(input, output, session) {
     output <- gsub("p =", "<i>p </i>=", output)
     output <- gsub("r_effectsize", "<i>r</i><sub>effect size</sub>", output)
     output <- gsub("g_effectsize", "<i>g</i><sub>effect size</sub>", output)
-    data("citation", envir = environment(), package = "cofad")
-    HTML(c(output, "<br><br>", citation))
+    HTML(c(output, "<br><br>", cite()))
   })
 })
