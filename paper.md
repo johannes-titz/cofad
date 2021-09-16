@@ -16,7 +16,7 @@ affiliations:
  - name: Department of Psychology, TU Chemnitz, Germany
    index: 1
 date: 15 September 2021
-bibliography: library.bib
+bibliography: clean_library.bib
 ---
 
 # Summary

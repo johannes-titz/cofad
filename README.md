@@ -93,9 +93,9 @@ or at johannes.titz at gmail.com.
 
 ## Using cofad
 
-Before we start: Your data has to be in the long-format (also refered to
-as narrow or tidy)! If you do not know what this means, please check the
-short description of the Wikipedia-article:
+Before we start: Your data has to be in the long-format (also referred
+to as narrow or tidy)! If you do not know what this means, please check
+the short description of the Wikipedia-article:
 <https://en.wikipedia.org/wiki/Wide_and_narrow_data>
 
 ### Graphical-User-Interface
@@ -194,11 +194,7 @@ ca <- calc_contrast(dv = empathy, between = major,
                     data = furr_p4)
 ca
 #> 
-#> Contrast Analysis for between factor design
-#> 
-#> F(1,16) = 6.154; p = 0.02461087
-#> Contrast:  business = 0; chemistry = 0; education = -1; psychology = 1
-#> r_effectsize = -0.276  CAVE: F-Value for opposite contrast
+#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276.  Attention: Contrast fits in the opposite direction!
 ```
 
 The print method only shows some basic information, but we can use the
@@ -240,22 +236,14 @@ ca <- calc_contrast(dv = empathy, between = major,
                     data = furr_p4)
 ca
 #> 
-#> Contrast Analysis for between factor design
-#> 
-#> F(1,16) = 0.684; p = 0.42045621
-#> Contrast:  business = 1; chemistry = -1; education = 0; psychology = 0
-#> r_effectsize = 0.092
+#> We ran a contrast analysis for the following between contrasts: business = 1; chemistry = -1; education = 0; psychology = 0. This resulted in statistics of F(1,16) = 0.684; p = 0.4205 and an effect magnitude of r_effectsize = 0.092.
 ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 1, "education" = 1,
                                        "business" = -1, "chemistry" = -1),
                     data = furr_p4)
 ca
 #> 
-#> Contrast Analysis for between factor design
-#> 
-#> F(1,16) = 57.778; p = 1.07e-06
-#> Contrast:  business = -1; chemistry = -1; education = 1; psychology = 1
-#> r_effectsize = 0.847
+#> We ran a contrast analysis for the following between contrasts: business = -1; chemistry = -1; education = 1; psychology = 1. This resulted in statistics of F(1,16) = 57.778; p = 1.07e-06 and an effect magnitude of r_effectsize = 0.847.
 ```
 
 You will find that the numbers are identical to the ones presented in
@@ -273,11 +261,7 @@ ca <- calc_contrast(dv = empathy, between = major,
 #> Warning in check_lambda(lambda_between): lambdas are centered and rounded to 3 digits
 ca
 #> 
-#> Contrast Analysis for between factor design
-#> 
-#> F(1,16) = 37.466; p = 1.475e-05
-#> Contrast:  business = -4.75; chemistry = -17.75; education = 5.25; psychology = 17.25
-#> r_effectsize = 0.682
+#> We ran a contrast analysis for the following between contrasts: business = -4.75; chemistry = -17.75; education = 5.25; psychology = 17.25. This resulted in statistics of F(1,16) = 37.466; p = 1.475e-05 and an effect magnitude of r_effectsize = 0.682.
 ```
 
 The manual test shows the same effect size:
@@ -297,7 +281,7 @@ care of it and we just have to use the within parameters *within* and
 *lambda_within* instead of the between equivalents. As an example we use
 Table 16.5 from Sedlmeier & Renkewitz (2018). Reading ability was
 assessed for eight participants under four different conditions. The
-hypothesis is that you can read best wihout music, white noise reduces
+hypothesis is that you can read best without music, white noise reduces
 your reading ability and music (independent of type) reduces it even
 further.
 
@@ -318,15 +302,10 @@ calc_contrast(dv = reading_test, within = music,
                                 "jazz" = -0.75),
               id = participant, data = sedlmeier_p537)
 #> 
-#> Contrast Analysis for within factor design
-#> 
-#> L-Values: Mean =  5.875 ; SD =  3.154
-#> t(7) = 5.269; p = 0.00058101
-#> Contrast:  classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25
-#> g_contrast = 1.863
+#> We ran a contrast analysis for the following within contrasts: classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25. This resulted in statistics of t(7) = 5.269; p = 0.000581 and an effect magnitude of g_effectsize = 1.863.
 ```
 
-You can see that the siginifance test is just a
+You can see that the significance test is just a
 ![t](https://latex.codecogs.com/png.latex?t "t")-test and the reported
 effect size is also for a mean comparison
 (![g](https://latex.codecogs.com/png.latex?g "g")). (The
@@ -400,12 +379,7 @@ contr_mx <- calc_contrast(dv = dv,
                           )
 contr_mx
 #> 
-#> Contrast Analysis for Mixed-Design:
-#> 
-#> F(1,6) = 20.211; p = 0.004
-#> Contrast between:  age10 = 0; age12 = 1; age8 = -1
-#> Contrast within:  1 = -3; 2 = -1; 3 = 1; 4 = 3
-#> r_effectsize = 0.871
+#> We ran a contrast analysis for the following between contrasts: age10 = 0; age12 = 1; age8 = -1 and within contrasts: 1 = -3; 2 = -1; 3 = 1; 4 = 3. This resulted in statistics of F(1,6) = 20.211; p = 0.004123 and an effect magnitude of r_effectsize = 0.871.
 ```
 
 The results look like a contrast analysis for between-subject designs.
@@ -457,11 +431,7 @@ furr_agg <- furr_p4 %>%
 lambdas = c("psychology" = 1, "education" = -1, "business" = 0, "chemistry" = 0)
 calc_contrast_aggregated(mean, sd, n, major, lambdas, furr_agg)
 #> 
-#> Contrast Analysis for between factor design
-#> 
-#> F(1,16) = 6.154; p = 0.02461087
-#> Contrast:  business = 0; chemistry = 0; education = -1; psychology = 1
-#> r_effectsize = -0.276  CAVE: F-Value for opposite contrast
+#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276.  Attention: Contrast fits in the opposite direction!
 ```
 
 And the result is indeed the same when compared to the analysis with the
@@ -474,11 +444,7 @@ ca <- calc_contrast(dv = empathy, between = major,
                     data = furr_p4)
 ca
 #> 
-#> Contrast Analysis for between factor design
-#> 
-#> F(1,16) = 6.154; p = 0.02461087
-#> Contrast:  business = 0; chemistry = 0; education = -1; psychology = 1
-#> r_effectsize = -0.276  CAVE: F-Value for opposite contrast
+#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276.  Attention: Contrast fits in the opposite direction!
 ```
 
 Note that this will only work for between-subjects designs.
@@ -536,8 +502,7 @@ University Press.
 
 Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). *Contrasts and
 Effect Sizes in Behavioral Research: A Correlational Approach*.
-Cambridge University Press. Retrieved from
-<https://books.google.com?id=ByxHEePhwHIC>
+Cambridge University Press.
 
 </div>
 

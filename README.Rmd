@@ -93,7 +93,7 @@ If it still does not work drop me an e-mail at johannes at titz.science or at jo
 
 ## Using cofad
 
-Before we start: Your data has to be in the long-format (also refered to as narrow or tidy)! If you do not know what this means, please check the short description of the Wikipedia-article: https://en.wikipedia.org/wiki/Wide_and_narrow_data
+Before we start: Your data has to be in the long-format (also referred to as narrow or tidy)! If you do not know what this means, please check the short description of the Wikipedia-article: https://en.wikipedia.org/wiki/Wide_and_narrow_data
 
 ### Graphical-User-Interface
 
@@ -199,7 +199,7 @@ Let us now do an analysis for within-subjects designs.
 
 ## Within-Subjects Designs
 
-For within designs the calculations are quite different, but cofad takes care of it and we just have to use the within parameters *within* and *lambda_within* instead of the between equivalents. As an example we use Table 16.5 from @sedlmeier2018. Reading ability was assessed for eight participants under four different conditions. The hypothesis is that you can read best wihout music, white noise reduces your reading ability and music (independent of type) reduces it even further.
+For within designs the calculations are quite different, but cofad takes care of it and we just have to use the within parameters *within* and *lambda_within* instead of the between equivalents. As an example we use Table 16.5 from @sedlmeier2018. Reading ability was assessed for eight participants under four different conditions. The hypothesis is that you can read best without music, white noise reduces your reading ability and music (independent of type) reduces it even further.
 
 ```{r}
 data("sedlmeier_p537")
@@ -212,7 +212,7 @@ calc_contrast(dv = reading_test, within = music,
               id = participant, data = sedlmeier_p537)
 ```
 
-You can see that the siginifance test is just a $t$-test and the reported effect size is also for a mean comparison ($g$). (The $t$-test is one-tailed, because contrast analysis has always a specific hypotheses.) When conducting the analysis manually, we can see why:
+You can see that the significance test is just a $t$-test and the reported effect size is also for a mean comparison ($g$). (The $t$-test is one-tailed, because contrast analysis has always a specific hypotheses.) When conducting the analysis manually, we can see why:
 
 ```{r}
 mtr <- matrix(sedlmeier_p537$reading_test, ncol = 4)
