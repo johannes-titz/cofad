@@ -10,7 +10,7 @@ test_that("constructor checks work", {
 
   expect_error(
     calc_contrast(dv = 1:8,
-                  between = as.factor(rep(1:2,4)),
+                  between = as.factor(rep(1:2, 4)),
                   lambda_between = NULL,
                   within = NULL,
                   lambda_within = NULL, id = NULL,
@@ -20,7 +20,7 @@ test_that("constructor checks work", {
 
   expect_error(
     calc_contrast(dv = 1:8,
-                  between = as.factor(rep(1:2,4)),
+                  between = as.factor(rep(1:2, 4)),
                   lambda_between = 1:2,
                   within = NULL,
                   lambda_within = NULL, id = NULL,
@@ -41,7 +41,7 @@ test_that("constructor checks work", {
   expect_error(
     calc_contrast(dv = 1:8,
                   lambda_between =  c("1" = -0.5, "foo" = 0.5),
-                  between = as.factor(rep(1:2,4)),
+                  between = as.factor(rep(1:2, 4)),
                   within = NULL,
                   lambda_within = NULL,
                   id = NULL,
@@ -52,7 +52,7 @@ test_that("constructor checks work", {
   expect_warning(
     calc_contrast(dv = 1:8,
                   lambda_between =  c("1" = -0.5, "2" = 0.5),
-                  between = rep(1:2,4),
+                  between = rep(1:2, 4),
                   within = NULL,
                   lambda_within = NULL,
                   id = NULL,
@@ -62,9 +62,9 @@ test_that("constructor checks work", {
 
   expect_warning(
     calc_contrast(dv = 1:8,
-                  between = as.factor(rep(1:2,4)),
+                  between = as.factor(rep(1:2, 4)),
                   lambda_between =  c("1" = 1, "2" = 2),
-                  within = as.factor(rep(1:4,2)),
+                  within = as.factor(rep(1:4, 2)),
                   lambda_within = NULL,
                   id = NULL,
                   data = NULL),
@@ -73,9 +73,9 @@ test_that("constructor checks work", {
 
   expect_warning(
     calc_contrast(dv = c(1:7, NA),
-                  between = as.factor(rep(1:2,4)),
+                  between = as.factor(rep(1:2, 4)),
                   lambda_between =  c("1" = -1, "2" = 1),
-                  within = as.factor(rep(1:4,2)),
+                  within = as.factor(rep(1:4, 2)),
                   id = NULL,
                   data = NULL),
     "SD of group means is zero"
