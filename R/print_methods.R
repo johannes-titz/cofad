@@ -52,7 +52,7 @@ print.cofad_wi <- function(x, ...) {
     ""
   )
   cat("\nWe ran a contrast analysis for the following within contrasts: ",
-      contr_1, ". ", sep ="")
+      contr_1, ". ", sep = "")
   cat("This resulted in statistics of ", p,
       " and an effect magnitude of g_effectsize = ", g_effect, ". ",
       opposite, sep = "")
@@ -86,8 +86,8 @@ print.cofad_mx <- function(x, ...) {
     ""
   )
   cat("\nWe ran a contrast analysis for the following between contrasts: ",
-      contr_1, " and within contrasts: ", contr_2, sep ="")
+      contr_1, " and within contrasts: ", contr_2, sep = "")
   cat(". This resulted in statistics of ", p,
       " and an effect magnitude of r_effectsize = ", r_effect, ". ",
-      opposite, sep ="")
+      opposite, sep = "")
 }

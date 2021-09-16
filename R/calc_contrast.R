@@ -87,7 +87,8 @@ calc_contrast <- function(dv,
     between <- eval(arguments$between, data)
     within <- eval(arguments$within, data)
     if (!missing(ID)) {
-      warning("argument ID is deprecated; please use id instead.", call. = FALSE)
+      warning("argument ID is deprecated; please use id instead.",
+              call. = FALSE)
       id <- eval(arguments$ID, data)
     } else {
       id <- eval(arguments$id, data)
@@ -196,9 +197,9 @@ calc_contrast <- function(dv,
   if (case == "mixed-Analysis: between and within factors") {
     lambda_within <- lambda_within[order(names(lambda_within))]
     lambda_between <- lambda_between[order(names(lambda_between))]
-    ni_within <- table(within)
+    #ni_within <- table(within)
     ni_between <- table(between)
-    n_total <- sum(ni_within)
+    #n_total <- sum(ni_within)
     k_between <- length(ni_between)
     df_contrast <- 1
     l_value <- NULL
@@ -220,7 +221,7 @@ calc_contrast <- function(dv,
         bw_wide[i, 2] <- id_bw
       }
     }
-    df_id <- length(l_value) - 1
+    #df_id <- length(l_value) - 1
     l_value_group_mean <- tapply(l_value, bw_wide[, 2], mean)
     l_value_group_var <- tapply(l_value, bw_wide[, 2], var)
     if (anyNA(l_value_group_var)) {
@@ -376,7 +377,7 @@ run_within_analysis <- function(dv, within, between, lambda_within, id) {
     df_id <- length(l_value) - 1
     df_within <- n_total - k_bw
   }
-  df_contrast <- 1
+  #df_contrast <- 1
   if (!is.null(between)) {
     df_id <- sum(ni_l_value) - k_bw
     ni_cell <- table(within, between)
@@ -389,7 +390,7 @@ run_within_analysis <- function(dv, within, between, lambda_within, id) {
   }
   t_value <- mean(l_value) / sqrt((1 / (k_bw * harm_n)) * s2)
   f_contrast <- t_value ** 2
-  ss_total <- sum(((dv - mean(dv)) ** 2))
+  #ss_total <- sum(((dv - mean(dv)) ** 2))
   p_contrast <- pt(t_value, df_id, lower.tail = F)
   g_effect <- mean(l_value) / (sqrt(s2))
   sign_r_contrast <- sign(g_effect)
@@ -512,9 +513,8 @@ calc_r_contrast <- function(r_alerting, r_effectsize) {
 #' @export
 calc_r_effectsize <- function(r_alerting, r_contrast) {
   numerator <- - r_contrast * r_alerting
-  denominator <- sqrt(
-    -(r_contrast^2) * r_alerting^2 + r_contrast^2 + r_alerting^2
-  )
+  denominator <- sqrt(- (r_contrast^2) * r_alerting^2 + r_contrast^2 +
+                        r_alerting^2)
   r_effectsize <- numerator / denominator
   return(r_effectsize)
 }
