@@ -19,3 +19,5 @@
 ^rsconnect$
 ^test_markus\.R$
 ^app\.R$
+^LICENSE\.md$
+^paper\.md$
