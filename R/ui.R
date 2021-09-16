@@ -53,23 +53,9 @@ myui <- function(request) {
             shinydashboard::box(
               title = "Help",
               status = "primary",
-              HTML(
-                paste(
-                  "<p>How to use cofad? See <a href='https://github.com/",
-                  "johannes-titz/cofad#readme' target='_blank'>",
-                  "README</a> for a short introduction.</p>",
-                  "<p>Bugtracker: <a href='https://github.com/johannes-titz/",
-                  "cofad/issues' target='_blank'>https://github.com/",
-                  "johannes-titz/cofad/issues</a></p>",
-                  "<p>Example data set (Table 5.3 from Rosenthal and Rosnow",
-                  ", 2000): <a href='https://cofad.titz.science/example' ",
-                  "target='_blank'>https://cofad.titz.science/example</a>",
-                  "<p><strong>Important Notice</strong>: Your data has to be in the long-format (also refered to as narrow or tidy)! If you do not know what this means, please check the short description of the Wikipedia-article: ",
-                  "<a href='https://en.wikipedia.org/wiki/Wide_and_narrow_data'",
-                  "target='_blank'>https://en.wikipedia.org/wiki/Wide_and_narrow_data</a></p>",
-                  "<p>Citation: [coming soon]</p>",
-                  sep = ""
-                )
+              HTML(paste(readLines(system.file("extdata", "intro.html",
+                                               package = "cofad")),
+                         collapse = "")
               )
             )
           ),
@@ -86,20 +72,17 @@ myui <- function(request) {
             )
           ),
           # Output  ------------------------------------------------------------
-          # column(
-          #   width = 8,
-            shinyjs::hidden(
-              div(
-                id = "output_region",
-                shinydashboard::box(
-                  title = "3. Result",
-                  status = "primary",
-                  width = 4,
-                  uiOutput("table_region")
-                )
+          shinyjs::hidden(
+            div(
+              id = "output_region",
+              shinydashboard::box(
+                title = "3. Result",
+                status = "primary",
+                width = 4,
+                uiOutput("table_region")
               )
             )
-          # )
+          )
         )
       )
     )
