@@ -122,12 +122,12 @@
 #'
 #' Example 16.2, table 16.1 in Sedlmeier & Renkewitz (2018). Fictious data set
 #' with 15 boys divided into three groups (no training, boys-specific material,
-#' girls-specific traning material). The DV is the number of solved problem
+#' girls-specific training material). The DV is the number of solved problem
 #' (similar to the training).
 #'
 #' @format a data frame with 15 rows and 3 columns
 #' \describe{
-#'   \item{lsg}{dv, number of svoled exercises}
+#'   \item{lsg}{dv, number of solved exercises}
 #'   \item{between}{group, KT=no training, JT=boys-specific, MT=girls-specific}
 #'   \item{lambda}{lambdas used for this example}
 #' }
