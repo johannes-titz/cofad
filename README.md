@@ -1,10 +1,12 @@
-
-# cofad
+Cofad User Guide
+================
 
 [![Build
 Status](https://travis-ci.com/johannes-titz/cofad.svg?branch=main)](https://travis-ci.com/johannes-titz/cofad)
-<!-- [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116) -->
+[![CRAN
+status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/package=cofad)
 
+<!-- [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116) -->
 <!-- To cite cofad in publications use: -->
 <!-- Titz, J. (2020). cofad: A modern graphical user interface for 2-level mixed models. *Journal of Open Source Software, 5*(49), 2116. https://doi.org/10.21105/joss.02116 -->
 <!-- A BibTeX entry for LaTeX users is -->
@@ -26,14 +28,13 @@ Status](https://travis-ci.com/johannes-titz/cofad.svg?branch=main)](https://trav
 Cofad is an R package for conducting COntrast analysis in FActorial
 Designs like ANOVAs. If contrast analysis was to win a price it would be
 the one for the most underestimated, underused statistical technique.
-This is a pitty because in every case a contrast analysis is at least as
-good as an ANOVA, but in most cases it is actually better. To the
-question why, the simplest answer is that contrast analysis gets rid off
-the unspecific omnibus-hypothesis *there are differences somewhere* and
-substitutes it with a very specific numerical hypothesis. Furthermore,
-contrast analysis focuses on effects instead of significance. This is
-expressed doubly: First, there are three different effect sizes for
-contrast analysis:
+This is unfortunate because in every case a contrast analysis is at
+least as good as an ANOVA, but in most cases it is better. Contrast
+analysis gets rid off the unspecific omnibus-hypothesis *there are
+differences somewhere* and replaces it with a very specific numerical
+hypothesis. Furthermore, contrast analysis focuses on effects instead of
+significance. This is expressed doubly: First, there are three different
+effect sizes for contrast analysis:
 ![r\_\\mathrm{effectsize}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D "r_\mathrm{effectsize}"),
 ![r\_\\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}")
 and
@@ -41,21 +42,22 @@ and
 Second, the effect size refers not to the data but to the tested
 hypothesis. The larger the effect, the more this speaks for the
 hypothesis. One can even compare different hypotheses against each other
-(hello experimentum crucis) by looking at the effect size for each
+(experimentum crucis!) by looking at the effect size for each
 hypothesis.
 
-If we sparked your interest we recommend to read some introductory
-literature like Furr (2004),Rosenthal & Rosnow (1985),Rosenthal, Rosnow,
-& Rubin (2000), or, for the German-speaking audience, Sedlmeier &
-Renkewitz (2018). Contrast analysis is actually really easy to
-understand if you know what a correlation is. In this vignette we assume
-you know some basics about contrast analysis and want to use it for your
-own data. We will start with between-subjects designs and then show
-applications for within designs and mixed designs.
+Sounds interesting? Then check out some introductory literature such as
+Furr (2004),Rosenthal & Rosnow (1985),Rosenthal, Rosnow, & Rubin (2000),
+or, for the German-speaking audience, Sedlmeier & Renkewitz (2018).
+Contrast analysis is fairly easy to understand if you know what an ANOVA
+and a correlation is. In this vignette we assume you are familiar with
+the basics of contrast analysis and want to apply it to a specific data
+set. First we show how to install cofad and use the graphical user
+interface. Then we demonstrate some exemplary analyses for between,
+within and mixed designs in R.
 
 ## Installation
 
-Cofad has two components, the plain R-package and a shiny-app that
+Cofad has two components, the plain R package and a shiny-app that
 offers an intuitive graphical user interface.
 
 If you just want to use the cofad-app, you do not need to install it.
@@ -67,19 +69,18 @@ locally, install it from github (you need the package devtools for
 this):
 
 ``` r
-# install.packages("devtools") # uncomment if you do not have devtools installed
+# install.packages('devtools') # uncomment if you do not have devtools
+# installed
 devtools::install_github("johannes-titz/cofad")
 ```
 
-Now can you load cofad and use it in your R-scripts.
+Now you can load cofad and use it in your R scripts.
 
 You can also run the app:
 
 ``` r
 cofad::run_app()
 ```
-
-Yes, it is that easy—at least under GNU/Linux!
 
 If you have any problems installing cofad, check that your R version is
 up to date (currently R version 4.1.1 (2021-08-10)). If you are using
@@ -88,8 +89,8 @@ Windows, enable TLS 1.2 in the Internet Options Advanced tab (see
 Under Windows, you will also need Rtools to build the package:
 <https://cran.r-project.org/bin/windows/Rtools/>.
 
-If it still does not work drop me an e-mail at johannes at titz.science
-or at johannes.titz at gmail.com.
+If it still does not work drop an e-mail at johannes at titz.science or
+at johannes.titz at gmail.com.
 
 ## Using cofad
 
@@ -105,15 +106,15 @@ and drag the variables to the correct position. At the moment you can
 only read .sav (SPSS) and .csv files.
 
 As an example go to <https://cofad.titz.science/example> which will load
-a data set from Rosenthal et al. (2000) (Table 5.3). Nine children were
-measured four times (within), but they also belong to different groups
-of age (between).
+a data set from Rosenthal et al. (2000) (Table 5.3). The cognitive
+ability of nine children belonging to different age groups (between) was
+measured four times (within).
 
 There are two hypotheses:
 
-1.  linear increase over time (within)
+1.  cogintive ability linearly increases over time (within)
     (![\\lambda\_\\mathrm{1} = -3, \\lambda\_\\mathrm{2} = -1, \\lambda\_\\mathrm{3} = 1, \\lambda\_\\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3"))
-2.  linear increase over age (between)
+2.  cogintive ability linearly increase over age groups (between)
     (![\\lambda\_\\mathrm{Age 8} = -1, \\lambda\_\\mathrm{Age 10} = 0, \\lambda\_\\mathrm{Age12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge12%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1"))
 
 Now drag the variables to the correct position and set the lambdas
@@ -128,7 +129,7 @@ The result should look like this:
 A mixed design is ideal for testing out the cofad-app. You can now
 construct a separate within-model by removing the between variable
 “age.” Then you can construct a separate between-model by removing
-“time” from within and only using “age” in between.
+“time” from within and dragging “age” back into the between panel.
 
 The graphical user interface will suffice for most users, but some will
 prefer to use the scripting capabilities of R. In the next sections we
@@ -188,17 +189,14 @@ These hypotheses are only mean comparisons, but this is a good way to
 start. Let’s use cofad to conduct the contrast analysis:
 
 ``` r
-ca <- calc_contrast(dv = empathy, between = major,
-                    lambda_between = c("psychology" = 1, "education" = -1,
-                                       "business" = 0, "chemistry" = 0),
-                    data = furr_p4)
+ca <- calc_contrast(dv = empathy, between = major, lambda_between = c(psychology = 1,
+    education = -1, business = 0, chemistry = 0), data = furr_p4)
 ca
-#> 
-#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276.  Attention: Contrast fits in the opposite direction!
+#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276. Attention: Contrast fits in the opposite direction!
 ```
 
-The print method only shows some basic information, but we can use the
-summary method for more details:
+The print method shows some basic information that can be directly used
+in a publication. With the summary method some more details are shown:
 
 ``` r
 summary(ca)
@@ -218,8 +216,8 @@ summary(ca)
 From this table,
 ![r\_\\mathrm{effectsize}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D "r_\mathrm{effectsize}")
 is probably the most useful statistic. It is just the correlation
-between the lambdas and the dependent variable, which can also easily be
-calculated manually:
+between the lambdas and the dependent variable, which can also be
+calculated by hand:
 
 ``` r
 lambdas <- rep(c(1, -1, 0, 0), each = 5)
@@ -230,19 +228,13 @@ cor(furr_p4$empathy, lambdas)
 The other two hypotheses can be tested accordingly:
 
 ``` r
-ca <- calc_contrast(dv = empathy, between = major,
-                    lambda_between = c("psychology" = 0, "education" = 0,
-                                       "business" = 1, "chemistry" = -1),
-                    data = furr_p4)
+ca <- calc_contrast(dv = empathy, between = major, lambda_between = c(psychology = 0,
+    education = 0, business = 1, chemistry = -1), data = furr_p4)
 ca
-#> 
 #> We ran a contrast analysis for the following between contrasts: business = 1; chemistry = -1; education = 0; psychology = 0. This resulted in statistics of F(1,16) = 0.684; p = 0.4205 and an effect magnitude of r_effectsize = 0.092.
-ca <- calc_contrast(dv = empathy, between = major,
-                    lambda_between = c("psychology" = 1, "education" = 1,
-                                       "business" = -1, "chemistry" = -1),
-                    data = furr_p4)
+ca <- calc_contrast(dv = empathy, between = major, lambda_between = c(psychology = 1,
+    education = 1, business = -1, chemistry = -1), data = furr_p4)
 ca
-#> 
 #> We ran a contrast analysis for the following between contrasts: business = -1; chemistry = -1; education = 1; psychology = 1. This resulted in statistics of F(1,16) = 57.778; p = 1.07e-06 and an effect magnitude of r_effectsize = 0.847.
 ```
 
@@ -250,21 +242,19 @@ You will find that the numbers are identical to the ones presented in
 Furr (2004). Now, imagine we have a more fun hypothesis and not just
 mean differences. From an elaborate theory we could derive that the
 means should be 73, 61, 51 and 38. We can test this with cofad directly
-because cofad will transfer the chosen lambdas into proper lambdas (the
-mean of the lambdas has to be 0):
+because cofad will center the lambdas (the mean of the lambdas has to be
+0):
 
 ``` r
-ca <- calc_contrast(dv = empathy, between = major,
-                    lambda_between = c("psychology" = 73, "education" = 61,
-                                       "business" = 51, "chemistry" = 38),
-                    data = furr_p4)
-#> Warning in check_lambda(lambda_between): lambdas are centered and rounded to 3 digits
+ca <- calc_contrast(dv = empathy, between = major, lambda_between = c(psychology = 73,
+    education = 61, business = 51, chemistry = 38), data = furr_p4)
+#> Warning in check_lambda(lambda_between): lambdas are centered and rounded to 3
+#> digits
 ca
-#> 
 #> We ran a contrast analysis for the following between contrasts: business = -4.75; chemistry = -17.75; education = 5.25; psychology = 17.25. This resulted in statistics of F(1,16) = 37.466; p = 1.475e-05 and an effect magnitude of r_effectsize = 0.682.
 ```
 
-The manual test shows the same effect size:
+The manual test gives the same effect size:
 
 ``` r
 lambdas <- rep(c(73, 61, 51, 38), each = 5)
@@ -272,14 +262,14 @@ cor(furr_p4$empathy, lambdas)
 #> [1] 0.6817294
 ```
 
-Let us now do an analysis for within-subjects designs.
+Let us now run an analysis for within-subjects designs.
 
 ## Within-Subjects Designs
 
 For within designs the calculations are quite different, but cofad takes
-care of it and we just have to use the within parameters *within* and
-*lambda_within* instead of the between equivalents. As an example we use
-Table 16.5 from Sedlmeier & Renkewitz (2018). Reading ability was
+care of the details. We just have to use the within parameters *within*
+and *lambda_within* instead of the between equivalents. As an example we
+use Table 16.5 from Sedlmeier & Renkewitz (2018). Reading ability was
 assessed for eight participants under four different conditions. The
 hypothesis is that you can read best without music, white noise reduces
 your reading ability and music (independent of type) reduces it even
@@ -295,23 +285,19 @@ head(sedlmeier_p537)
 #> 4           29           4 without music
 #> 5           30           5 without music
 #> 6           33           6 without music
-calc_contrast(dv = reading_test, within = music,
-              lambda_within = c("without music" = 1.25, 
-                                "white noise" = 0.25,
-                                "classic" = -0.75,
-                                "jazz" = -0.75),
-              id = participant, data = sedlmeier_p537)
+calc_contrast(dv = reading_test, within = music, lambda_within = c(`without music` = 1.25,
+    `white noise` = 0.25, classic = -0.75, jazz = -0.75), id = participant, data = sedlmeier_p537)
 #> 
 #> We ran a contrast analysis for the following within contrasts: classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25. This resulted in statistics of t(7) = 5.269; p = 0.000581 and an effect magnitude of g_effectsize = 1.863.
 ```
 
 You can see that the significance test is just a
 ![t](https://latex.codecogs.com/png.latex?t "t")-test and the reported
-effect size is also for a mean comparison
+effect size is referring to a mean comparison
 (![g](https://latex.codecogs.com/png.latex?g "g")). (The
 ![t](https://latex.codecogs.com/png.latex?t "t")-test is one-tailed,
 because contrast analysis has always a specific hypotheses.) When
-conducting the analysis manually, we can see why:
+conducting the analysis by hand, we can see why:
 
 ``` r
 mtr <- matrix(sedlmeier_p537$reading_test, ncol = 4)
@@ -339,19 +325,19 @@ also gives you more information such as the different effect sizes.
 
 ## Mixed Designs
 
-The idea of mixed designs is a combination of between and within
-factors. In this case cofad calculates the *L*-Value for the within
-factor, which is treated as a new dependent variable. Thereafter, these
-values are used for the between analysis. We will again look at the
-example presented in Rosenthal et al. (2000) (see the section
-graphical-user-interface). Nine children were measured four times
-(within), but they also belong to different groups of age (between).
+A mixed design combines between and within factors. In this case cofad
+first calculates the linear combination (*L*-Values) for the within
+factor. This new variable serves as the dependent variable for a between
+contrast analysis. We will again look at the example presented in
+Rosenthal et al. (2000) (see the section graphical user interface). The
+cognitive ability of nine children belonging to different age groups
+(between) was measured four times (within).
 
 There are two hypotheses:
 
-1.  linear increase over time (within)
+1.  cogintive ability linearly increases over time (within)
     (![\\lambda\_\\mathrm{1} = -3, \\lambda\_\\mathrm{2} = -1, \\lambda\_\\mathrm{3} = 1, \\lambda\_\\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3"))
-2.  linear increase over age (between)
+2.  cogintive ability linearly increase over age groups (between)
     (![\\lambda\_\\mathrm{Age 8} = -1, \\lambda\_\\mathrm{Age 10} = 0, \\lambda\_\\mathrm{Age12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge12%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1"))
 
 Let’s have a look at the data and calculation:
@@ -366,25 +352,19 @@ head(rosenthal_tbl53)
 #> 4  4   age10  4      1
 #> 5  5   age10  5      1
 #> 6  5   age10  6      1
-lambda_within <- c("1" = -3, "2" = -1, "3" = 1, "4" = 3)
-lambda_between <-c("age8" = -1, "age10" = 0, "age12" = 1)
+lambda_within <- c(`1` = -3, `2` = -1, `3` = 1, `4` = 3)
+lambda_between <- c(age8 = -1, age10 = 0, age12 = 1)
 
-contr_mx <- calc_contrast(dv = dv, 
-                          between = between,
-                          lambda_between = lambda_between,
-                          within = within,
-                          lambda_within = lambda_within,
-                          id = id, 
-                          data = rosenthal_tbl53
-                          )
+contr_mx <- calc_contrast(dv = dv, between = between, lambda_between = lambda_between,
+    within = within, lambda_within = lambda_within, id = id, data = rosenthal_tbl53)
 contr_mx
 #> 
 #> We ran a contrast analysis for the following between contrasts: age10 = 0; age12 = 1; age8 = -1 and within contrasts: 1 = -3; 2 = -1; 3 = 1; 4 = 3. This resulted in statistics of F(1,6) = 20.211; p = 0.004123 and an effect magnitude of r_effectsize = 0.871.
 ```
 
 The results look like a contrast analysis for between-subject designs.
-Again, the summary gives some more details: The effect sizes and within
-group means and standard errors of the *L*-values.
+The summary gives some more details: The effect sizes, within group
+means and standard errors of the *L*-values.
 
 ``` r
 summary(contr_mx)
@@ -411,7 +391,7 @@ summary(contr_mx)
 
 Sometimes you would like to run a contrast analysis on aggregated data
 (e.g. when no raw data is available). If you have the means, standard
-deviations and sample sizes for every condition, you can do this in
+deviations and sample sizes for every condition, you can do this with
 cofad. For instance, if we take our first example and aggregate it, we
 can still calculate the contrast analysis:
 
@@ -425,26 +405,22 @@ library(dplyr)
 #> The following objects are masked from 'package:base':
 #> 
 #>     intersect, setdiff, setequal, union
-furr_agg <- furr_p4 %>% 
-  group_by(major) %>% 
-  summarize(mean = mean(empathy), sd = sd(empathy), n = n())
-lambdas = c("psychology" = 1, "education" = -1, "business" = 0, "chemistry" = 0)
+furr_agg <- furr_p4 %>%
+    group_by(major) %>%
+    summarize(mean = mean(empathy), sd = sd(empathy), n = n())
+lambdas = c(psychology = 1, education = -1, business = 0, chemistry = 0)
 calc_contrast_aggregated(mean, sd, n, major, lambdas, furr_agg)
-#> 
-#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276.  Attention: Contrast fits in the opposite direction!
+#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276. Attention: Contrast fits in the opposite direction!
 ```
 
 And the result is indeed the same when compared to the analysis with the
 raw data:
 
 ``` r
-ca <- calc_contrast(dv = empathy, between = major,
-                    lambda_between = c("psychology" = 1, "education" = -1,
-                                       "business" = 0, "chemistry" = 0),
-                    data = furr_p4)
+ca <- calc_contrast(dv = empathy, between = major, lambda_between = c(psychology = 1,
+    education = -1, business = 0, chemistry = 0), data = furr_p4)
 ca
-#> 
-#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276.  Attention: Contrast fits in the opposite direction!
+#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276. Attention: Contrast fits in the opposite direction!
 ```
 
 Note that this will only work for between-subjects designs.
@@ -455,7 +431,7 @@ If you find any bugs, please use the issue tracker at:
 
 <https://github.com/johannes-titz/cofad/issues>
 
-If you need answers on how to use the package, drop me an e-mail at
+If you need answers on how to use the package, drop an e-mail at
 johannes at titz.science or johannes.titz at gmail.com
 
 ## Contributing
@@ -473,9 +449,8 @@ the code style described here: <http://r-pkgs.had.co.nz/r.html#style>
 
 ## Acknowledgments
 
-We want to thank Karin Matko, Thomas Schäfer, Peter Sedlmeier, and
-Isabell Winkler for testing cofad and giving helpful comments on the
-documentation.
+We want to thank Thomas Schäfer and Isabell Winkler for testing cofad
+and giving helpful feedback.
 
 ## References
 

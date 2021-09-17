@@ -1,8 +1,9 @@
 ---
-output: 
+title: Cofad User Guide
+output:
   github_document:
     pandoc_args: --webtex
-
+    hard_line_breaks: TRUE
 bibliography: "clean_library.bib"
 csl: apa.csl
 ---
@@ -12,9 +13,12 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
-  
+  out.width = "100%",
+  tidy.opts=list(width.cutoff=80),
+  tidy=TRUE
 )
+
+options(width = 80)
 
 library(stringr)
 
@@ -35,8 +39,9 @@ clean_bib("README.Rmd", "library.bib", "clean_library.bib")
 
 ```
 
-# cofad
 [![Build Status](https://travis-ci.com/johannes-titz/cofad.svg?branch=main)](https://travis-ci.com/johannes-titz/cofad)
+[![CRAN status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/package=cofad)
+
 <!-- [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116) -->
 
 <!-- To cite cofad in publications use: -->
@@ -60,13 +65,13 @@ clean_bib("README.Rmd", "library.bib", "clean_library.bib")
 
 ## Introduction
 
-Cofad is an R package for conducting COntrast analysis in FActorial Designs like ANOVAs. If contrast analysis was to win a price it would be the one for the most underestimated, underused statistical technique. This is a pitty because in every case a contrast analysis is at least as good as an ANOVA, but in most cases it is actually better. To the question why, the simplest answer is that contrast analysis gets rid off the unspecific omnibus-hypothesis *there are differences somewhere* and substitutes it with a very specific numerical hypothesis. Furthermore, contrast analysis focuses on effects instead of significance. This is expressed doubly: First, there are three different effect sizes for contrast analysis: $r_\mathrm{effectsize}$, $r_\mathrm{contrast}$ and $r_\mathrm{alerting}$. Second, the effect size refers not to the data but to the tested hypothesis. The larger the effect, the more this speaks for the hypothesis. One can even compare different hypotheses against each other (hello experimentum crucis) by looking at the effect size for each hypothesis. 
+Cofad is an R package for conducting COntrast analysis in FActorial Designs like ANOVAs. If contrast analysis was to win a price it would be the one for the most underestimated, underused statistical technique. This is unfortunate because in every case a contrast analysis is at least as good as an ANOVA, but in most cases it is better. Contrast analysis gets rid off the unspecific omnibus-hypothesis *there are differences somewhere* and replaces it with a very specific numerical hypothesis. Furthermore, contrast analysis focuses on effects instead of significance. This is expressed doubly: First, there are three different effect sizes for contrast analysis: $r_\mathrm{effectsize}$, $r_\mathrm{contrast}$ and $r_\mathrm{alerting}$. Second, the effect size refers not to the data but to the tested hypothesis. The larger the effect, the more this speaks for the hypothesis. One can even compare different hypotheses against each other (experimentum crucis!) by looking at the effect size for each hypothesis.
 
-If we sparked your interest we recommend to read some introductory literature like @furr2004,@rosenthal1985,@rosenthal2000, or, for the German-speaking audience, @sedlmeier2018. Contrast analysis is actually really easy to understand if you know what a correlation is. In this vignette we assume you know some basics about contrast analysis and want to use it for your own data. We will start with between-subjects designs and then show applications for within designs and mixed designs.
+Sounds interesting? Then check out some introductory literature such as @furr2004,@rosenthal1985,@rosenthal2000, or, for the German-speaking audience, @sedlmeier2018. Contrast analysis is fairly easy to understand if you know what an ANOVA and a correlation is. In this vignette we assume you are familiar with the basics of contrast analysis and want to apply it to a specific data set. First we show how to install cofad and use the graphical user interface. Then we demonstrate some exemplary analyses for between, within and mixed designs in R.
 
 ## Installation
 
-Cofad has two components, the plain R-package and a shiny-app that offers an intuitive graphical user interface.
+Cofad has two components, the plain R package and a shiny-app that offers an intuitive graphical user interface.
 
 If you just want to use the cofad-app, you do not need to install it. Just go to https://cofad.titz.science and use it there. An example data file is loaded when you go to https://cofad.titz.science/example.
 
@@ -77,7 +82,7 @@ If you prefer the command line interface or want to use the cofad-app locally, i
 devtools::install_github("johannes-titz/cofad")
 ```
 
-Now can you load cofad and use it in your R-scripts.
+Now you can load cofad and use it in your R scripts.
 
 You can also run the app:
 
@@ -85,11 +90,9 @@ You can also run the app:
 cofad::run_app()
 ```
 
-Yes, it is that easy---at least under GNU/Linux! 
-
 If you have any problems installing cofad, check that your R version is up to date (currently `r version$version.string`). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/.
 
-If it still does not work drop me an e-mail at johannes at titz.science or at johannes.titz at gmail.com.
+If it still does not work drop an e-mail at johannes at titz.science or at johannes.titz at gmail.com.
 
 ## Using cofad
 
@@ -97,15 +100,15 @@ Before we start: Your data has to be in the long-format (also referred to as nar
 
 ### Graphical-User-Interface
 
-The graphical-user-interface is self-explanatory. Just load your data and drag the variables to the correct position. At the moment you can only read .sav (SPSS) and .csv files. 
+The graphical-user-interface is self-explanatory. Just load your data and drag the variables to the correct position. At the moment you can only read .sav (SPSS) and .csv files.
 
-As an example go to https://cofad.titz.science/example which will load a data set from @rosenthal2000 (Table 5.3). Nine children were  measured four times (within), but they also belong to different groups of age (between).
+As an example go to https://cofad.titz.science/example which will load a data set from @rosenthal2000 (Table 5.3). The cognitive ability of nine children belonging to different age groups (between) was measured four times (within).
 
-There are two hypotheses: 
+There are two hypotheses:
 
-1. linear increase over time (within)
+1. cogintive ability linearly increases over time (within)
 ($\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3$)
-2. linear increase over age (between)
+2. cogintive ability linearly increase over age groups (between)
 ($\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1$)
 
 Now drag the variables to the correct position and set the lambdas accordingly:
@@ -116,7 +119,7 @@ The result should look like this:
 
 ![cofad GUI](gui2.png)
 
-A mixed design is ideal for testing out the cofad-app. You can now construct a separate within-model by removing the between variable "age". Then you can construct a separate between-model by removing "time" from within and only using "age" in between.
+A mixed design is ideal for testing out the cofad-app. You can now construct a separate within-model by removing the between variable "age". Then you can construct a separate between-model by removing "time" from within and dragging "age" back into the between panel.
 
 The graphical user interface will suffice for most users, but some will prefer to use the scripting capabilities of R. In the next sections we will look at several script examples for different designs.
 
@@ -151,12 +154,13 @@ ca <- calc_contrast(dv = empathy, between = major,
 ca
 ```
 
-The print method only shows some basic information, but we can use the summary method for more details:
+The print method shows some basic information that can be directly used in a publication. With the summary method some more details are shown:
+
 ```{r}
 summary(ca)
 ```
 
-From this table, $r_\mathrm{effectsize}$ is probably the most useful statistic. It is just the correlation between the lambdas and the dependent variable, which can also easily be calculated manually:
+From this table, $r_\mathrm{effectsize}$ is probably the most useful statistic. It is just the correlation between the lambdas and the dependent variable, which can also be calculated by hand:
 
 ```{r}
 lambdas <- rep(c(1, -1, 0, 0), each = 5)
@@ -178,7 +182,7 @@ ca <- calc_contrast(dv = empathy, between = major,
 ca
 ```
 
-You will find that the numbers are identical to the ones presented in @furr2004. Now, imagine we have a more fun hypothesis and not just mean differences. From an elaborate theory we could derive that the means should be 73, 61, 51 and 38. We can test this with cofad directly because cofad will transfer the chosen lambdas into proper lambdas (the mean of the lambdas has to be 0):
+You will find that the numbers are identical to the ones presented in @furr2004. Now, imagine we have a more fun hypothesis and not just mean differences. From an elaborate theory we could derive that the means should be 73, 61, 51 and 38. We can test this with cofad directly because cofad will center the lambdas (the mean of the lambdas has to be 0):
 
 ```{r}
 ca <- calc_contrast(dv = empathy, between = major,
@@ -188,18 +192,18 @@ ca <- calc_contrast(dv = empathy, between = major,
 ca
 ```
 
-The manual test shows the same effect size:
+The manual test gives the same effect size:
 
 ```{r}
 lambdas <- rep(c(73, 61, 51, 38), each = 5)
 cor(furr_p4$empathy, lambdas)
 ```
 
-Let us now do an analysis for within-subjects designs.
+Let us now run an analysis for within-subjects designs.
 
 ## Within-Subjects Designs
 
-For within designs the calculations are quite different, but cofad takes care of it and we just have to use the within parameters *within* and *lambda_within* instead of the between equivalents. As an example we use Table 16.5 from @sedlmeier2018. Reading ability was assessed for eight participants under four different conditions. The hypothesis is that you can read best without music, white noise reduces your reading ability and music (independent of type) reduces it even further.
+For within designs the calculations are quite different, but cofad takes care of the details. We just have to use the within parameters *within* and *lambda_within* instead of the between equivalents. As an example we use Table 16.5 from @sedlmeier2018. Reading ability was assessed for eight participants under four different conditions. The hypothesis is that you can read best without music, white noise reduces your reading ability and music (independent of type) reduces it even further.
 
 ```{r}
 data("sedlmeier_p537")
@@ -212,7 +216,7 @@ calc_contrast(dv = reading_test, within = music,
               id = participant, data = sedlmeier_p537)
 ```
 
-You can see that the significance test is just a $t$-test and the reported effect size is also for a mean comparison ($g$). (The $t$-test is one-tailed, because contrast analysis has always a specific hypotheses.) When conducting the analysis manually, we can see why:
+You can see that the significance test is just a $t$-test and the reported effect size is referring to a mean comparison ($g$). (The $t$-test is one-tailed, because contrast analysis has always a specific hypotheses.) When conducting the analysis by hand, we can see why:
 
 ```{r}
 mtr <- matrix(sedlmeier_p537$reading_test, ncol = 4)
@@ -225,13 +229,13 @@ Only the linear combination of the dependent variable and the contrast weights f
 
 ## Mixed Designs
 
-The idea of mixed designs is a combination of between and within factors. In this case cofad calculates the *L*-Value for the within factor, which is treated as a new dependent variable. Thereafter, these values are used for the between analysis. We will again look at the example presented in @rosenthal2000 (see the section graphical-user-interface). Nine children were measured four times (within), but they also belong to different groups of age (between).
+A mixed design combines between and within factors. In this case cofad first calculates the linear combination (*L*-Values) for the within factor. This new variable serves as the dependent variable for a between contrast analysis. We will again look at the example presented in @rosenthal2000 (see the section graphical user interface). The cognitive ability of nine children belonging to different age groups (between) was measured four times (within).
 
-There are two hypotheses: 
+There are two hypotheses:
 
-1. linear increase over time (within)
+1. cogintive ability linearly increases over time (within)
 ($\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3$)
-2. linear increase over age (between)
+2. cogintive ability linearly increase over age groups (between)
 ($\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1$)
 
 Let's have a look at the data and calculation:
@@ -248,12 +252,11 @@ contr_mx <- calc_contrast(dv = dv,
                           within = within,
                           lambda_within = lambda_within,
                           id = id, 
-                          data = rosenthal_tbl53
-                          )
+                          data = rosenthal_tbl53)
 contr_mx
 ```
 
-The results look like a contrast analysis for between-subject designs. Again, the summary gives some more details: The effect sizes and within group means and standard errors of the *L*-values.
+The results look like a contrast analysis for between-subject designs. The summary gives some more details: The effect sizes, within group means and standard errors of the *L*-values.
 
 ```{r}
 summary(contr_mx)
@@ -261,7 +264,7 @@ summary(contr_mx)
 
 ## Aggregated Data
 
-Sometimes you would like to run a contrast analysis on aggregated data (e.g. when no raw data is available). If you have the means, standard deviations and sample sizes for every condition, you can do this in cofad. For instance, if we take our first example and aggregate it, we can still calculate the contrast analysis:
+Sometimes you would like to run a contrast analysis on aggregated data (e.g. when no raw data is available). If you have the means, standard deviations and sample sizes for every condition, you can do this with cofad. For instance, if we take our first example and aggregate it, we can still calculate the contrast analysis:
 
 ```{r}
 library(dplyr)
@@ -285,11 +288,12 @@ ca
 Note that this will only work for between-subjects designs.
 
 ## Issues and Support
+
 If you find any bugs, please use the issue tracker at:
 
 https://github.com/johannes-titz/cofad/issues
 
-If you need answers on how to use the package, drop me an e-mail at johannes at titz.science or johannes.titz at gmail.com
+If you need answers on how to use the package, drop an e-mail at johannes at titz.science or johannes.titz at gmail.com
 
 ## Contributing
 
@@ -299,6 +303,6 @@ If you want to make a pull request, please check that you can still build the pa
 
 ## Acknowledgments
 
-We want to thank Karin Matko, Thomas Schäfer, Peter Sedlmeier, and Isabell Winkler for testing cofad and giving helpful comments on the documentation.
+We want to thank Thomas Schäfer and Isabell Winkler for testing cofad and giving helpful feedback.
 
 ## References
