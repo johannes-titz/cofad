@@ -329,11 +329,11 @@ MotionNotify 539 545
 Delay 1172
 ButtonRelease 1
 Delay 5148
-MotionNotify 800 384
+MotionNotify 770 384
 ButtonPress 1
 Delay 76
 ButtonRelease 1
-MotionNotify 960 462
+MotionNotify 770 508
 Delay 3266
 KeyStrPress minus
 KeyStrRelease minus
