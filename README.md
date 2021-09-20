@@ -120,11 +120,11 @@ There are two hypotheses:
 Now drag the variables to the correct position and set the lambdas
 accordingly:
 
-![cofad GUI](gui1.png)
+![cofad GUI](gui1b.png)
 
 The result should look like this:
 
-![cofad GUI](gui2.png)
+![cofad GUI](gui2b.png)
 
 A mixed design is ideal for testing out the cofad-app. You can now
 construct a separate within-model by removing the between variable
