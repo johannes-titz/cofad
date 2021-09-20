@@ -17,7 +17,7 @@ print.cofad_bw <- function(x, ...) {
   r_effect <- round(x[[4]][1], 3)
   opposite <- ifelse(
     r_effect < 0,
-    " Attention: Contrast fits in the opposite direction!",
+    "Attention: Contrast fits in the opposite direction!",
     ""
   )
   cat("\nWe ran a contrast analysis for the following between contrasts: ",
@@ -48,7 +48,7 @@ print.cofad_wi <- function(x, ...) {
   g_effect <- round(x[[4]][2], 3)
   opposite <- ifelse(
     g_effect < 0,
-    " Attention: Contrast fits in the opposite direction!",
+    "Attention: Contrast fits in the opposite direction!",
     ""
   )
   cat("\nWe ran a contrast analysis for the following within contrasts: ",
@@ -82,7 +82,7 @@ print.cofad_mx <- function(x, ...) {
   r_effect <- round(x[[5]][1], 3)
   opposite <- ifelse(
     r_effect < 0,
-    " Attention: Contrast fits in the opposite direction!",
+    "Attention: Contrast fits in the opposite direction!",
     ""
   )
   cat("\nWe ran a contrast analysis for the following between contrasts: ",
