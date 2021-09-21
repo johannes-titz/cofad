@@ -27,7 +27,7 @@ Cofad is an R package and shiny app for conducting COntrast analysis in FActoria
 
 The R packages lsmeans [@lenth2016] and multcomp [@hothorn2008] provide contrast coding from a multiple comparison perspective. These tools are used to test typical (multiple) contrasts such as *all possible pairs* or *treatment versus control*. Although it is possible to use a more specific contrast it involves multiple steps and is less convenient than in cofad. For instance, the order of contrasts has to strictly adhere to the order of the independent variable, which can quickly lead to mistakes that are difficult to spot. Furthermore, typical effect sizes in contrast analysis such as $r_\mathrm{effectsize}$ are not reported. Cofad is easier to use because the model and the contrast can be set in a single step. Furthermore, errors in specifying contrasts are unlikely because a named vector has to be provided with all conditions of the independent variable.
 
-SPSS [@ibm2020] offers a function for planned contrasts in an ANOVA. But to my knowledge it cannot handle within designs or mixed designs. A minor annoyance is that adding contrasts involves many steps and the interface does not show which contrasts are mapped to which group. Again, cofad is more intuitive to use and prevents input errors.
+SPSS [@ibm2020] offers a function for planned contrasts in an ANOVA. But to our knowledge it cannot handle within designs or mixed designs. A minor annoyance is that adding contrasts involves many steps and the interface does not show which contrasts are mapped to which group. Again, cofad is more intuitive to use and prevents input errors.
 
 # Acknowledgments
 
