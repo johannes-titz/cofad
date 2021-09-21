@@ -46,14 +46,14 @@ hypothesis. One can even compare different hypotheses against each other
 hypothesis.
 
 Sounds interesting? Then check out some introductory literature such as
-Furr (2004),Rosenthal & Rosnow (1985),Rosenthal, Rosnow, & Rubin (2000),
-or, for the German-speaking audience, Sedlmeier & Renkewitz (2018).
-Contrast analysis is fairly easy to understand if you know what an ANOVA
-and a correlation is. In this vignette we assume you are familiar with
-the basics of contrast analysis and want to apply it to a specific data
-set. First we show how to install cofad and use the graphical user
-interface. Then we demonstrate some exemplary analyses for between,
-within and mixed designs in R.
+Furr (2004), Rosenthal & Rosnow (1985), Rosenthal, Rosnow, & Rubin
+(2000), or, for the German-speaking audience, Sedlmeier & Renkewitz
+(2018). Contrast analysis is fairly easy to understand if you know what
+an ANOVA and a correlation is. In this vignette we assume you are
+familiar with the basics of contrast analysis and want to apply it to a
+specific data set. First we show how to install cofad and use the
+graphical user interface. Then we demonstrate some exemplary analyses
+for between, within and mixed designs in R.
 
 ## Installation
 
