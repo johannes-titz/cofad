@@ -11,11 +11,7 @@ csl: apa.csl
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%",
-  tidy.opts=list(width.cutoff=80),
-  tidy=TRUE
+  comment = "#>"
 )
 
 options(width = 80)
@@ -24,7 +20,7 @@ library(stringr)
 
 clean_bib <- function(input_file, input_bib, output_bib){
   lines <- paste(readLines(input_file), collapse = "")
-  entries <- unique(str_match_all(lines, "@([a-zA-Z0-9]+)[,\\. \\?\\!\\]]")[[1]][, 2])
+  entries <- unique(str_match_all(lines,"@([a-zA-Z0-9]+)[,\\. \\?\\!\\]]")[[1]][, 2])
 
   bib <- paste(readLines(input_bib), collapse = "\n")
   bib <- unlist(strsplit(bib, "\n@"))
@@ -36,7 +32,7 @@ clean_bib <- function(input_file, input_bib, output_bib){
 }
 
 clean_bib("README.Rmd", "library.bib", "clean_library.bib")
-clean_bib("paper.md", "library.bib", "paper/library_paper.bib")
+clean_bib("paper/paper.md", "library.bib", "paper/library_paper.bib")
 ```
 
 [![Build Status](https://travis-ci.com/johannes-titz/cofad.svg?branch=main)](https://travis-ci.com/johannes-titz/cofad)

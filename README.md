@@ -69,8 +69,7 @@ locally, install it from github (you need the package devtools for
 this):
 
 ``` r
-# install.packages('devtools') # uncomment if you do not have devtools
-# installed
+# install.packages("devtools") # uncomment if you do not have devtools installed
 devtools::install_github("johannes-titz/cofad")
 ```
 
@@ -189,8 +188,10 @@ These hypotheses are only mean comparisons, but this is a good way to
 start. Let’s use cofad to conduct the contrast analysis:
 
 ``` r
-ca <- calc_contrast(dv = empathy, between = major, lambda_between = c(psychology = 1,
-    education = -1, business = 0, chemistry = 0), data = furr_p4)
+ca <- calc_contrast(dv = empathy, between = major,
+                    lambda_between = c("psychology" = 1, "education" = -1,
+                                       "business" = 0, "chemistry" = 0),
+                    data = furr_p4)
 ca
 #> 
 #> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276. Attention: Contrast fits in the opposite direction!
@@ -229,13 +230,17 @@ cor(furr_p4$empathy, lambdas)
 The other two hypotheses can be tested accordingly:
 
 ``` r
-ca <- calc_contrast(dv = empathy, between = major, lambda_between = c(psychology = 0,
-    education = 0, business = 1, chemistry = -1), data = furr_p4)
+ca <- calc_contrast(dv = empathy, between = major,
+                    lambda_between = c("psychology" = 0, "education" = 0,
+                                       "business" = 1, "chemistry" = -1),
+                    data = furr_p4)
 ca
 #> 
 #> We ran a contrast analysis for the following between contrasts: business = 1; chemistry = -1; education = 0; psychology = 0. This resulted in statistics of F(1,16) = 0.684; p = 0.4205 and an effect magnitude of r_effectsize = 0.092.
-ca <- calc_contrast(dv = empathy, between = major, lambda_between = c(psychology = 1,
-    education = 1, business = -1, chemistry = -1), data = furr_p4)
+ca <- calc_contrast(dv = empathy, between = major,
+                    lambda_between = c("psychology" = 1, "education" = 1,
+                                       "business" = -1, "chemistry" = -1),
+                    data = furr_p4)
 ca
 #> 
 #> We ran a contrast analysis for the following between contrasts: business = -1; chemistry = -1; education = 1; psychology = 1. This resulted in statistics of F(1,16) = 57.778; p = 1.07e-06 and an effect magnitude of r_effectsize = 0.847.
@@ -249,8 +254,10 @@ because cofad will center the lambdas (the mean of the lambdas has to be
 0):
 
 ``` r
-ca <- calc_contrast(dv = empathy, between = major, lambda_between = c(psychology = 73,
-    education = 61, business = 51, chemistry = 38), data = furr_p4)
+ca <- calc_contrast(dv = empathy, between = major,
+                    lambda_between = c("psychology" = 73, "education" = 61,
+                                       "business" = 51, "chemistry" = 38),
+                    data = furr_p4)
 #> Warning in check_lambda(lambda_between): lambdas are centered and rounded to 3
 #> digits
 ca
@@ -289,8 +296,12 @@ head(sedlmeier_p537)
 #> 4           29           4 without music
 #> 5           30           5 without music
 #> 6           33           6 without music
-calc_contrast(dv = reading_test, within = music, lambda_within = c(`without music` = 1.25,
-    `white noise` = 0.25, classic = -0.75, jazz = -0.75), id = participant, data = sedlmeier_p537)
+calc_contrast(dv = reading_test, within = music,
+              lambda_within = c("without music" = 1.25, 
+                                "white noise" = 0.25,
+                                "classic" = -0.75,
+                                "jazz" = -0.75),
+              id = participant, data = sedlmeier_p537)
 #> 
 #> We ran a contrast analysis for the following within contrasts: classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25. This resulted in statistics of t(7) = 5.269; p = 0.000581 and an effect magnitude of g_effectsize = 1.863.
 ```
@@ -356,11 +367,16 @@ head(rosenthal_tbl53)
 #> 4  4   age10  4      1
 #> 5  5   age10  5      1
 #> 6  5   age10  6      1
-lambda_within <- c(`1` = -3, `2` = -1, `3` = 1, `4` = 3)
-lambda_between <- c(age8 = -1, age10 = 0, age12 = 1)
+lambda_within <- c("1" = -3, "2" = -1, "3" = 1, "4" = 3)
+lambda_between <-c("age8" = -1, "age10" = 0, "age12" = 1)
 
-contr_mx <- calc_contrast(dv = dv, between = between, lambda_between = lambda_between,
-    within = within, lambda_within = lambda_within, id = id, data = rosenthal_tbl53)
+contr_mx <- calc_contrast(dv = dv, 
+                          between = between,
+                          lambda_between = lambda_between,
+                          within = within,
+                          lambda_within = lambda_within,
+                          id = id, 
+                          data = rosenthal_tbl53)
 contr_mx
 #> 
 #> We ran a contrast analysis for the following between contrasts: age10 = 0; age12 = 1; age8 = -1 and within contrasts: 1 = -3; 2 = -1; 3 = 1; 4 = 3. This resulted in statistics of F(1,6) = 20.211; p = 0.004123 and an effect magnitude of r_effectsize = 0.871.
@@ -401,10 +417,10 @@ can still calculate the contrast analysis:
 
 ``` r
 library(dplyr)
-furr_agg <- furr_p4 %>%
-    group_by(major) %>%
-    summarize(mean = mean(empathy), sd = sd(empathy), n = n())
-lambdas = c(psychology = 1, education = -1, business = 0, chemistry = 0)
+furr_agg <- furr_p4 %>% 
+  group_by(major) %>% 
+  summarize(mean = mean(empathy), sd = sd(empathy), n = n())
+lambdas = c("psychology" = 1, "education" = -1, "business" = 0, "chemistry" = 0)
 calc_contrast_aggregated(mean, sd, n, major, lambdas, furr_agg)
 #> 
 #> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276. Attention: Contrast fits in the opposite direction!
@@ -414,8 +430,10 @@ And the result is indeed the same when compared to the analysis with the
 raw data:
 
 ``` r
-ca <- calc_contrast(dv = empathy, between = major, lambda_between = c(psychology = 1,
-    education = -1, business = 0, chemistry = 0), data = furr_p4)
+ca <- calc_contrast(dv = empathy, between = major,
+                    lambda_between = c("psychology" = 1, "education" = -1,
+                                       "business" = 0, "chemistry" = 0),
+                    data = furr_p4)
 ca
 #> 
 #> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276. Attention: Contrast fits in the opposite direction!
