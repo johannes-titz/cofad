@@ -36,7 +36,7 @@ clean_bib <- function(input_file, input_bib, output_bib){
 }
 
 clean_bib("README.Rmd", "library.bib", "clean_library.bib")
-
+clean_bib("paper.md", "library.bib", "library_paper.bib")
 ```
 
 [![Build Status](https://travis-ci.com/johannes-titz/cofad.svg?branch=main)](https://travis-ci.com/johannes-titz/cofad)
