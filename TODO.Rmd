@@ -4,20 +4,13 @@ output: github_document
 
 # todos
 
-[] warnung bei unzentrierten Lambdas
-[] N für subgruppen in tabelle
-[] hinweis auf long-format!
-[] interaktionen?
-[] CAVE
+[] strwrap print -- does not work!
+
 [] KI für Korrelationen
 [] abbildung?
-[] literatur-hinweise
 [] jamovi
 [] convert to tags, check data type when there are two classes, currently this 
 is only a hot-fix!
-[] between and within only check for 0 variance groups!
-[] document data sets
-[] add example for aggregated data
 
 # paar hinweise zur reaktivität
 
