@@ -193,7 +193,7 @@ ca <- calc_contrast(dv = empathy, between = major, lambda_between = c(psychology
     education = -1, business = 0, chemistry = 0), data = furr_p4)
 ca
 #> 
-#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276.  Attention: Contrast fits in the opposite direction!
+#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276. Attention: Contrast fits in the opposite direction!
 ```
 
 The print method shows some basic information that can be directly used
@@ -401,21 +401,13 @@ can still calculate the contrast analysis:
 
 ``` r
 library(dplyr)
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
 furr_agg <- furr_p4 %>%
     group_by(major) %>%
     summarize(mean = mean(empathy), sd = sd(empathy), n = n())
 lambdas = c(psychology = 1, education = -1, business = 0, chemistry = 0)
 calc_contrast_aggregated(mean, sd, n, major, lambdas, furr_agg)
 #> 
-#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276.  Attention: Contrast fits in the opposite direction!
+#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276. Attention: Contrast fits in the opposite direction!
 ```
 
 And the result is indeed the same when compared to the analysis with the
@@ -426,7 +418,7 @@ ca <- calc_contrast(dv = empathy, between = major, lambda_between = c(psychology
     education = -1, business = 0, chemistry = 0), data = furr_p4)
 ca
 #> 
-#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276.  Attention: Contrast fits in the opposite direction!
+#> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of F(1,16) = 6.154; p = 0.02461 and an effect magnitude of r_effectsize = -0.276. Attention: Contrast fits in the opposite direction!
 ```
 
 Note that this will only work for between-subjects designs.

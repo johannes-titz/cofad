@@ -266,7 +266,7 @@ summary(contr_mx)
 
 Sometimes you would like to run a contrast analysis on aggregated data (e.g. when no raw data is available). If you have the means, standard deviations and sample sizes for every condition, you can do this with cofad. For instance, if we take our first example and aggregate it, we can still calculate the contrast analysis:
 
-```{r}
+```{r message=FALSE}
 library(dplyr)
 furr_agg <- furr_p4 %>% 
   group_by(major) %>% 
