@@ -111,9 +111,9 @@ measured four times (within).
 
 There are two hypotheses:
 
-1.  cogintive ability linearly increases over time (within)
+1.  cognitive ability linearly increases over time (within)
     (![\\lambda\_\\mathrm{1} = -3, \\lambda\_\\mathrm{2} = -1, \\lambda\_\\mathrm{3} = 1, \\lambda\_\\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3"))
-2.  cogintive ability linearly increase over age groups (between)
+2.  cognitive ability linearly increase over age groups (between)
     (![\\lambda\_\\mathrm{Age 8} = -1, \\lambda\_\\mathrm{Age 10} = 0, \\lambda\_\\mathrm{Age12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge12%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1"))
 
 Now drag the variables to the correct position and set the lambdas
@@ -350,9 +350,9 @@ cognitive ability of nine children belonging to different age groups
 
 There are two hypotheses:
 
-1.  cogintive ability linearly increases over time (within)
+1.  cognitive ability linearly increases over time (within)
     (![\\lambda\_\\mathrm{1} = -3, \\lambda\_\\mathrm{2} = -1, \\lambda\_\\mathrm{3} = 1, \\lambda\_\\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3"))
-2.  cogintive ability linearly increase over age groups (between)
+2.  cognitive ability linearly increase over age groups (between)
     (![\\lambda\_\\mathrm{Age 8} = -1, \\lambda\_\\mathrm{Age 10} = 0, \\lambda\_\\mathrm{Age12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge12%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1"))
 
 Let’s have a look at the data and calculation:

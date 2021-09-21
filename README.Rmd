@@ -102,9 +102,9 @@ As an example go to https://cofad.titz.science/example which will load a data se
 
 There are two hypotheses:
 
-1. cogintive ability linearly increases over time (within)
+1. cognitive ability linearly increases over time (within)
 ($\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3$)
-2. cogintive ability linearly increase over age groups (between)
+2. cognitive ability linearly increase over age groups (between)
 ($\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1$)
 
 Now drag the variables to the correct position and set the lambdas accordingly:
@@ -229,9 +229,9 @@ A mixed design combines between and within factors. In this case cofad first cal
 
 There are two hypotheses:
 
-1. cogintive ability linearly increases over time (within)
+1. cognitive ability linearly increases over time (within)
 ($\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3$)
-2. cogintive ability linearly increase over age groups (between)
+2. cognitive ability linearly increase over age groups (between)
 ($\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1$)
 
 Let's have a look at the data and calculation:
