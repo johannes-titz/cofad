@@ -23,3 +23,5 @@
 ^paper\.md$
 ^gui1b\.png$
 ^gui2b\.png$
+^paper$
+^\.github$
