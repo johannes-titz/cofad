@@ -10,6 +10,7 @@ authors:
     orcid: 0000-0002-1102-5719
     affiliation: 1
   - name: Markus Burkhardt
+    orcid: 0000-0002-2498-2999
     affiliation: 1
 affiliations:
  - name: Department of Psychology, TU Chemnitz, Germany
