@@ -82,7 +82,7 @@ cofad::run_app()
 ```
 
 If you have any problems installing cofad, check that your R version is
-up to date (currently R version 4.1.1 (2021-08-10)). If you are using
+up to date (currently R version 4.1.2 (2021-11-01)). If you are using
 Windows, enable TLS 1.2 in the Internet Options Advanced tab (see
 <https://github.com/r-lib/remotes/issues/130#issuecomment-423830669>).
 Under Windows, you will also need Rtools to build the package:
@@ -127,7 +127,7 @@ The result should look like this:
 
 A mixed design is ideal for testing out the cofad-app. You can now
 construct a separate within-model by removing the between variable
-“age.” Then you can construct a separate between-model by removing
+“age”. Then you can construct a separate between-model by removing
 “time” from within and dragging “age” back into the between panel.
 
 The graphical user interface will suffice for most users, but some will
