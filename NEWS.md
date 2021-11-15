@@ -1,3 +1,8 @@
+# cofad 0.2.1
+
+* small improvements in documentation, references and paper for the official
+publication at journal of open source software
+
 # cofad 0.2.0
 
 * Added a `NEWS.md` file to track changes to the package.
