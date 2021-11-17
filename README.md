@@ -5,6 +5,7 @@ Cofad User Guide
 Status](https://travis-ci.com/johannes-titz/cofad.svg?branch=main)](https://travis-ci.com/johannes-titz/cofad)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/package=cofad)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.03822/status.svg)](https://doi.org/10.21105/joss.03822)
 
 <!-- [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116) -->
 <!-- To cite cofad in publications use: -->
