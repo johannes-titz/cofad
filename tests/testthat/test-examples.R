@@ -30,10 +30,12 @@ ca <- calc_contrast(
   ),
   data = furr_p4
 )
-expect_equal(round(ca$sig[1], 3), 6.154)
-# test effect sizes!
-expect_equal(round(ca$effects, 2), c(-0.28, -0.53, -0.31))
-
+test_that("furr p4 works", {
+          expect_equal(round(ca$sig[1], 3), 6.154)
+          # test effect sizes!
+          expect_equal(round(ca$effects, 2), c(-0.28, -0.53, -0.31))
+          }
+)
 # test convert functions
 test_that(
   "converting effect sizes works for furr", {
@@ -54,9 +56,12 @@ t16_2 <- calc_contrast(
   ),
   data = sedlmeier_p525
 )
-expect_equal(round(t16_2$sig[1], 3), 6.519)
-expect_equal(round(t16_2$effects[2], 2), 0.59)
 
+test_that("sedlmeier 525 works", {
+  expect_equal(round(t16_2$sig[1], 3), 6.519)
+  expect_equal(round(t16_2$effects[2], 2), 0.59)
+}
+)
 # within (no between)------
 #
 # Example for within-subjects-design calculation 16.6 from
@@ -76,12 +81,14 @@ contr_wi <- calc_contrast(
   id = participant, data = sedlmeier_p537
 )
 
-expect_equal(contr_wi$desc[1], 5.875)
-expect_equal(
-  round(contr_wi$sig, 3), c(5.269, .001, 7)
+test_that("sedlmeier 537 works", {
+  expect_equal(contr_wi$desc[1], 5.875)
+  expect_equal(
+    round(contr_wi$sig, 3), c(5.269, .001, 7)
+  )
+  expect_equal(round(contr_wi$effects[2], 2), 1.86)
+  }
 )
-expect_equal(round(contr_wi$effects[2], 2), 1.86)
-
 # mixed ----
 ## unequal sample sizes for between -----
 data("rosenthal_p141")
@@ -95,8 +102,10 @@ ca <- calc_contrast(
   lambda_within = c("treatment" = -1, "placebo" = +1),
   data = rosenthal_p141
 )
-expect_setequal(round(ca$sig, 2), c(7.41, 0.00, 4.00))
-
+test_that("rosenthal works", {
+  expect_setequal(round(ca$sig, 2), c(7.41, 0.00, 4.00))
+  }
+)
 ## (within_lambda & between_lambda) -----
 
 # Table 5.3. from Rosenthal, Chapter 5 (raw data)
@@ -117,9 +126,11 @@ t_53 <- calc_contrast(
   data = rosenthal_tbl53
 )
 
-expect_equal(round(t_53$sig[c(1, 3, 4)], 3), c(20.211, 1, 6))
-expect_equal(summary(t_53)$Effects[1], 0.871)
-
+test_that("rosenthal 53 works", {
+  expect_equal(round(t_53$sig[c(1, 3, 4)], 3), c(20.211, 1, 6))
+  expect_equal(summary(t_53)$Effects[1], 0.871)
+  }
+)
 # Rosenthal chap 5 exercise 2
 data(rosenthal_chap5_q2)
 
@@ -132,7 +143,11 @@ c5_e2 <- calc_contrast(
   data = rosenthal_chap5_q2,
   lambda_between = c("high" = 1, "low" = -1)
 )
-expect_equal(c5_e2$sig[1], 28.125)
+
+test_that("rosenthal q2 works", {
+  expect_equal(c5_e2$sig[1], 28.125)
+  }
+)
 
 # Rosenthal table 5.9
 data(rosenthal_tbl59)
@@ -145,4 +160,129 @@ t59 <- calc_contrast(
   lambda_within = c("treatment" = 1, "placebo" = -1),
   data = tbl59
 )
-expect_equal(round(t59$sig, 3)[1], 2.449)
+test_that("rosenthal 59 works", {
+  expect_equal(round(t59$sig, 3)[1], 2.449)
+  }
+)
+
+# comparison between two contrasts, sedlmeier 2013 16.8, data is the same as
+# sedlmeier_p525
+
+lambda1 <- c(-2, 3, -1)
+lambda2 <- c(-2, 1, 1)
+lambda_diff <- lambda_diff(lambda1, lambda2, labels = c("KT", "JT", "MT"))
+
+data("sedlmeier_p525")
+sedlmeier525 <- sedlmeier_p525[sample(1:15, 15, F), ]
+t16_2B <- calc_contrast(
+  dv = lsg,
+  between = between,
+  lambda_between = round(lambda_diff, 2),
+  data = sedlmeier_p525
+)
+
+test_that("comparison between two contrasts works, sedlmeier 525", {
+  # actual value in Sedlmeier (2013) p. 533 is 1.137, which seems to be due to
+  # rounding errors (lambda_diff is identical)
+  expect_equal(round(sqrt(t16_2B$sig[1]), 3), 1.136)
+  expect_equal(round(t16_2B$effects[1], 2), 0.26)
+  }
+)
+
+# comparison between two contrasts within, Sedlmeier 2013 p. 534
+data("sedlmeier_p537")
+
+# random row order
+sedlmeier_p537 <- sedlmeier_p537[sample(1:32, 32, F), ]
+
+lambda1 <- c(1.25, 0.25, -0.75, -0.75)
+lambda2 <- c(3, -1, -1, -1)
+lambda_diff <- lambda_diff(lambda2, lambda1,
+                           labels = c("without music", "white noise", "classic",
+                                      "jazz"))
+# analysis
+contr_wi <- calc_contrast(
+  dv = reading_test, within = music,
+  lambda_within = round(lambda_diff, 2),
+  id = participant, data = sedlmeier_p537
+)
+
+test_that("comparison between 2 contrasts for within (sedlmeier 537) works", {
+  # actual value in Sedlmeier 2013 p. 536 is -3.75
+  expect_equal(round(contr_wi$sig[1], 2), -3.77)
+  expect_equal(round(contr_wi$effects[2], 2), -1.33)
+  }
+)
+
+
+# comparison between two contrasts between, Rosenthal table 6.4, 6.5, 6.6
+lambda2 <- c(-3, -1, 1, 3)
+lambda1 <- c(-1, -1, -1, 3)
+names(lambda1) <- letters[1:4]
+names(lambda2) <- letters[1:4]
+lambda_diff <- lambda_diff(lambda2, lambda1)
+# rosenthal is rounding upto 1.03, whereas the correct rounding would be 1.02
+lambda_rosenthal <- c("a" = -.76, "b" = .13, "c" = 1.02, "d" = -.39)
+expect_equal(round(lambda_diff, 2), lambda_rosenthal)
+
+# <- calc_contrast(dv = dv, between = between, data = ...,
+#                  lambda_between = lambda_diff)
+# expect_equal(round($sig, 3)[1], ...)
+
+# comparison between two contrasts within, it seems this table is not correct
+# in rosenthal, the values for L1 in Rosenthal are all -0.01 of the correct ones...
+# checked it manually with some examples
+data("rosenthal_tbl68")
+lambda2 <- round(zscale(c(-3, -1, 1, 3)), 10)
+lambda1 <- round(zscale(c(-1, 0, 0, 1)), 10)
+names(lambda1) <- c("t1", "t2", "t3", "t4")
+names(lambda2) <- names(lambda1)
+
+lambda_diff <- round(lambda_diff(lambda1, lambda2), 2)
+# test_that("diff of two contrasts works",
+#           expect_setequal(lambda_diff, c())
+# ca_tbl68 <- calc_contrast(dv = dv, id = id, within = within,
+#                           lambda_within = lambda_diff, data = rosenthal_tbl68)
+# ca_tbl68
+#
+# librarian::shelf(dplyr)
+# r <- rosenthal_tbl68
+# r$lambda <- lambda_diff
+# r$lambda1 <- lambda1
+# r$lambda2 <- lambda2
+# r %>%
+#   group_by(id) %>%
+#   summarize(sum(dv * lambda), sum(dv * lambda1), sum(dv * lambda2))
+
+# comparison between two contrasts mixed...rosenthal example, probably incorrect
+
+# lambda1 <- c(-1, 0, 1)
+# lambda2 <- c(-2, 1, 1)
+# names(lambda1) <- names(lambda2) <- letters[1:3]
+# lambda_diff <- lambda_diff(lambda1, lambda2)
+
+# helper lambda_diff
+
+test_that("error handling for lambda_diff works", {
+  expect_error(lambda_diff(1:3, 3:1), "Please provide group labels for your lambdas")
+  expect_error(lambda_diff(c("A" = 1, "B" = 2, "C" = 3), 3:1), "Please provide group labels for your lambdas")
+  expect_error(lambda_diff(3:1, c("A" = 1, "B" = 2, "C" = 3)), "Please provide group labels for your lambdas")
+  expect_error(lambda_diff(c("A" = 3, "B" = 2, "C" = 3), c("A" = 1, "B" = 2, "C" = 3),
+                           labels = letters[1:3]), "Use either a named")
+  expect_error(lambda_diff(3:1, c("A" = 1, "B" = 2, "C" = 3),
+                           labels = letters[1:3]), "Use either a named")
+  expect_error(lambda_diff(c("A" = 3, "B" = 2, "C" = 3), 1:3,
+                           labels = letters[1:3]), "Use either a named")
+  expect_error(lambda_diff(1:3, 1:3), "Your lambdas are perfectly correlated")
+  expect_error(lambda_diff(c("a" = 1, "b" = 2), c("A" = 1, "b" = 2)),
+               "Please provide the same labels for your")
+  }
+)
+
+
+test_that("2 ways of lambda specification for lambda_diff are identical", {
+  expect_equal(lambda_diff(3:1, 1:3, labels = letters[1:3]),
+               lambda_diff(c("a" = 3, "b" = 2, "c" = 1),
+                           c("a" = 1, "b" = 2, "c" = 3)))
+  }
+)
