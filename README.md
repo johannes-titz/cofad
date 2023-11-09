@@ -8,21 +8,26 @@ status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.03822/status.svg)](https://doi.org/10.21105/joss.03822)
 
 <!-- [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116) -->
-<!-- To cite cofad in publications use: -->
-<!-- Titz, J. (2020). cofad: A modern graphical user interface for 2-level mixed models. *Journal of Open Source Software, 5*(49), 2116. https://doi.org/10.21105/joss.02116 -->
-<!-- A BibTeX entry for LaTeX users is -->
-<!-- ``` -->
-<!-- @article{titz2020, -->
-<!--   title = {cofad: {A} }, -->
-<!--   author = {Titz, Johannes and Burkhardt, Markus}, -->
-<!--   year = {2020}, -->
-<!--   journal = {Journal of Open Source Software}, -->
-<!--   volume = {5}, -->
-<!--   pages = {2116}, -->
-<!--   doi = {10.21105/joss.02116}, -->
-<!--   number = {49} -->
-<!-- } -->
-<!-- ``` -->
+
+To cite cofad in publications use:
+
+Titz J. & Burkhardt M. (2021). cofad: An R package and shiny app for
+contrast analysis. Journal of Open Source Software, 6(67), 3822,
+<https://doi.org/10.21105/joss.03822>
+
+A BibTeX entry for LaTeX users is
+
+    @article{titz2021, 
+      doi = {10.21105/joss.03822}, 
+      url = {https://doi.org/10.21105/joss.03822}, 
+      year = {2021}, 
+      publisher = {The Open Journal}, 
+      volume = {6}, 
+      number = {67}, 
+      pages = {3822}, 
+      author = {Johannes Titz and Markus Burkhardt}, 
+      title = {cofad: An R package and shiny app for contrast analysis}, 
+      journal = {Journal of Open Source Software} }
 
 ## Introduction
 
@@ -36,10 +41,10 @@ differences somewhere* and replaces it with a very specific numerical
 hypothesis. Furthermore, contrast analysis focuses on effects instead of
 significance. This is expressed doubly: First, there are three different
 effect sizes for contrast analysis:
-![r\_\\mathrm{effectsize}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D "r_\mathrm{effectsize}"),
-![r\_\\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}")
+![r\_\mathrm{effectsize}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D "r_\mathrm{effectsize}"),
+![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}")
 and
-![r\_\\mathrm{alerting}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Balerting%7D "r_\mathrm{alerting}").
+![r\_\mathrm{alerting}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Balerting%7D "r_\mathrm{alerting}").
 Second, the effect size refers not to the data but to the tested
 hypothesis. The larger the effect, the more this speaks for the
 hypothesis. One can even compare different hypotheses against each other
@@ -83,7 +88,7 @@ cofad::run_app()
 ```
 
 If you have any problems installing cofad, check that your R version is
-up to date (currently R version 4.1.2 (2021-11-01)). If you are using
+up to date (currently R version 4.3.1 (2023-06-16)). If you are using
 Windows, enable TLS 1.2 in the Internet Options Advanced tab (see
 <https://github.com/r-lib/remotes/issues/130#issuecomment-423830669>).
 Under Windows, you will also need Rtools to build the package:
@@ -113,18 +118,24 @@ measured four times (within).
 There are two hypotheses:
 
 1.  cognitive ability linearly increases over time (within)
-    (![\\lambda\_\\mathrm{1} = -3, \\lambda\_\\mathrm{2} = -1, \\lambda\_\\mathrm{3} = 1, \\lambda\_\\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3"))
+    (![\lambda\_\mathrm{1} = -3, \lambda\_\mathrm{2} = -1, \lambda\_\mathrm{3} = 1, \lambda\_\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3"))
 2.  cognitive ability linearly increase over age groups (between)
-    (![\\lambda\_\\mathrm{Age 8} = -1, \\lambda\_\\mathrm{Age 10} = 0, \\lambda\_\\mathrm{Age12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge12%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1"))
+    (![\lambda\_\mathrm{Age 8} = -1, \lambda\_\mathrm{Age 10} = 0, \lambda\_\mathrm{Age12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge12%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1"))
 
 Now drag the variables to the correct position and set the lambdas
 accordingly:
 
-![cofad GUI](gui1b.png)
+<figure>
+<img src="gui1b.png" alt="cofad GUI" />
+<figcaption aria-hidden="true">cofad GUI</figcaption>
+</figure>
 
 The result should look like this:
 
-![cofad GUI](gui2b.png)
+<figure>
+<img src="gui2b.png" alt="cofad GUI" />
+<figcaption aria-hidden="true">cofad GUI</figcaption>
+</figure>
 
 A mixed design is ideal for testing out the cofad-app. You can now
 construct a separate within-model by removing the between variable
@@ -175,15 +186,15 @@ furr_p4
 
 Furr states three hypotheses:
 
--   Contrast A: Psychology majors have higher empathy scores than
-    Education majors
-    (![\\lambda\_\\mathrm{psych} = 1, \\lambda\_\\mathrm{edu} = -1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7Bpsych%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bedu%7D%20%3D%20-1 "\lambda_\mathrm{psych} = 1, \lambda_\mathrm{edu} = -1")).
--   Contrast B: Business majors have higher empathy scores than
-    Chemistry majors
-    (![\\lambda\_\\mathrm{bus} = 1, \\lambda\_\\mathrm{chem} = -1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7Bbus%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bchem%7D%20%3D%20-1 "\lambda_\mathrm{bus} = 1, \lambda_\mathrm{chem} = -1")).
--   Contrast C: On average, Psychology and Education majors have higher
-    empathy scores than Business and Chemistry majors
-    (![\\lambda\_\\mathrm{psych} = 1, \\lambda\_\\mathrm{edu} = 1, \\lambda\_\\mathrm{bus} = -1, \\lambda\_\\mathrm{chem} = -1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7Bpsych%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bedu%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bbus%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7Bchem%7D%20%3D%20-1 "\lambda_\mathrm{psych} = 1, \lambda_\mathrm{edu} = 1, \lambda_\mathrm{bus} = -1, \lambda_\mathrm{chem} = -1")).
+- Contrast A: Psychology majors have higher empathy scores than
+  Education majors
+  (![\lambda\_\mathrm{psych} = 1, \lambda\_\mathrm{edu} = -1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7Bpsych%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bedu%7D%20%3D%20-1 "\lambda_\mathrm{psych} = 1, \lambda_\mathrm{edu} = -1")).
+- Contrast B: Business majors have higher empathy scores than Chemistry
+  majors
+  (![\lambda\_\mathrm{bus} = 1, \lambda\_\mathrm{chem} = -1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7Bbus%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bchem%7D%20%3D%20-1 "\lambda_\mathrm{bus} = 1, \lambda_\mathrm{chem} = -1")).
+- Contrast C: On average, Psychology and Education majors have higher
+  empathy scores than Business and Chemistry majors
+  (![\lambda\_\mathrm{psych} = 1, \lambda\_\mathrm{edu} = 1, \lambda\_\mathrm{bus} = -1, \lambda\_\mathrm{chem} = -1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7Bpsych%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bedu%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bbus%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7Bchem%7D%20%3D%20-1 "\lambda_\mathrm{psych} = 1, \lambda_\mathrm{edu} = 1, \lambda_\mathrm{bus} = -1, \lambda_\mathrm{chem} = -1")).
 
 These hypotheses are only mean comparisons, but this is a good way to
 start. Let’s use cofad to conduct the contrast analysis:
@@ -217,7 +228,7 @@ summary(ca)
 ```
 
 From this table,
-![r\_\\mathrm{effectsize}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D "r_\mathrm{effectsize}")
+![r\_\mathrm{effectsize}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D "r_\mathrm{effectsize}")
 is probably the most useful statistic. It is just the correlation
 between the lambdas and the dependent variable, which can also be
 calculated by hand:
@@ -259,8 +270,7 @@ ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 73, "education" = 61,
                                        "business" = 51, "chemistry" = 38),
                     data = furr_p4)
-#> Warning in check_lambda(lambda_between): lambdas are centered and rounded to 3
-#> digits
+#> lambdas are centered and rounded to 3 digits
 ca
 #> 
 #> We ran a contrast analysis for the following between contrasts: business = -4.75; chemistry = -17.75; education = 5.25; psychology = 17.25. This resulted in statistics of F(1,16) = 37.466; p = 1.475e-05 and an effect magnitude of r_effectsize = 0.682.
@@ -352,9 +362,9 @@ cognitive ability of nine children belonging to different age groups
 There are two hypotheses:
 
 1.  cognitive ability linearly increases over time (within)
-    (![\\lambda\_\\mathrm{1} = -3, \\lambda\_\\mathrm{2} = -1, \\lambda\_\\mathrm{3} = 1, \\lambda\_\\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3"))
+    (![\lambda\_\mathrm{1} = -3, \lambda\_\mathrm{2} = -1, \lambda\_\mathrm{3} = 1, \lambda\_\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3"))
 2.  cognitive ability linearly increase over age groups (between)
-    (![\\lambda\_\\mathrm{Age 8} = -1, \\lambda\_\\mathrm{Age 10} = 0, \\lambda\_\\mathrm{Age12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge12%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1"))
+    (![\lambda\_\mathrm{Age 8} = -1, \lambda\_\mathrm{Age 10} = 0, \lambda\_\mathrm{Age12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge12%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1"))
 
 Let’s have a look at the data and calculation:
 
@@ -407,6 +417,182 @@ summary(contr_mx)
 #> age12 7.333333 0.8819171
 #> age8  2.000000 0.5773503
 ```
+
+## Comparing two hypothesis
+
+With `cofad` you can also compare two competing hypothesis. As an
+example Sedlmeier & Renkewitz (2013) use a fictious data set on problem
+solving skills of boys:
+
+``` r
+sedlmeier_p525
+#>    lsg between lambda
+#> 1    1      KT     -2
+#> 2    2      KT     -2
+#> 3    2      KT     -2
+#> 4    2      KT     -2
+#> 5    3      KT     -2
+#> 6    4      JT      3
+#> 7    2      JT      3
+#> 8    3      JT      3
+#> 9    4      JT      3
+#> 10   3      JT      3
+#> 11   2      MT     -1
+#> 12   3      MT     -1
+#> 13   3      MT     -1
+#> 14   1      MT     -1
+#> 15   2      MT     -1
+```
+
+Where lsg is the number of solved exercises and the groups are KT = no
+training, JT = boys-specific training, MT=girls-specific training. Two
+hypotheses are competing:
+
+- -2, 3, -1 (boys benefit from boys-specific training)
+- -2, 1, 1 (boys benefit from training, independent of the type of
+  training)
+
+First, we need to create the difference lambdas:
+
+``` r
+lambda1 <- c(-2, 3, -1)
+lambda2 <- c(-2, 1, 1)
+lambda_diff <- lambda_diff(lambda1, lambda2, labels = c("KT", "JT", "MT"))
+lambda_diff
+#>         JT         KT         MT 
+#>  0.6816234  0.4883935 -1.1700168
+```
+
+Note that you cannot just subtract the lambdas because their variance
+can differ, which has an effect on the test. Instead, you need to
+standardize the lambdas first. `lambda_diff` takes care of this for you.
+
+Now you can run a normal contrast analysis:
+
+``` r
+ca_competing <- calc_contrast(
+  dv = lsg,
+  between = between,
+  lambda_between = lambda_diff,
+  data = sedlmeier_p525
+)
+#> lambdas are centered and rounded to 3 digits
+summary(ca_competing)
+#> $`F-Table`
+#>              SS df    MS     F     p
+#> contrast  0.824  1 0.824 1.301 0.276
+#> within    7.600 12 0.633    NA    NA
+#> total    11.733 14    NA    NA    NA
+#> 
+#> $Effects
+#>              effects
+#> r_effectsize   0.265
+#> r_contrast     0.313
+#> r_alerting     0.447
+ca_competing
+#> 
+#> We ran a contrast analysis for the following between contrasts: JT = 0.682; KT = 0.488; MT = -1.17. This resulted in statistics of F(1,12) = 1.301; p = 0.2763 and an effect magnitude of r_effectsize = 0.265.
+```
+
+Here, we rounded the lambdas so that the result is similar to the one in
+Sedlmeier & Renkewitz (2013), who found t=1.137 and r_effectsize=0.26.
+The effet size is the same, but what about the t-value? Well, we need to
+take the root of the F-value, 1.291, which is 1.136. There is still a
+slight difference to original result of 1.137, which is likely due to
+rounding errors.
+
+The same also works for within-designs. The reading comprehension data
+from above can server as an example. Reading ability was assessed for
+eight participants under four different conditions:
+
+``` r
+sedlmeier_p537
+#>    reading_test participant         music
+#> 1            27           1 without music
+#> 2            25           2 without music
+#> 3            30           3 without music
+#> 4            29           4 without music
+#> 5            30           5 without music
+#> 6            33           6 without music
+#> 7            31           7 without music
+#> 8            35           8 without music
+#> 9            25           1   white noise
+#> 10           26           2   white noise
+#> 11           32           3   white noise
+#> 12           29           4   white noise
+#> 13           28           5   white noise
+#> 14           30           6   white noise
+#> 15           32           7   white noise
+#> 16           34           8   white noise
+#> 17           21           1       classic
+#> 18           25           2       classic
+#> 19           23           3       classic
+#> 20           26           4       classic
+#> 21           27           5       classic
+#> 22           26           6       classic
+#> 23           29           7       classic
+#> 24           31           8       classic
+#> 25           23           1          jazz
+#> 26           24           2          jazz
+#> 27           24           3          jazz
+#> 28           28           4          jazz
+#> 29           24           5          jazz
+#> 30           26           6          jazz
+#> 31           27           7          jazz
+#> 32           32           8          jazz
+```
+
+There are two hypotheses:
+
+- 1.25, 0.25, -0.75, -0.75: You can read best without music, white noise
+  reduces your reading ability and music (independent of type) reduces
+  it even further.
+- 3, -1, -1, -1: Noise of any kind reduces reading ability.
+
+Again, we need to calculcate the difference lambdas first:
+
+``` r
+lambda1 <- c(1.25, 0.25, -0.75, -0.75)
+lambda2 <- c(3, -1, -1, -1)
+lambda_diff <- lambda_diff(lambda2, lambda1,
+                           labels = c("without music", "white noise", "classic",
+                                      "jazz"))
+lambda_diff
+#>       classic          jazz   white noise without music 
+#>     0.3271838     0.3271838    -0.8788616     0.2244941
+```
+
+Note that we use lambda2 as the first entry into `lambda_diff` because
+this is how Sedlmeier & Renkewitz (2013) calculcated it
+(hypothesis2-hypothesis1).
+
+And now the contrast analysis:
+
+``` r
+contr_wi <- calc_contrast(
+  dv = reading_test, within = music,
+  lambda_within = round(lambda_diff, 2),
+  id = participant, data = sedlmeier_p537
+)
+#> lambdas are centered and rounded to 3 digits
+summary(contr_wi)
+#> $`L-Statistics`
+#>      Mean        SE df         p        t  CI-lower   CI-upper
+#> [1,] -2.2 0.5835483  7 0.9965087 -3.77004 -3.579872 -0.8201276
+#> 
+#> $Effects
+#>                  [,1]
+#> r-contrast -0.5606777
+#> g-contrast -1.3329103
+contr_wi
+#> 
+#> We ran a contrast analysis for the following within contrasts: classic = 0.33; jazz = 0.33; white noise = -0.88; without music = 0.22. This resulted in statistics of t(7) = -3.77; p = 0.9965 and an effect magnitude of g_effectsize = -1.333. Attention: Contrast fits in the opposite direction!
+```
+
+Sedlmeier & Renkewitz (2013) found a t-value of -3.75 and a g_contrast
+of -1.33. Again, there are slight differences to our calculation, likely
+due to rounding errors. Further note, that hypothesis 1 fits better,
+because the statistic and effect are negative.
 
 ## Aggregated Data
 
@@ -495,6 +681,14 @@ University Press.
 Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). *Contrasts and
 Effect Sizes in Behavioral Research: A Correlational Approach*.
 Cambridge University Press.
+
+</div>
+
+<div id="ref-sedlmeier2013" class="csl-entry">
+
+Sedlmeier, P., & Renkewitz, F. (2013). *Forschungsmethoden und Statistik
+für Psychologen und Sozialwissenschaftler* (2nd ed.). Hallbergmoos,
+Germany: Pearson Studium.
 
 </div>
 

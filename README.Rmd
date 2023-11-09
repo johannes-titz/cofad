@@ -31,8 +31,8 @@ clean_bib <- function(input_file, input_bib, output_bib){
   writeLines(unlist(output), output_bib)
 }
 
-clean_bib("README.Rmd", "library.bib", "clean_library.bib")
-clean_bib("paper/paper.md", "library.bib", "paper/library_paper.bib")
+#clean_bib("README.Rmd", "library.bib", "clean_library.bib")
+#clean_bib("paper/paper.md", "library.bib", "paper/library_paper.bib")
 ```
 
 [![Build Status](https://travis-ci.com/johannes-titz/cofad.svg?branch=main)](https://travis-ci.com/johannes-titz/cofad)
@@ -41,24 +41,25 @@ clean_bib("paper/paper.md", "library.bib", "paper/library_paper.bib")
 
 <!-- [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116) -->
 
-<!-- To cite cofad in publications use: -->
+To cite cofad in publications use:
 
-<!-- Titz, J. (2020). cofad: A modern graphical user interface for 2-level mixed models. *Journal of Open Source Software, 5*(49), 2116. https://doi.org/10.21105/joss.02116 -->
+Titz J. & Burkhardt M. (2021). cofad: An R package and shiny app for contrast analysis. Journal of Open Source Software, 6(67), 3822, https://doi.org/10.21105/joss.03822
 
-<!-- A BibTeX entry for LaTeX users is -->
+A BibTeX entry for LaTeX users is
 
-<!-- ``` -->
-<!-- @article{titz2020, -->
-<!--   title = {cofad: {A} }, -->
-<!--   author = {Titz, Johannes and Burkhardt, Markus}, -->
-<!--   year = {2020}, -->
-<!--   journal = {Journal of Open Source Software}, -->
-<!--   volume = {5}, -->
-<!--   pages = {2116}, -->
-<!--   doi = {10.21105/joss.02116}, -->
-<!--   number = {49} -->
-<!-- } -->
-<!-- ``` -->
+```
+@article{titz2021, 
+  doi = {10.21105/joss.03822}, 
+  url = {https://doi.org/10.21105/joss.03822}, 
+  year = {2021}, 
+  publisher = {The Open Journal}, 
+  volume = {6}, 
+  number = {67}, 
+  pages = {3822}, 
+  author = {Johannes Titz and Markus Burkhardt}, 
+  title = {cofad: An R package and shiny app for contrast analysis}, 
+  journal = {Journal of Open Source Software} }
+```
 
 ## Introduction
 
@@ -258,6 +259,82 @@ The results look like a contrast analysis for between-subject designs. The summa
 ```{r}
 summary(contr_mx)
 ```
+
+## Comparing two hypothesis
+
+With `cofad` you can also compare two competing hypothesis. As an example @sedlmeier2013 use a fictious data set on problem solving skills of boys:
+
+```{r}
+sedlmeier_p525
+```
+
+Where lsg is the number of solved exercises and the groups are KT = no training, JT = boys-specific training, MT=girls-specific training. Two hypotheses are competing:
+
+- -2, 3, -1 (boys benefit from boys-specific training)
+- -2, 1, 1 (boys benefit from training, independent of the type of training)
+
+First, we need to create the difference lambdas:
+
+```{r}
+lambda1 <- c(-2, 3, -1)
+lambda2 <- c(-2, 1, 1)
+lambda_diff <- lambda_diff(lambda1, lambda2, labels = c("KT", "JT", "MT"))
+lambda_diff
+```
+
+Note that you cannot just subtract the lambdas because their variance can differ, which has an effect on the test. Instead, you need to standardize the lambdas first. `lambda_diff` takes care of this for you.
+
+Now you can run a normal contrast analysis:
+
+```{r}
+ca_competing <- calc_contrast(
+  dv = lsg,
+  between = between,
+  lambda_between = lambda_diff,
+  data = sedlmeier_p525
+)
+summary(ca_competing)
+ca_competing
+```
+Here, we rounded the lambdas so that the result is similar to the one in @sedlmeier2013, who found t=1.137 and r_effectsize=0.26. The effet size is the same, but what about the t-value? Well, we need to take the root of the F-value, 1.291, which is `r round(sqrt(1.291), 3)`. There is still a slight difference to original result of 1.137, which is likely due to rounding errors.
+
+The same also works for within-designs. The reading comprehension data from above can server as an example. Reading ability was assessed for eight participants under four different conditions:
+
+```{r}
+sedlmeier_p537
+```
+
+There are two hypotheses:
+
+- 1.25, 0.25, -0.75, -0.75: You can read best without music, white noise reduces your reading ability and music (independent of type) reduces it even further.
+- 3, -1, -1, -1: Noise of any kind reduces reading ability.
+
+Again, we need to calculcate the difference lambdas first:
+
+```{r}
+lambda1 <- c(1.25, 0.25, -0.75, -0.75)
+lambda2 <- c(3, -1, -1, -1)
+lambda_diff <- lambda_diff(lambda2, lambda1,
+                           labels = c("without music", "white noise", "classic",
+                                      "jazz"))
+lambda_diff
+```
+
+Note that we use lambda2 as the first entry into `lambda_diff` because this is how @sedlmeier2013 calculcated it (hypothesis2-hypothesis1).
+
+And now the contrast analysis:
+
+```{r}
+contr_wi <- calc_contrast(
+  dv = reading_test, within = music,
+  lambda_within = round(lambda_diff, 2),
+  id = participant, data = sedlmeier_p537
+)
+summary(contr_wi)
+contr_wi
+```
+
+@sedlmeier2013 found a t-value of -3.75 and a g_contrast of -1.33. Again, there are slight differences to our calculation, likely due to rounding errors. Further note, that hypothesis 1 fits better, because the statistic and effect are negative.
 
 ## Aggregated Data
 
