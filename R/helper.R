@@ -128,3 +128,67 @@ cite <- function() {
   paste(readLines(system.file("extdata", "citation.txt", package = "cofad")),
         collapse = "")
 }
+
+#' Calculate lambdas for two competing hypotheses
+#'
+#' If you want to test two competing hypotheses, you can use this helper
+#' function to create the correct difference lambdas. There is no magic here.
+#' The two contrasts are z-standardized first and then subtracted
+#' (lambda_preferred - lambda_competing). You can use the new difference lambdas
+#' as the input for calc_contrast.
+#'
+#' @param lambda_preferred Lambdas of the preferred hypothesis, has to be a
+#'   named vector with the names corresponding with the groups in the analyzed
+#'   data set. Alternatively, use the parameter labels.
+#' @param lambda_competing Lambdas of the competing hypothesis, has to be a
+#'   named vector with the names corresponding with the groups in the analyzed
+#'   data set. Alternatively, use the parameter labels.
+#' @param labels If you provide lambdas without names, you can set the labels
+#'   for both groups here.
+#'
+#' @return Lambdas for difference between lambda_preferred and lambda 2
+#'
+#' @examples
+#' lambda_diff <- lambda_diff(c("A" = 1, "B" = 2, "C" = 3),
+#'                            c("A" = 1, "B" = 2, "C" = 6))
+#' # same result
+#' lambda_diff2 <- lambda_diff(c(1, 2, 3), c(1, 2, 6),
+#'                             labels = c("A", "B", "C"))
+#' @export
+lambda_diff <- function(lambda_preferred, lambda_competing, labels = NULL) {
+  if (cor(lambda_preferred, lambda_competing) == 1) {
+    stop('Your lambdas are perfectly correlated. ',
+         'It does not make sense to compare them.')
+  }
+  if ((is.null(names(lambda_preferred)) | is.null(names(lambda_competing))) &
+      is.null(labels)) {
+    stop('Please provide group labels for your lambdas. ',
+         'For instance, c("A" = 1, "B" = 2, ...)')
+  }
+  if ((!is.null(names(lambda_preferred)) | !is.null(names(lambda_competing))) &
+      !is.null(labels)) {
+    stop('Use either a named vector for the lambdas',
+         ' or the labels parameter to specify the group labels. ',
+         'Do not use both.')
+  }
+  if (!is.null(labels)) {
+    names(lambda_preferred) <- names(lambda_competing) <- labels
+  }
+  lambda_preferred <- lambda_preferred[sort(names(lambda_preferred))]
+  lambda_competing <- lambda_competing[sort(names(lambda_competing))]
+  if (!(identical(names(lambda_preferred), names(lambda_competing)))) {
+    stop('Please provide the same labels for your lambdas\n',
+         'current labels of preferred lambdas: ',
+         paste(names(lambda_preferred), collapse = " "),
+         '\ncurrent labels of competing lambdas: ',
+         paste(names(lambda_competing), collapse = " "))
+  }
+  lambda_diff <- as.numeric(zscale(lambda_preferred) - zscale(lambda_competing))
+  names(lambda_diff) <- names(lambda_preferred)
+  return(lambda_diff)
+}
+
+zscale <- function(x) {
+  n <- length(x)
+  sqrt(n / (n - 1)) * (x - mean(x)) / sd(x)
+}
