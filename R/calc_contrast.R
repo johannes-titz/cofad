@@ -423,8 +423,8 @@ check_lambda <- function(lambda) {
     }
   }
   if (sum(lambda) != 0) {
-    lambda <- lambda - mean(lambda)
-    warning("lambdas are centered and rounded to 3 digits")
+    lambda <- round(lambda - mean(lambda), 3)
+    message("lambdas are centered and rounded to 3 digits")
   }
   lambda
 }
