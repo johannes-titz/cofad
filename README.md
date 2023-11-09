@@ -418,9 +418,9 @@ summary(contr_mx)
 #> age8  2.000000 0.5773503
 ```
 
-## Comparing two hypothesis
+## Comparing two hypotheses
 
-With `cofad` you can also compare two competing hypothesis. As an
+With `cofad` you can also compare two competing hypotheses. As an
 example Sedlmeier & Renkewitz (2013) use a fictitious data set on
 problem solving skills of boys:
 

@@ -260,9 +260,9 @@ The results look like a contrast analysis for between-subject designs. The summa
 summary(contr_mx)
 ```
 
-## Comparing two hypothesis
+## Comparing two hypotheses
 
-With `cofad` you can also compare two competing hypothesis. As an example @sedlmeier2013 use a fictitious data set on problem solving skills of boys:
+With `cofad` you can also compare two competing hypotheses. As an example @sedlmeier2013 use a fictitious data set on problem solving skills of boys:
 
 ```{r}
 sedlmeier_p525
