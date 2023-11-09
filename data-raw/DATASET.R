@@ -78,6 +78,17 @@ rosenthal_chap5_q2 <- data.frame(
   between = as.factor(rep(rep(c("high", "low"), c(3, 3)), 3))
 )
 
+# rosenthal comparison of 2 contrasts between
+
+# rosenthal comparison of 2 contrasts within
+rosenthal_tbl68 <- data.frame(
+  dv = c(2, 4, 4, 8, 1, 5, 6, 7, 3, 5, 4, 8, 2, 6, 6, 9,
+         1, 5, 5, 6, 3, 5, 3, 7, 2, 4, 3, 7, 2, 6, 5, 8),
+  within = as.factor(paste0("t", rep(1:4, 8))),
+  id = as.factor(rep(1:8, each = 4)),
+  between = as.factor(c("girl", "boy"))
+)
+
 write.csv(rosenthal_tbl31, "data-raw/rosenthal_tbl31.csv", row.names = F)
 write.csv(sedlmeier_p537, "data-raw/sedlmeier_p537.csv", row.names = F)
 write.csv(rosenthal_tbl59, "data-raw/rosenthal_tbl59.csv", row.names = F)
@@ -86,6 +97,7 @@ write.csv(furr_p4, "data-raw/furr_p4.csv", row.names = F)
 write.csv(sedlmeier_p525, "data-raw/sedlmeier_p525.csv", row.names = F)
 write.csv(rosenthal_tbl53, "data-raw/rosenthal_tbl53.csv", row.names = F)
 write.csv(rosenthal_chap5_q2, "data-raw/rosenthal_chap5_q2.csv", row.names = F)
+write.csv(rosenthal_tbl68, "data-raw/rosenthal_tbl68.csv", row.names = F)
 
 usethis::use_data(rosenthal_tbl31, overwrite = T)
 usethis::use_data(sedlmeier_p537, overwrite = T)
@@ -95,3 +107,4 @@ usethis::use_data(furr_p4, overwrite = T)
 usethis::use_data(sedlmeier_p525, overwrite = T)
 usethis::use_data(rosenthal_tbl53, overwrite = T)
 usethis::use_data(rosenthal_chap5_q2, overwrite = T)
+usethis::use_data(rosenthal_tbl68, overwrite = T)

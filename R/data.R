@@ -84,6 +84,24 @@
 
 #' Data set by Rosenthal and Rosnow (2000)
 #'
+#' Fictious example of children ability, Table 6.8 in Rosenthal and Rosnow
+#' (2000)
+#'
+#' @format a data frame with 8 rows and 4 columns
+#' \describe{
+#'   \item{id}{unique identifier of participant}
+#'   \item{dv}{dependent variable}
+#'   \item{within}{within variable}
+#'   \item{between}{between variable}
+#' }
+#'
+#' @source Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
+#'   Effect Sizes in Behavioral Research: A Correlational Approach. Cambridge
+#'   University Press.
+"rosenthal_tbl68"
+
+#' Data set by Rosenthal and Rosnow (2000)
+#'
 #' Fictious example corresponding to aggregated data set on p. 141 in Rosenthal
 #' and Rosnow (2000)
 #'
