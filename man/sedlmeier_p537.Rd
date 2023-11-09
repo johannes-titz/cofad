@@ -21,7 +21,7 @@ Sedlmeier, P., & Renkewitz, F. (2018). Forschungsmethoden und
 sedlmeier_p537
 }
 \description{
-Example 16.6, table 16.5 in Sedlmeier & Renkewitz (2018). Fictious data set
+Example 16.6, table 16.5 in Sedlmeier & Renkewitz (2018). Fictitious data set
 with 8 participants that listened to no music, white noise, classical music,
 and jazz music (within). The DV is a reading test.
 }

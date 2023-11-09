@@ -20,6 +20,6 @@ Furr, R. M. (2004). Interpreting effect sizes in contrast analysis.
 furr_p4
 }
 \description{
-fictious data set on empathy ratings of students from different majors
+fictitious data set on empathy ratings of students from different majors
 }
 \keyword{datasets}

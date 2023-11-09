@@ -421,8 +421,8 @@ summary(contr_mx)
 ## Comparing two hypothesis
 
 With `cofad` you can also compare two competing hypothesis. As an
-example Sedlmeier & Renkewitz (2013) use a fictious data set on problem
-solving skills of boys:
+example Sedlmeier & Renkewitz (2013) use a fictitious data set on
+problem solving skills of boys:
 
 ``` r
 sedlmeier_p525
@@ -498,8 +498,8 @@ Here, we rounded the lambdas so that the result is similar to the one in
 Sedlmeier & Renkewitz (2013), who found t=1.137 and r_effectsize=0.26.
 The effet size is the same, but what about the t-value? Well, we need to
 take the root of the F-value, 1.291, which is 1.136. There is still a
-slight difference to original result of 1.137, which is likely due to
-rounding errors.
+slight difference to the original result of 1.137, which is likely due
+to rounding errors.
 
 The same also works for within-designs. The reading comprehension data
 from above can serve as an example. Reading ability was assessed for
@@ -549,7 +549,7 @@ There are two hypotheses:
   it even further.
 - 3, -1, -1, -1: Noise of any kind reduces reading ability.
 
-Again, we need to calculcate the difference lambdas first:
+Again, we need to calculate the difference lambdas first:
 
 ``` r
 lambda1 <- c(1.25, 0.25, -0.75, -0.75)
@@ -563,7 +563,7 @@ lambda_diff
 ```
 
 Note that we use lambda2 as the first entry into `lambda_diff` because
-this is how Sedlmeier & Renkewitz (2013) calculcated it
+this is how Sedlmeier & Renkewitz (2013) calculated it
 (hypothesis2-hypothesis1).
 
 And now the contrast analysis:

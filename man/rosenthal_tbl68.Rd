@@ -22,7 +22,7 @@ Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
 rosenthal_tbl68
 }
 \description{
-Fictious example of children ability, Table 6.8 in Rosenthal and Rosnow
+Fictitious example of children ability, Table 6.8 in Rosenthal and Rosnow
 (2000)
 }
 \keyword{datasets}

@@ -1,6 +1,6 @@
 #' Empathy data set by Furr (2004)
 #'
-#' fictious data set on empathy ratings of students from different majors
+#' fictitious data set on empathy ratings of students from different majors
 #'
 #' @format a data frame with 20 rows and 2 columns
 #' \describe{
@@ -84,7 +84,7 @@
 
 #' Data set by Rosenthal and Rosnow (2000)
 #'
-#' Fictious example of children ability, Table 6.8 in Rosenthal and Rosnow
+#' Fictitious example of children ability, Table 6.8 in Rosenthal and Rosnow
 #' (2000)
 #'
 #' @format a data frame with 8 rows and 4 columns
@@ -102,7 +102,7 @@
 
 #' Data set by Rosenthal and Rosnow (2000)
 #'
-#' Fictious example corresponding to aggregated data set on p. 141 in Rosenthal
+#' Fictitious example corresponding to aggregated data set on p. 141 in Rosenthal
 #' and Rosnow (2000)
 #'
 #' @format a data frame with 12 rows and 4 columns
@@ -120,7 +120,7 @@
 
 #' Music data set by Sedlmeier & Renkewitz (2018)
 #'
-#' Example 16.6, table 16.5 in Sedlmeier & Renkewitz (2018). Fictious data set
+#' Example 16.6, table 16.5 in Sedlmeier & Renkewitz (2018). Fictitious data set
 #' with 8 participants that listened to no music, white noise, classical music,
 #' and jazz music (within). The DV is a reading test.
 #'
@@ -138,7 +138,7 @@
 
 #' Problem solving data set by Sedlmeier & Renkewitz (2018)
 #'
-#' Example 16.2, table 16.1 in Sedlmeier & Renkewitz (2018). Fictious data set
+#' Example 16.2, table 16.1 in Sedlmeier & Renkewitz (2018). Fictitious data set
 #' with 15 boys divided into three groups (no training, boys-specific material,
 #' girls-specific training material). The DV is the number of solved problem
 #' (similar to the training).
