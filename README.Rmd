@@ -290,7 +290,7 @@ Now you can run a normal contrast analysis:
 ca_competing <- calc_contrast(
   dv = lsg,
   between = between,
-  lambda_between = lambda_diff,
+  lambda_between = round(lambda_diff, 2),
   data = sedlmeier_p525
 )
 summary(ca_competing)
@@ -298,7 +298,7 @@ ca_competing
 ```
 Here, we rounded the lambdas so that the result is similar to the one in @sedlmeier2013, who found t=1.137 and r_effectsize=0.26. The effet size is the same, but what about the t-value? Well, we need to take the root of the F-value, 1.291, which is `r round(sqrt(1.291), 3)`. There is still a slight difference to original result of 1.137, which is likely due to rounding errors.
 
-The same also works for within-designs. The reading comprehension data from above can server as an example. Reading ability was assessed for eight participants under four different conditions:
+The same also works for within-designs. The reading comprehension data from above can serve as an example. Reading ability was assessed for eight participants under four different conditions:
 
 ```{r}
 sedlmeier_p537

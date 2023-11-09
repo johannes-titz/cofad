@@ -473,25 +473,25 @@ Now you can run a normal contrast analysis:
 ca_competing <- calc_contrast(
   dv = lsg,
   between = between,
-  lambda_between = lambda_diff,
+  lambda_between = round(lambda_diff, 2),
   data = sedlmeier_p525
 )
 #> lambdas are centered and rounded to 3 digits
 summary(ca_competing)
 #> $`F-Table`
 #>              SS df    MS     F     p
-#> contrast  0.824  1 0.824 1.301 0.276
+#> contrast  0.818  1 0.818 1.291 0.278
 #> within    7.600 12 0.633    NA    NA
 #> total    11.733 14    NA    NA    NA
 #> 
 #> $Effects
 #>              effects
-#> r_effectsize   0.265
-#> r_contrast     0.313
-#> r_alerting     0.447
+#> r_effectsize   0.264
+#> r_contrast     0.312
+#> r_alerting     0.445
 ca_competing
 #> 
-#> We ran a contrast analysis for the following between contrasts: JT = 0.682; KT = 0.488; MT = -1.17. This resulted in statistics of F(1,12) = 1.301; p = 0.2763 and an effect magnitude of r_effectsize = 0.265.
+#> We ran a contrast analysis for the following between contrasts: JT = 0.68; KT = 0.49; MT = -1.17. This resulted in statistics of F(1,12) = 1.291; p = 0.278 and an effect magnitude of r_effectsize = 0.264.
 ```
 
 Here, we rounded the lambdas so that the result is similar to the one in
@@ -502,7 +502,7 @@ slight difference to original result of 1.137, which is likely due to
 rounding errors.
 
 The same also works for within-designs. The reading comprehension data
-from above can server as an example. Reading ability was assessed for
+from above can serve as an example. Reading ability was assessed for
 eight participants under four different conditions:
 
 ``` r
