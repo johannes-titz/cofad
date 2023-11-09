@@ -41,10 +41,11 @@ summary.cofad_wi <- function(object, ci = .95, ...) {
   l_upper_bound <- l_mean + l_se_ci
   l_lower_bound <- l_mean - l_se_ci
   l_vals <- matrix(c(
-    l_mean, l_se, l_df, l_p, l_lower_bound, l_upper_bound), ncol = 6)
+    l_mean, l_se, l_df, l_p, x$sig[1], l_lower_bound, l_upper_bound),
+    ncol = 7)
   l_eff <- matrix(c(x[[4]][1], x[[4]][2]))
   rownames(l_eff) <- c("r-contrast", "g-contrast")
-  colnames(l_vals) <- c("Mean", "SE", "df", "p", "CI-lower", "CI-upper")
+  colnames(l_vals) <- c("Mean", "SE", "df", "p", "t", "CI-lower", "CI-upper")
   out <- list(l_vals, l_eff)
   names(out) <- c("L-Statistics", "Effects")
   return(out)
