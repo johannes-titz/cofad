@@ -137,23 +137,25 @@ cite <- function() {
 #' (lambda_preferred - lambda_competing). You can use the new difference lambdas
 #' as the input for calc_contrast.
 #'
-#' @param lambda_preferred Lambdas of the preferred hypothesis, has to be a
+#' @param lambda_preferred Lambdas of the preferred hypothesis. Has to be a
 #'   named vector with the names corresponding with the groups in the analyzed
 #'   data set. Alternatively, use the parameter labels.
-#' @param lambda_competing Lambdas of the competing hypothesis, has to be a
-#'   named vector with the names corresponding with the groups in the analyzed
-#'   data set. Alternatively, use the parameter labels.
-#' @param labels If you provide lambdas without names, you can set the labels
-#'   for both groups here.
+#' @param lambda_competing Lambdas of the competing hypothesis. Has to be a
+#' named vector with the names corresponding with the groups in the analyzed
+#' data set. Alternatively, use the parameter labels.
+#' @param labels If you provide lambdas without names, you can set the group
+#'   labels for both contrasts here.
 #'
-#' @return Lambdas for difference between lambda_preferred and lambda 2
+#' @return Lambdas for difference between lambda_preferred and lambda_competing
 #'
 #' @examples
 #' lambda_diff <- lambda_diff(c("A" = 1, "B" = 2, "C" = 3),
 #'                            c("A" = 1, "B" = 2, "C" = 6))
+#' lambda_diff
 #' # same result
 #' lambda_diff2 <- lambda_diff(c(1, 2, 3), c(1, 2, 6),
 #'                             labels = c("A", "B", "C"))
+#' lambda_diff2
 #' @export
 lambda_diff <- function(lambda_preferred, lambda_competing, labels = NULL) {
   if (cor(lambda_preferred, lambda_competing) == 1) {

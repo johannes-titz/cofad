@@ -7,19 +7,19 @@
 lambda_diff(lambda_preferred, lambda_competing, labels = NULL)
 }
 \arguments{
-\item{lambda_preferred}{Lambdas of the preferred hypothesis, has to be a
+\item{lambda_preferred}{Lambdas of the preferred hypothesis. Has to be a
 named vector with the names corresponding with the groups in the analyzed
 data set. Alternatively, use the parameter labels.}
 
-\item{lambda_competing}{Lambdas of the competing hypothesis, has to be a
+\item{lambda_competing}{Lambdas of the competing hypothesis. Has to be a
 named vector with the names corresponding with the groups in the analyzed
 data set. Alternatively, use the parameter labels.}
 
-\item{labels}{If you provide lambdas without names, you can set the labels
-for both groups here.}
+\item{labels}{If you provide lambdas without names, you can set the group
+labels for both contrasts here.}
 }
 \value{
-Lambdas for difference between lambda_preferred and lambda 2
+Lambdas for difference between lambda_preferred and lambda_competing
 }
 \description{
 If you want to test two competing hypotheses, you can use this helper
@@ -31,7 +31,9 @@ as the input for calc_contrast.
 \examples{
 lambda_diff <- lambda_diff(c("A" = 1, "B" = 2, "C" = 3),
                            c("A" = 1, "B" = 2, "C" = 6))
+lambda_diff
 # same result
 lambda_diff2 <- lambda_diff(c(1, 2, 3), c(1, 2, 6),
                             labels = c("A", "B", "C"))
+lambda_diff2
 }
