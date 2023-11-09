@@ -1,4 +1,4 @@
-context("tests constructor validation functions")
+#context("tests constructor validation functions")
 library(testthat)
 library(cofad)
 
@@ -60,7 +60,7 @@ test_that("constructor checks work", {
     "between is not a factor. I will try to convert it to a factor."
   )
 
-  expect_warning(
+  expect_message(
     calc_contrast(dv = 1:8,
                   between = as.factor(rep(1:2, 4)),
                   lambda_between =  c("1" = 1, "2" = 2),
@@ -72,8 +72,8 @@ test_that("constructor checks work", {
   )
 
   expect_warning(
-    calc_contrast(dv = c(1:7, NA),
-                  between = as.factor(rep(1:2, 4)),
+    calc_contrast(dv = c(1:4, 1:4),
+                  between = as.factor(rep(c("1" = 1, "2" = 2), each = 4)),
                   lambda_between =  c("1" = -1, "2" = 1),
                   within = as.factor(rep(1:4, 2)),
                   id = NULL,
