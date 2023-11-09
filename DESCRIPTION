@@ -2,11 +2,11 @@ Package: cofad
 Type: Package
 Title: Contrast Analyses for Factorial Designs
 Version: 0.2.1.9000
-Authors@R: c(person("Markus", "Burkhardt",
+Authors@R: c(person("Johannes", "Titz", email = "johannes.titz@gmail.com",
+  role = c("aut")),
+  person("Markus", "Burkhardt",
   email = "markus.burkhardt@psychologie.tu-chemnitz.de",
-  role = c("aut", "cre")),
-  person("Johannes", "Titz", email = "johannes.titz@gmail.com",
-  role = c("aut")))
+  role = c("aut", "cre")))
 Maintainer: Markus Burkhardt <markus.burkhardt@psychologie.tu-chemnitz.de>
 Description: Contrast analysis for factorial designs is an alternative to the 
   classical ANOVA approach with the advantage of testing focused hypothesis. 
