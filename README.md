@@ -568,9 +568,11 @@ And now the contrast analysis:
 
 ``` r
 contr_wi <- calc_contrast(
-  dv = reading_test, within = music,
+  dv = reading_test,
+  within = music,
   lambda_within = round(lambda_diff, 2),
-  id = participant, data = sedlmeier_p537
+  id = participant,
+  data = sedlmeier_p537
 )
 #> lambdas are centered and rounded to 3 digits
 summary(contr_wi)
@@ -588,9 +590,10 @@ contr_wi
 ```
 
 Sedlmeier & Renkewitz (2013) found a t-value of -3.75 and a g_contrast
-of -1.33. Again, there are slight differences to our calculation, likely
-due to rounding errors. Further note, that hypothesis 1 fits better,
-because the statistic and effect are negative.
+of -1.33. Again, there is a slight difference for the t-value when
+compared to our calculation, likely due to rounding errors. Further
+note, that hypothesis 1 fits better because the statistic and effect are
+negative.
 
 ## Aggregated Data
 
@@ -598,7 +601,7 @@ Sometimes you would like to run a contrast analysis on aggregated data
 (e.g. when no raw data is available). If you have the means, standard
 deviations and sample sizes for every condition, you can do this with
 cofad. For instance, if we take our first example and aggregate it, we
-can still calculate the contrast analysis:
+can still run the contrast analysis:
 
 ``` r
 library(dplyr)
