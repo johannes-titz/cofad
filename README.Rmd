@@ -16,20 +16,20 @@ knitr::opts_chunk$set(
 
 options(width = 80)
 
-library(stringr)
-
-clean_bib <- function(input_file, input_bib, output_bib){
-  lines <- paste(readLines(input_file), collapse = "")
-  entries <- unique(str_match_all(lines,"@([a-zA-Z0-9]+)[,\\. \\?\\!\\]]")[[1]][, 2])
-
-  bib <- paste(readLines(input_bib), collapse = "\n")
-  bib <- unlist(strsplit(bib, "\n@"))
-
-  output <- sapply(entries, grep, bib, value = T)
-  output <- paste("@", output, sep = "")
-
-  writeLines(unlist(output), output_bib)
-}
+# library(stringr)
+# 
+# clean_bib <- function(input_file, input_bib, output_bib){
+#   lines <- paste(readLines(input_file), collapse = "")
+#   entries <- unique(str_match_all(lines,"@([a-zA-Z0-9]+)[,\\. \\?\\!\\]]")[[1]][, 2])
+# 
+#   bib <- paste(readLines(input_bib), collapse = "\n")
+#   bib <- unlist(strsplit(bib, "\n@"))
+# 
+#   output <- sapply(entries, grep, bib, value = T)
+#   output <- paste("@", output, sep = "")
+# 
+#   writeLines(unlist(output), output_bib)
+# }
 
 #clean_bib("README.Rmd", "library.bib", "clean_library.bib")
 #clean_bib("paper/paper.md", "library.bib", "paper/library_paper.bib")
@@ -201,7 +201,7 @@ Let us now run an analysis for within-subjects designs.
 
 ## Within-Subjects Designs
 
-For within designs the calculations are quite different, but cofad takes care of the details. We just have to use the within parameters *within* and *lambda_within* instead of the between equivalents. As an example we use Table 16.5 from @sedlmeier2018. Reading ability was assessed for eight participants under four different conditions. The hypothesis is that you can read best without music, white noise reduces your reading ability and music (independent of type) reduces it even further.
+For within designs the calculations are quite different, but cofad takes care of the details. We just have to use the within parameters *within* and *lambda_within* instead of the between equivalents. As an example we use Table 16.5 from @sedlmeier2018. Reading ability was assessed for eight participants under four different conditions. The hypothesis is that you can read best without music, white noise reduces your reading ability and music (independently of type) reduces it even further.
 
 ```{r}
 data("sedlmeier_p537")
@@ -271,7 +271,7 @@ sedlmeier_p525
 Where lsg is the number of solved exercises and the groups are KT = no training, JT = boys-specific training, MT=girls-specific training. Two hypotheses are competing:
 
 - -2, 3, -1 (boys benefit from boys-specific training)
-- -2, 1, 1 (boys benefit from training, independent of the type of training)
+- -2, 1, 1 (boys benefit from training, independently of the type of training)
 
 First, we need to create the difference lambdas:
 
@@ -296,7 +296,7 @@ ca_competing <- calc_contrast(
 summary(ca_competing)
 ca_competing
 ```
-Here, we rounded the lambdas so that the result is similar to the one in @sedlmeier2013, who found t=1.137 and r_effectsize=0.26. The effet size is the same, but what about the t-value? Well, we need to take the root of the F-value, 1.291, which is `r round(sqrt(1.291), 3)`. There is still a slight difference to the original result of 1.137, which is likely due to rounding errors.
+Here, we rounded the lambdas so that the result is similar to the one in @sedlmeier2013, who found t=1.137 and r_effectsize=0.26. The effet size is the same. For the t-value, we need to take the root of the F-value, 1.291, which is `r round(sqrt(1.291), 3)`. There is still a slight difference to the original result of 1.137, which is likely due to rounding errors.
 
 The same also works for within-designs. The reading comprehension data from above can serve as an example. Reading ability was assessed for eight participants under four different conditions:
 
@@ -306,7 +306,7 @@ sedlmeier_p537
 
 There are two hypotheses:
 
-- 1.25, 0.25, -0.75, -0.75: You can read best without music, white noise reduces your reading ability and music (independent of type) reduces it even further.
+- 1.25, 0.25, -0.75, -0.75: You can read best without music, white noise reduces your reading ability and music (independently of type) reduces it even further.
 - 3, -1, -1, -1: Noise of any kind reduces reading ability.
 
 Again, we need to calculate the difference lambdas first:

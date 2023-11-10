@@ -293,7 +293,7 @@ and *lambda_within* instead of the between equivalents. As an example we
 use Table 16.5 from Sedlmeier & Renkewitz (2018). Reading ability was
 assessed for eight participants under four different conditions. The
 hypothesis is that you can read best without music, white noise reduces
-your reading ability and music (independent of type) reduces it even
+your reading ability and music (independently of type) reduces it even
 further.
 
 ``` r
@@ -448,7 +448,7 @@ training, JT = boys-specific training, MT=girls-specific training. Two
 hypotheses are competing:
 
 - -2, 3, -1 (boys benefit from boys-specific training)
-- -2, 1, 1 (boys benefit from training, independent of the type of
+- -2, 1, 1 (boys benefit from training, independently of the type of
   training)
 
 First, we need to create the difference lambdas:
@@ -495,10 +495,9 @@ ca_competing
 
 Here, we rounded the lambdas so that the result is similar to the one in
 Sedlmeier & Renkewitz (2013), who found t=1.137 and r_effectsize=0.26.
-The effet size is the same, but what about the t-value? Well, we need to
-take the root of the F-value, 1.291, which is 1.136. There is still a
-slight difference to the original result of 1.137, which is likely due
-to rounding errors.
+The effet size is the same. For the t-value, we need to take the root of
+the F-value, 1.291, which is 1.136. There is still a slight difference
+to the original result of 1.137, which is likely due to rounding errors.
 
 The same also works for within-designs. The reading comprehension data
 from above can serve as an example. Reading ability was assessed for
@@ -544,7 +543,7 @@ sedlmeier_p537
 There are two hypotheses:
 
 - 1.25, 0.25, -0.75, -0.75: You can read best without music, white noise
-  reduces your reading ability and music (independent of type) reduces
+  reduces your reading ability and music (independently of type) reduces
   it even further.
 - 3, -1, -1, -1: Noise of any kind reduces reading ability.
 
