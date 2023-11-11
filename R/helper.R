@@ -194,3 +194,8 @@ zscale <- function(x) {
   n <- length(x)
   sqrt(n / (n - 1)) * (x - mean(x)) / sd(x)
 }
+
+#' @importFrom tibble lst
+cn <- function(...) {
+  unlist(tibble::lst(...))
+}
