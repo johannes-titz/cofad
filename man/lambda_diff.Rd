@@ -29,11 +29,11 @@ The two contrasts are z-standardized first and then subtracted
 as the input for calc_contrast.
 }
 \examples{
-lambda_diff <- lambda_diff(c("A" = 1, "B" = 2, "C" = 3),
-                           c("A" = 1, "B" = 2, "C" = 6))
-lambda_diff
+lambda <- lambda_diff(c("A" = 1, "B" = 2, "C" = 3),
+                      c("A" = 1, "B" = 2, "C" = 6))
+lambda
 # same result
-lambda_diff2 <- lambda_diff(c(1, 2, 3), c(1, 2, 6),
-                            labels = c("A", "B", "C"))
-lambda_diff2
+lambda2 <- lambda_diff(c(1, 2, 3), c(1, 2, 6),
+                       labels = c("A", "B", "C"))
+lambda2
 }
