@@ -17,7 +17,7 @@ t31 <- calc_contrast(
 )
 
 test_that("Rosenthal Chapter 3 F-value is correct", {
-  expect_equal(t31$sig[1], 28.9)
+  expect_equal(t31$sig["f_contrast"], c("f_contrast" = 28.9))
 })
 
 ## furr -----
@@ -31,9 +31,10 @@ ca <- calc_contrast(
   data = furr_p4
 )
 test_that("furr p4 works", {
-          expect_equal(round(ca$sig[1], 3), 6.154)
+          expect_equal(round(ca$sig["f_contrast"], 3), c("f_contrast" = 6.154))
           # test effect sizes!
-          expect_equal(round(ca$effects, 2), c(-0.28, -0.53, -0.31))
+          expect_equal(as.numeric(round(ca$effects, 2)),
+                       c(-0.28, -0.53, -0.31))
           }
 )
 # test convert functions
@@ -58,8 +59,9 @@ t16_2 <- calc_contrast(
 )
 
 test_that("sedlmeier 525 works", {
-  expect_equal(round(t16_2$sig[1], 3), 6.519)
-  expect_equal(round(t16_2$effects[2], 2), 0.59)
+  expect_equal(round(t16_2$sig["f_contrast"], 3),
+               c("f_contrast" = 6.519))
+  expect_equal(as.numeric(round(t16_2$effects[2], 2)), 0.59)
 }
 )
 # within (no between)------
@@ -80,6 +82,7 @@ contr_wi <- calc_contrast(
   ),
   id = participant, data = sedlmeier_p537
 )
+
 
 test_that("sedlmeier 537 works", {
   expect_equal(contr_wi$desc[1], 5.875)
@@ -145,7 +148,7 @@ c5_e2 <- calc_contrast(
 )
 
 test_that("rosenthal q2 works", {
-  expect_equal(c5_e2$sig[1], 28.125)
+  expect_equal(c5_e2$sig[1], c(28.125))
   }
 )
 
@@ -184,8 +187,8 @@ t16_2B <- calc_contrast(
 test_that("comparison between two contrasts works, sedlmeier 525", {
   # actual value in Sedlmeier (2013) p. 533 is 1.137, which seems to be due to
   # rounding errors (lambda_diff is identical)
-  expect_equal(round(sqrt(t16_2B$sig[1]), 3), 1.136)
-  expect_equal(round(t16_2B$effects[1], 2), 0.26)
+  expect_equal(round(sqrt(t16_2B$sig["f_contrast"]), 3), c("f_contrast" = 1.136))
+  expect_equal(as.numeric(round(t16_2B$effects[1], 2)), 0.26)
   }
 )
 
@@ -209,7 +212,7 @@ contr_wi <- calc_contrast(
 
 test_that("comparison between 2 contrasts for within (sedlmeier 537) works", {
   # actual value in Sedlmeier 2013 p. 536 is -3.75
-  expect_equal(round(contr_wi$sig[1], 2), -3.77)
+  expect_equal(round(contr_wi$sig[1], 2), c(-3.77))
   expect_equal(round(contr_wi$effects[2], 2), -1.33)
   }
 )
