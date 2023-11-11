@@ -4,14 +4,12 @@
 \alias{summary.cofad_wi}
 \title{Summary of within subject design contrast analysis}
 \usage{
-\method{summary}{cofad_wi}(object, ci = 0.95, ...)
+\method{summary}{cofad_wi}(object, ci = 0.95)
 }
 \arguments{
 \item{object}{output of calc_contrast}
 
 \item{ci}{confidence intervall for composite Score (L-Values)}
-
-\item{...}{further arguments}
 }
 \value{
 Displays ANOVA table of the contrastanalysis
