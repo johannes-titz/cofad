@@ -39,5 +39,6 @@ Imports:
     magrittr,
     rhandsontable,
     dplyr,
-    rlang
+    rlang,
+    tibble
 Config/testthat/edition: 3
