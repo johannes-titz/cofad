@@ -33,7 +33,7 @@ summary.cofad_bw <- function(object, ...) {
 #' @return Displays ANOVA table of the contrastanalysis
 #' and the typical effectsizes.
 #' @export
-summary.cofad_wi <- function(object, ci = .95) {
+summary.cofad_wi <- function(object, ci = .95, ...) {
   x <- object
   # @Markus: please put names before calculation!
   l_mean <- x[[2]][[1]]
