@@ -301,10 +301,12 @@ run_between_analysis <- function(dv, between, lambda_between) {
   ms_within <- mean(var_within, na.rm = T)
   mean_i <- tapply(X = dv, INDEX = between, FUN = mean)
   se_i <- tapply(X = dv, INDEX = between, FUN = sd) / sqrt(ni)
-  prodsum <- sum(mean_i * lambda_between)
+  L <- sum(mean_i * lambda_between)
+  ss_kontrast <- L^2/(sum(lambda_between^2 / ni))
   ss_total <- sum((dv - mean(dv)) ** 2)
-  ss_between <- sum(ni * (mean_i - mean(mean_i) ** 2))
-  f_contrast <- ((prodsum ** 2) / (ms_within)) *
+  ss_between <- sum(ni * (mean_i - mean(mean_i))^2)
+  ss_within <- ss_total - ss_between
+  f_contrast <- ((L ** 2) / (ms_within)) *
     (1 / sum((lambda_between ** 2) / ni))
   p_contrast <- pf(f_contrast, 1, df_inn, lower.tail = F)
   r_effectsize <- cor(lambda_between_row, dv)
@@ -320,13 +322,13 @@ run_between_analysis <- function(dv, between, lambda_between) {
         r_effectsize ** 2 * r_alerting ** 2 - r_effectsize ** 2
         + r_alerting ** 2))
   }
-  sig <- c(f_contrast, p_contrast, df_contrast, df_inn, ms_within,
-           ss_between, ss_total, n_total - 1)
-  r <- c(r_effectsize, r_contrast, r_alerting)
+  sig <- cn(f_contrast, p_contrast, df_contrast, df_inn, ms_within,
+            ss_between, ss_kontrast, ss_total, ss_within,
+            df_total = n_total - 1, L)
+  effects <- cn(r_effectsize, r_contrast, r_alerting)
   desc <- matrix(c(mean_i, se_i), ncol = 2, byrow = F)
-  colnames(desc) <- c("M", "SE")
-  out_l <- list(sig, desc, lambda_between, r)
-  names(out_l) <- c("sig", "desc", "lambda_between", "effects")
+  colnames(desc) <- c("mean_i", "se_i")
+  out_l <- tibble::lst(sig, desc, lambda_between, effects)
   class(out_l) <- c("cofad_bw")
   structure(out_l)
   return(out_l)
