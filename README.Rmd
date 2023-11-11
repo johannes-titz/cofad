@@ -206,12 +206,14 @@ For within designs the calculations are quite different, but cofad takes care of
 ```{r}
 data("sedlmeier_p537")
 head(sedlmeier_p537)
-calc_contrast(dv = reading_test, within = music,
-              lambda_within = c("without music" = 1.25, 
-                                "white noise" = 0.25,
-                                "classic" = -0.75,
-                                "jazz" = -0.75),
-              id = participant, data = sedlmeier_p537)
+within <- calc_contrast(dv = reading_test, within = music,
+                        lambda_within = c("without music" = 1.25, 
+                                          "white noise" = 0.25,
+                                          "classic" = -0.75,
+                                          "jazz" = -0.75),
+                        id = participant, data = sedlmeier_p537)
+summary(within)
+within
 ```
 
 You can see that the significance test is just a $t$-test and the reported effect size is referring to a mean comparison ($g$). (The $t$-test is one-tailed, because contrast analysis has always a specific hypotheses.) When conducting the analysis by hand, we can see why:

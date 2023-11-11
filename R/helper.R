@@ -149,13 +149,13 @@ cite <- function() {
 #' @return Lambdas for difference between lambda_preferred and lambda_competing
 #'
 #' @examples
-#' lambda_diff <- lambda_diff(c("A" = 1, "B" = 2, "C" = 3),
-#'                            c("A" = 1, "B" = 2, "C" = 6))
-#' lambda_diff
+#' lambda <- lambda_diff(c("A" = 1, "B" = 2, "C" = 3),
+#'                       c("A" = 1, "B" = 2, "C" = 6))
+#' lambda
 #' # same result
-#' lambda_diff2 <- lambda_diff(c(1, 2, 3), c(1, 2, 6),
-#'                             labels = c("A", "B", "C"))
-#' lambda_diff2
+#' lambda2 <- lambda_diff(c(1, 2, 3), c(1, 2, 6),
+#'                        labels = c("A", "B", "C"))
+#' lambda2
 #' @export
 lambda_diff <- function(lambda_preferred, lambda_competing, labels = NULL) {
   if (cor(lambda_preferred, lambda_competing) == 1) {

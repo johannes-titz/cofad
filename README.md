@@ -306,12 +306,22 @@ head(sedlmeier_p537)
 #> 4           29           4 without music
 #> 5           30           5 without music
 #> 6           33           6 without music
-calc_contrast(dv = reading_test, within = music,
-              lambda_within = c("without music" = 1.25, 
-                                "white noise" = 0.25,
-                                "classic" = -0.75,
-                                "jazz" = -0.75),
-              id = participant, data = sedlmeier_p537)
+within <- calc_contrast(dv = reading_test, within = music,
+                        lambda_within = c("without music" = 1.25, 
+                                          "white noise" = 0.25,
+                                          "classic" = -0.75,
+                                          "jazz" = -0.75),
+                        id = participant, data = sedlmeier_p537)
+summary(within)
+#> $`L-Statistics`
+#>       Mean       SE df        t            p CI-lower CI-upper
+#> [1,] 5.875 1.115035  7 5.268892 0.0005810119 3.238361 8.511639
+#> 
+#> $Effects
+#>                 [,1]
+#> r-contrast 0.6873436
+#> g-contrast 1.8628346
+within
 #> 
 #> We ran a contrast analysis for the following within contrasts: classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25. This resulted in statistics of t(7) = 5.269; p = 0.000581 and an effect magnitude of g_effectsize = 1.863.
 ```
@@ -577,8 +587,8 @@ contr_wi <- calc_contrast(
 #> lambdas are centered and rounded to 3 digits
 summary(contr_wi)
 #> $`L-Statistics`
-#>      Mean        SE df         p        t  CI-lower   CI-upper
-#> [1,] -2.2 0.5835483  7 0.9965087 -3.77004 -3.579872 -0.8201276
+#>      Mean        SE df        t         p  CI-lower   CI-upper
+#> [1,] -2.2 0.5835483  7 -3.77004 0.9965087 -3.579872 -0.8201276
 #> 
 #> $Effects
 #>                  [,1]
