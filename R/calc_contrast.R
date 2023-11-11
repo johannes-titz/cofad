@@ -471,8 +471,8 @@ check_if_factor <- function(variable) {
 calc_r_alerting <- function(r_contrast, r_effectsize) {
   numerator <- - r_effectsize * r_contrast
   denominator <- sqrt((1 + r_effectsize^2) * r_contrast^2 - r_effectsize^2)
-  r_alerting <- numerator / denominator
-  return(r_alerting)
+  r_alerting <- as.numeric(numerator / denominator)
+  return(cn(r_alerting))
 }
 
 #' Calculate r_alerting from F-values
@@ -501,8 +501,8 @@ calc_r_contrast <- function(r_alerting, r_effectsize) {
   denominator <- sqrt(
     r_effectsize^2 * r_alerting^2 - r_effectsize^2 + r_alerting^2
   )
-  r_contrast <- numerator / denominator
-  return(r_contrast)
+  r_contrast <- as.numeric(numerator / denominator)
+  return(cn(r_contrast))
 }
 
 #' Calculate r_effectsize from r_contrast and r_alerting
@@ -517,6 +517,6 @@ calc_r_effectsize <- function(r_alerting, r_contrast) {
   numerator <- - r_contrast * r_alerting
   denominator <- sqrt(- (r_contrast^2) * r_alerting^2 + r_contrast^2 +
                         r_alerting^2)
-  r_effectsize <- numerator / denominator
-  return(r_effectsize)
+  r_effectsize <- as.numeric(numerator / denominator)
+  return(cn(r_effectsize))
 }
