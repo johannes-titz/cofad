@@ -165,6 +165,8 @@ lambdas <- rep(c(1, -1, 0, 0), each = 5)
 cor(furr_p4$empathy, lambdas)
 ```
 
+As you can see, the effect is negative and `cofad` also warns the user that the contrast fits in the opposite direction. This is a big failure for the hypothesis and indicates substantial problems in theorizing.
+
 The other two hypotheses can be tested accordingly:
 
 ```{r}
@@ -180,7 +182,9 @@ ca <- calc_contrast(dv = empathy, between = major,
 ca
 ```
 
-You will find that the numbers are identical to the ones presented in @furr2004. Now, imagine we have a more fun hypothesis and not just mean differences. From an elaborate theory we could derive that the means should be 73, 61, 51 and 38. We can test this with cofad directly because cofad will center the lambdas (the mean of the lambdas has to be 0):
+When you compare the numbers to the ones presented in @furr2004, you will find the same result, except that @furr2004 uses t-values and the p-values are halved. This is because in contrast analysis you can always test one-sided. The assumption is that your lambdas covariate positively with the mean values, not that they either covariate positively or negatively. Thus, you can always halve the p-value from the F-Test.
+
+Now, imagine we have a more fun hypothesis and not just mean differences. From an elaborate theory we could derive that the means should be 73, 61, 51 and 38. We can test this with cofad directly because cofad will center the lambdas (the mean of the lambdas has to be 0):
 
 ```{r}
 ca <- calc_contrast(dv = empathy, between = major,
@@ -280,8 +284,8 @@ First, we need to create the difference lambdas:
 ```{r}
 lambda1 <- c(-2, 3, -1)
 lambda2 <- c(-2, 1, 1)
-lambda_diff <- lambda_diff(lambda1, lambda2, labels = c("KT", "JT", "MT"))
-lambda_diff
+lambda <- lambda_diff(lambda1, lambda2, labels = c("KT", "JT", "MT"))
+lambda
 ```
 
 Note that you cannot just subtract the lambdas because their variance can differ, which has an effect on the test. Instead, you need to standardize the lambdas first. `lambda_diff` takes care of this for you.
@@ -292,7 +296,7 @@ Now you can run a normal contrast analysis:
 ca_competing <- calc_contrast(
   dv = lsg,
   between = between,
-  lambda_between = round(lambda_diff, 2),
+  lambda_between = round(lambda, 2),
   data = sedlmeier_p525
 )
 summary(ca_competing)
@@ -316,10 +320,10 @@ Again, we need to calculate the difference lambdas first:
 ```{r}
 lambda1 <- c(1.25, 0.25, -0.75, -0.75)
 lambda2 <- c(3, -1, -1, -1)
-lambda_diff <- lambda_diff(lambda2, lambda1,
-                           labels = c("without music", "white noise", "classic",
-                                      "jazz"))
-lambda_diff
+lambda <- lambda_diff(lambda2, lambda1,
+                      labels = c("without music", "white noise", "classic",
+                                 "jazz"))
+lambda
 ```
 
 Note that we use lambda2 as the first entry into `lambda_diff` because this is how @sedlmeier2013 calculated it (hypothesis2-hypothesis1).
@@ -330,7 +334,7 @@ And now the contrast analysis:
 contr_wi <- calc_contrast(
   dv = reading_test,
   within = music,
-  lambda_within = round(lambda_diff, 2),
+  lambda_within = round(lambda, 2),
   id = participant,
   data = sedlmeier_p537
 )

@@ -213,11 +213,17 @@ in a publication. With the summary method some more details are shown:
 
 ``` r
 summary(ca)
-#> $`F-Table`
-#>            SS df     MS     F     p
-#> contrast   90  1 90.000 6.154 0.025
-#> within    234 16 14.625    NA    NA
-#> total    1179 19     NA    NA    NA
+#> Contrast Analysis Between
+#> 
+#> L=-6
+#> 
+#> Attention! Your contrast is negative, meaning that it fits in the opposite direction of your lambdas!
+#> 
+#> $FTable
+#>            SS df     MS     F      p
+#> contrast   90  1 90.000 6.154 0.0246
+#> within    234 16 14.625             
+#> total    1179 19                    
 #> 
 #> $Effects
 #>              effects
@@ -238,6 +244,10 @@ cor(furr_p4$empathy, lambdas)
 #> [1] -0.2762895
 ```
 
+As you can see, the effect is negative and `cofad` also warns the user
+that the contrast fits in the opposite direction. This is a big failure
+for the hypothesis and indicates substantial problems in theorizing.
+
 The other two hypotheses can be tested accordingly:
 
 ``` r
@@ -257,10 +267,16 @@ ca
 #> We ran a contrast analysis for the following between contrasts: business = -1; chemistry = -1; education = 1; psychology = 1. This resulted in statistics of F(1,16) = 57.778; p = 1.07e-06 and an effect magnitude of r_effectsize = 0.847.
 ```
 
-You will find that the numbers are identical to the ones presented in
-Furr (2004). Now, imagine we have a more fun hypothesis and not just
-mean differences. From an elaborate theory we could derive that the
-means should be 73, 61, 51 and 38. We can test this with cofad directly
+When you compare the numbers to the ones presented in Furr (2004), you
+will find the same result, except that Furr (2004) uses t-values and the
+p-values are halved. This is because in contrast analysis you can always
+test one-sided. The assumption is that your lambdas covariate positively
+with the mean values, not that they either covariate positively or
+negatively. Thus, you can always halve the p-value from the F-Test.
+
+Now, imagine we have a more fun hypothesis and not just mean
+differences. From an elaborate theory we could derive that the means
+should be 73, 61, 51 and 38. We can test this with cofad directly
 because cofad will center the lambdas (the mean of the lambdas has to be
 0):
 
@@ -314,13 +330,13 @@ within <- calc_contrast(dv = reading_test, within = music,
                         id = participant, data = sedlmeier_p537)
 summary(within)
 #> $`L-Statistics`
-#>       Mean       SE df        t            p CI-lower CI-upper
-#> [1,] 5.875 1.115035  7 5.268892 0.0005810119 3.238361 8.511639
+#>      mean of L    SE df     t        p 95%CI-lower 95%CI-upper
+#> [1,]     5.875 1.115  7 5.269 0.000581       3.238       8.512
 #> 
 #> $Effects
-#>                 [,1]
-#> r-contrast 0.6873436
-#> g-contrast 1.8628346
+#>             [,1]
+#> r-contrast 0.687
+#> g-contrast 1.860
 within
 #> 
 #> We ran a contrast analysis for the following within contrasts: classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25. This resulted in statistics of t(7) = 5.269; p = 0.000581 and an effect magnitude of g_effectsize = 1.863.
@@ -466,8 +482,8 @@ First, we need to create the difference lambdas:
 ``` r
 lambda1 <- c(-2, 3, -1)
 lambda2 <- c(-2, 1, 1)
-lambda_diff <- lambda_diff(lambda1, lambda2, labels = c("KT", "JT", "MT"))
-lambda_diff
+lambda <- lambda_diff(lambda1, lambda2, labels = c("KT", "JT", "MT"))
+lambda
 #>         JT         KT         MT 
 #>  0.6816234  0.4883935 -1.1700168
 ```
@@ -482,16 +498,20 @@ Now you can run a normal contrast analysis:
 ca_competing <- calc_contrast(
   dv = lsg,
   between = between,
-  lambda_between = round(lambda_diff, 2),
+  lambda_between = round(lambda, 2),
   data = sedlmeier_p525
 )
 #> lambdas are centered and rounded to 3 digits
 summary(ca_competing)
-#> $`F-Table`
+#> Contrast Analysis Between
+#> 
+#> L=0.582
+#> 
+#> $FTable
 #>              SS df    MS     F     p
 #> contrast  0.818  1 0.818 1.291 0.278
-#> within    7.600 12 0.633    NA    NA
-#> total    11.733 14    NA    NA    NA
+#> within    7.600 12 0.633            
+#> total    11.733 14                  
 #> 
 #> $Effects
 #>              effects
@@ -562,10 +582,10 @@ Again, we need to calculate the difference lambdas first:
 ``` r
 lambda1 <- c(1.25, 0.25, -0.75, -0.75)
 lambda2 <- c(3, -1, -1, -1)
-lambda_diff <- lambda_diff(lambda2, lambda1,
-                           labels = c("without music", "white noise", "classic",
-                                      "jazz"))
-lambda_diff
+lambda <- lambda_diff(lambda2, lambda1,
+                      labels = c("without music", "white noise", "classic",
+                                 "jazz"))
+lambda
 #>       classic          jazz   white noise without music 
 #>     0.3271838     0.3271838    -0.8788616     0.2244941
 ```
@@ -580,20 +600,20 @@ And now the contrast analysis:
 contr_wi <- calc_contrast(
   dv = reading_test,
   within = music,
-  lambda_within = round(lambda_diff, 2),
+  lambda_within = round(lambda, 2),
   id = participant,
   data = sedlmeier_p537
 )
 #> lambdas are centered and rounded to 3 digits
 summary(contr_wi)
 #> $`L-Statistics`
-#>      Mean        SE df        t         p  CI-lower   CI-upper
-#> [1,] -2.2 0.5835483  7 -3.77004 0.9965087 -3.579872 -0.8201276
+#>      mean of L     SE df     t      p 95%CI-lower 95%CI-upper
+#> [1,]      -2.2 0.5835  7 -3.77 0.9965       -3.58     -0.8201
 #> 
 #> $Effects
-#>                  [,1]
-#> r-contrast -0.5606777
-#> g-contrast -1.3329103
+#>              [,1]
+#> r-contrast -0.561
+#> g-contrast -1.330
 contr_wi
 #> 
 #> We ran a contrast analysis for the following within contrasts: classic = 0.33; jazz = 0.33; white noise = -0.88; without music = 0.22. This resulted in statistics of t(7) = -3.77; p = 0.9965 and an effect magnitude of g_effectsize = -1.333. Attention: Contrast fits in the opposite direction!
