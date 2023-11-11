@@ -27,11 +27,10 @@ summary.cofad_bw <- function(object, ...) {
 #' Summary of within subject design contrast analysis
 #' @param object output of calc_contrast
 #' @param ci confidence intervall for composite Score (L-Values)
-#' @param ... further arguments
 #' @return Displays ANOVA table of the contrastanalysis
 #' and the typical effectsizes.
 #' @export
-summary.cofad_wi <- function(object, ci = .95, ...) {
+summary.cofad_wi <- function(object, ci = .95) {
   x <- object
   l_mean <- x[[2]][[1]]
   l_se <- x[[2]][2]
@@ -40,12 +39,12 @@ summary.cofad_wi <- function(object, ci = .95, ...) {
   l_se_ci <- qt(p = (1 - ci) / 2, df = l_df, lower.tail = F) * l_se
   l_upper_bound <- l_mean + l_se_ci
   l_lower_bound <- l_mean - l_se_ci
-  l_vals <- matrix(c(
-    l_mean, l_se, l_df, l_p, x$sig[1], l_lower_bound, l_upper_bound),
-    ncol = 7)
-  l_eff <- matrix(c(x[[4]][1], x[[4]][2]))
+  l_vals <- c(l_mean, l_se, l_df, x$sig[1], l_p, l_lower_bound, l_upper_bound)
+  l_vals <- signif(matrix(l_vals, ncol = length(l_vals)), 4)
+  l_eff <- signif(matrix(c(x[[4]][1], x[[4]][2])), 3)
   rownames(l_eff) <- c("r-contrast", "g-contrast")
-  colnames(l_vals) <- c("Mean", "SE", "df", "p", "t", "CI-lower", "CI-upper")
+  colnames(l_vals) <- c("mean of L", "SE", "df", "t", "p",
+                     paste0(ci*100, "%", c("CI-lower", "CI-upper")))
   out <- list(l_vals, l_eff)
   names(out) <- c("L-Statistics", "Effects")
   return(out)
