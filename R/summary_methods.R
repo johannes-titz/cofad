@@ -23,7 +23,7 @@ summary.cofad_bw <- function(object, ...) {
   colnames(r_tab) <- c("effects")
   out <- list(f_tab, r_tab)
   names(out) <- c("FTable", "Effects")
-  warning <- ifelse(s["L"] < 0, "Attention! Your contrast is negative, meaning that it fits in the opposite direction of your lambdas!", "")
+  warning <- ifelse(s["L"] < 0, "\n\nAttention! Your contrast is negative, meaning that it fits in the opposite direction of your lambdas!", "")
   cat(paste0("Contrast Analysis Between\n\nL=", s["L"], warning, "\n\n", collapse = ""))
   return(print(out, na.print = ""))
 }
@@ -43,7 +43,7 @@ summary.cofad_wi <- function(object, ci = .95) {
   l_se_ci <- qt(p = (1 - ci) / 2, df = l_df, lower.tail = F) * l_se
   l_upper_bound <- l_mean + l_se_ci
   l_lower_bound <- l_mean - l_se_ci
-  l_vals <- c(l_mean, l_se, l_df, s$sig[1], l_p, l_lower_bound, l_upper_bound)
+  l_vals <- c(l_mean, l_se, l_df, x$sig[1], l_p, l_lower_bound, l_upper_bound)
   l_vals <- signif(matrix(l_vals, ncol = length(l_vals)), 4)
   l_eff <- signif(matrix(c(x[[4]][1], x[[4]][2])), 3)
   rownames(l_eff) <- c("r-contrast", "g-contrast")
