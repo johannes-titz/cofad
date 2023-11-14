@@ -114,3 +114,15 @@ working_memory <- read.csv("data-raw/Akan_etal_2018_Exp2B.csv")
 testing_effect <- read.csv("data-raw/dat_testing.csv")
 usethis::use_data(testing_effect)
 usethis::use_data(working_memory)
+
+# Haans 2018
+
+d <- haven::read_stata("data-raw/within1by4data.dta")
+haans_within1by4 <- tidyr::pivot_longer(d, 2:5)
+usethis::use_data(haans_within1by4)
+
+# l <- c(3, 1, -1, -3)
+# names(l) <- unique(haans_within1by4$name)
+# res <- calc_contrast(value, id = person, within = name,
+#                      lambda_within = l, data = haans_within1by4)
+# summary(res)

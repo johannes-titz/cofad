@@ -176,7 +176,6 @@
 #'
 "testing_effect"
 
-#'
 #' Working memory data
 #'
 #' This dataset originates from a study conducted at the University of Zurich
@@ -199,3 +198,17 @@
 #' }
 #'
 "working_memory"
+
+#' Haans within data example
+#'
+#' Fictitious data set from Haans, A. (2018). Contrast Analysis: A Tutorial.
+#' https://doi.org/10.7275/7DEY-ZD62
+#'
+#' @format a data frame with 20 rows and 3 variables:
+#' \describe{
+#'   \item{person}{person id}
+#'   \item{name}{group name (sitting row 1 to 4)}
+#'   \item{value}{dv, final exam grade}
+#' }
+#'
+"haans_within1by4"
