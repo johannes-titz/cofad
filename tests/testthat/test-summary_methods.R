@@ -38,6 +38,30 @@ furr_ftable <- round(furr_ftable, 2)
 cofad_ftable <- round(summary(ca)$FTable, 2)
 
 test_that("furr p4 summary works", {
-          expect_equal(cofad_ftable, furr_ftable)
+  expect_equal(cofad_ftable, furr_ftable)
+  expect_equal(round(summary(ca)$tTable[2:4], 2), c(1, -2.48, 0.99))
+  }
+)
+
+data(sedlmeier_p537)
+
+# random row order
+sedlmeier_p537 <- sedlmeier_p537[sample(1:32, 32, F), ]
+
+# analysis
+contr_wi <- calc_contrast(
+  dv = reading_test, within = music,
+  lambda_within = c(
+    "without music" = 1.25, "white noise" = 0.25, "classic" = -0.75,
+    "jazz" = -0.75
+  ),
+  id = participant, data = sedlmeier_p537
+)
+
+summary <- summary(contr_wi)
+test_that("within summary works", {
+  expect_equal(round(summary$tTable[1:4], 3),
+               c(5.875, round(sqrt(9.946/8), 3), 7, 5.269))
+  expect_equal(round(summary$Effects[2], 2), 1.86)
   }
 )
