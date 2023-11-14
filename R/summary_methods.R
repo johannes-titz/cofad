@@ -21,10 +21,20 @@ summary.cofad_bw <- function(object, ...) {
   colnames(f_tab) <- c("SS", "df", "MS", "F", "p")
   r_tab <- as.matrix(round(x$effects, 3))
   colnames(r_tab) <- c("effects")
-  out <- list(f_tab, r_tab)
-  names(out) <- c("FTable", "Effects")
+  t <- sqrt(s["f_contrast"])*sign(x$effects[1])
+  t_tab <- matrix(
+    c(s["L"], "df" = round(s["df_contrast"]),
+      "t" = t,
+      "p" = pt(t, s["df_inn"], lower.tail = F)),
+    nrow = 1)
+  t_tab[1:3] <- round(t_tab[1:3], 3)
+  t_tab[4] <- signif(t_tab[4], 3)
+  colnames(t_tab) <- c("L", "df", "t", "p")
+  rownames(t_tab) <- ""
+  out <- list(x$lambda_between, t_tab, f_tab, r_tab)
+  names(out) <- c("Lambdas", "tTable", "FTable", "Effects")
   warning <- ifelse(s["L"] < 0, "\n\nAttention! Your contrast is negative, meaning that it fits in the opposite direction of your lambdas!", "")
-  cat(paste0("Contrast Analysis Between\n\nL=", s["L"], warning, "\n\n", collapse = ""))
+  cat(paste0("Contrast Analysis Between", warning, "\n\n", collapse = ""))
   return(print(out, na.print = ""))
 }
 #' Summary of within subject design contrast analysis
@@ -44,14 +54,19 @@ summary.cofad_wi <- function(object, ci = .95, ...) {
   l_se_ci <- qt(p = (1 - ci) / 2, df = l_df, lower.tail = F) * l_se
   l_upper_bound <- l_mean + l_se_ci
   l_lower_bound <- l_mean - l_se_ci
-  l_vals <- c(l_mean, l_se, l_df, x$sig[1], l_p, l_lower_bound, l_upper_bound)
-  l_vals <- signif(matrix(l_vals, ncol = length(l_vals)), 4)
-  l_eff <- signif(matrix(c(x[[4]][1], x[[4]][2])), 3)
+  l_vals <- c(round(c(l_mean, l_se, l_df, x$sig[1]), 3),
+              signif(l_p, 3),
+              round(c(l_lower_bound, l_upper_bound), 3))
+  l_vals <- matrix(l_vals, ncol = length(l_vals))
+  l_eff <- round(matrix(c(x[[4]][1], x[[4]][2])), 3)
   rownames(l_eff) <- c("r-contrast", "g-contrast")
+  colnames(l_eff) <- ""
   colnames(l_vals) <- c("mean of L", "SE", "df", "t", "p",
-                     paste0(ci*100, "%", c("CI-lower", "CI-upper")))
-  out <- list(l_vals, l_eff)
-  names(out) <- c("L-Statistics", "Effects")
+                        paste0(ci*100, "%", c("CI-lower", "CI-upper")))
+  rownames(l_vals) <- ""
+  out <- list(x$lambda_within, l_vals, l_eff)
+  names(out) <- c("Lambdas", "tTable", "Effects")
+  cat("Contrast Analysis Within\n\n")
   return(out)
 }
 #' Summary of a mixed design contrast analysis
