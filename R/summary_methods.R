@@ -66,7 +66,8 @@ summary.cofad_wi <- function(object, ci = .95, ...) {
   rownames(l_vals) <- ""
   out <- list(x$lambda_within, l_vals, l_eff)
   names(out) <- c("Lambdas", "tTable", "Effects")
-  cat("Contrast Analysis Within\n\n")
+  warning <- ifelse(l_mean < 0, "\n\nAttention! Your contrast is negative, meaning that it fits in the opposite direction of your lambdas!", "")
+  cat(paste0("Contrast Analysis Within", warning, "\n\n", collapse = ""))
   return(out)
 }
 #' Summary of a mixed design contrast analysis
