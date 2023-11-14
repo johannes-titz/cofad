@@ -215,9 +215,15 @@ in a publication. With the summary method some more details are shown:
 summary(ca)
 #> Contrast Analysis Between
 #> 
-#> L=-6
-#> 
 #> Attention! Your contrast is negative, meaning that it fits in the opposite direction of your lambdas!
+#> 
+#> $Lambdas
+#>   business  chemistry  education psychology 
+#>          0          0         -1          1 
+#> 
+#> $tTable
+#>   L df      t     p
+#>  -6  1 -2.481 0.988
 #> 
 #> $FTable
 #>            SS df     MS     F      p
@@ -329,14 +335,19 @@ within <- calc_contrast(dv = reading_test, within = music,
                                           "jazz" = -0.75),
                         id = participant, data = sedlmeier_p537)
 summary(within)
-#> $`L-Statistics`
-#>      mean of L    SE df     t        p 95%CI-lower 95%CI-upper
-#> [1,]     5.875 1.115  7 5.269 0.000581       3.238       8.512
+#> Contrast Analysis Within
+#> $Lambdas
+#>       classic          jazz   white noise without music 
+#>         -0.75         -0.75          0.25          1.25 
+#> 
+#> $tTable
+#>  mean of L    SE df     t        p 95%CI-lower 95%CI-upper
+#>      5.875 1.115  7 5.269 0.000581       3.238       8.512
 #> 
 #> $Effects
-#>             [,1]
+#>                 
 #> r-contrast 0.687
-#> g-contrast 1.860
+#> g-contrast 1.863
 within
 #> 
 #> We ran a contrast analysis for the following within contrasts: classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25. This resulted in statistics of t(7) = 5.269; p = 0.000581 and an effect magnitude of g_effectsize = 1.863.
@@ -347,7 +358,7 @@ You can see that the significance test is just a
 effect size is referring to a mean comparison
 (![g](https://latex.codecogs.com/png.latex?g "g")). (The
 ![t](https://latex.codecogs.com/png.latex?t "t")-test is one-tailed,
-because contrast analysis has always a specific hypotheses.) When
+because contrast analysis has always a specific hypothesis.) When
 conducting the analysis by hand, we can see why:
 
 ``` r
@@ -372,7 +383,7 @@ Only the linear combination of the dependent variable and the contrast
 weights for each participant is needed. With these values a normal
 ![t](https://latex.codecogs.com/png.latex?t "t")-test against 0 is
 conducted. While you can do this manually, using cofad is quicker and it
-also gives you more information such as the different effect sizes.
+also gives you more information, such as the different effect sizes.
 
 ## Mixed Designs
 
@@ -505,7 +516,13 @@ ca_competing <- calc_contrast(
 summary(ca_competing)
 #> Contrast Analysis Between
 #> 
-#> L=0.582
+#> $Lambdas
+#>    JT    KT    MT 
+#>  0.68  0.49 -1.17 
+#> 
+#> $tTable
+#>      L df     t     p
+#>  0.582  1 1.136 0.139
 #> 
 #> $FTable
 #>              SS df    MS     F     p
@@ -606,14 +623,19 @@ contr_wi <- calc_contrast(
 )
 #> lambdas are centered and rounded to 3 digits
 summary(contr_wi)
-#> $`L-Statistics`
-#>      mean of L     SE df     t      p 95%CI-lower 95%CI-upper
-#> [1,]      -2.2 0.5835  7 -3.77 0.9965       -3.58     -0.8201
+#> Contrast Analysis Within
+#> $Lambdas
+#>       classic          jazz   white noise without music 
+#>          0.33          0.33         -0.88          0.22 
+#> 
+#> $tTable
+#>  mean of L    SE df     t     p 95%CI-lower 95%CI-upper
+#>       -2.2 0.584  7 -3.77 0.997       -3.58       -0.82
 #> 
 #> $Effects
-#>              [,1]
+#>                  
 #> r-contrast -0.561
-#> g-contrast -1.330
+#> g-contrast -1.333
 contr_wi
 #> 
 #> We ran a contrast analysis for the following within contrasts: classic = 0.33; jazz = 0.33; white noise = -0.88; without music = 0.22. This resulted in statistics of t(7) = -3.77; p = 0.9965 and an effect magnitude of g_effectsize = -1.333. Attention: Contrast fits in the opposite direction!

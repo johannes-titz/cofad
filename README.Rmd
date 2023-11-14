@@ -220,7 +220,7 @@ summary(within)
 within
 ```
 
-You can see that the significance test is just a $t$-test and the reported effect size is referring to a mean comparison ($g$). (The $t$-test is one-tailed, because contrast analysis has always a specific hypotheses.) When conducting the analysis by hand, we can see why:
+You can see that the significance test is just a $t$-test and the reported effect size is referring to a mean comparison ($g$). (The $t$-test is one-tailed, because contrast analysis has always a specific hypothesis.) When conducting the analysis by hand, we can see why:
 
 ```{r}
 mtr <- matrix(sedlmeier_p537$reading_test, ncol = 4)
@@ -229,7 +229,7 @@ lc1 <- mtr %*% lambdas
 t.test(lc1)
 ```
 
-Only the linear combination of the dependent variable and the contrast weights for each participant is needed. With these values a normal $t$-test against 0 is conducted. While you can do this manually, using cofad is quicker and it also gives you more information such as the different effect sizes.
+Only the linear combination of the dependent variable and the contrast weights for each participant is needed. With these values a normal $t$-test against 0 is conducted. While you can do this manually, using cofad is quicker and it also gives you more information, such as the different effect sizes.
 
 ## Mixed Designs
 
