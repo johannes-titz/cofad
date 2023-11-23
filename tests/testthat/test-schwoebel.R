@@ -7,7 +7,7 @@ dat$condition <- factor(dat$condition,
                                    "same context spaced",
                                    "different context spaced"))
 # compute group means --> use later to estimate the contrast estimate
-(group_means <- aggregate(percent_recalled ~ condition, dat, mean))
+group_means <- aggregate(percent_recalled ~ condition, dat, mean)
 
 # spaced vs. massed
 contrast1 <- calc_contrast(dv = percent_recalled,
