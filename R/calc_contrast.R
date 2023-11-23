@@ -195,8 +195,8 @@ calc_contrast <- function(dv,
   }
 
   if (case == "mixed-Analysis: between and within factors") {
-    lambda_within <- lambda_within[order(names(lambda_within))]
-    lambda_between <- lambda_between[order(names(lambda_between))]
+    lambda_within <- lambda_within[levels(within)]
+    lambda_between <- lambda_between[levels(between)]
     #ni_within <- table(within)
     ni_between <- table(between)
     #n_total <- sum(ni_within)
@@ -344,7 +344,7 @@ run_between_analysis <- function(dv, between, lambda_between) {
 #' @inheritParams calc_contrast
 #' @noRd
 run_within_analysis <- function(dv, within, between, lambda_within, id) {
-  lambda_within <- lambda_within[order(names(lambda_within))]
+  lambda_within <- lambda_within[levels(within)]
   ni_within <- table(within)
   n_total <- sum(ni_within)
   l_value <- NULL

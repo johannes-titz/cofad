@@ -72,17 +72,18 @@ data("sedlmeier_p537")
 
 # random row order
 sedlmeier_p537 <- sedlmeier_p537[sample(1:32, 32, F), ]
+# change order of levels
+sedlmeier_p537$music <- relevel(sedlmeier_p537$music, "white noise")
 
 # analysis
 contr_wi <- calc_contrast(
   dv = reading_test, within = music,
-  lambda_within = c(
+  lambda_within = sample(c(
     "without music" = 1.25, "white noise" = 0.25, "classic" = -0.75,
-    "jazz" = -0.75
+    "jazz" = -0.75), 4, F
   ),
   id = participant, data = sedlmeier_p537
 )
-
 
 test_that("sedlmeier 537 works", {
   expect_equal(contr_wi$desc[1], 5.875)
