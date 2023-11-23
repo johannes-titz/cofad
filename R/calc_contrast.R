@@ -301,6 +301,9 @@ run_between_analysis <- function(dv, between, lambda_between) {
   ms_within <- mean(var_within, na.rm = T)
   mean_i <- tapply(X = dv, INDEX = between, FUN = mean)
   se_i <- tapply(X = dv, INDEX = between, FUN = sd) / sqrt(ni)
+
+  # bring lambda_between in same order as between variable
+  lambda_between <- lambda_between[levels(between)]
   L <- sum(mean_i * lambda_between)
   ss_kontrast <- L^2/(sum(lambda_between^2 / ni))
   ss_total <- sum((dv - mean(dv)) ** 2)
