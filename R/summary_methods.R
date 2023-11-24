@@ -22,6 +22,7 @@ summary.cofad_bw <- function(object, ...) {
   r_tab <- as.matrix(round(x$effects, 3))
   colnames(r_tab) <- c("effects")
   t <- sqrt(s["f_contrast"])*sign(x$effects[1])
+  p_label <- paste0("p(t\u2265", round(t, 3), ")")
   t_tab <- matrix(
     c(s["L"], "df" = round(s["df_contrast"]),
       "t" = t,
@@ -29,7 +30,7 @@ summary.cofad_bw <- function(object, ...) {
     nrow = 1)
   t_tab[1:3] <- round(t_tab[1:3], 3)
   t_tab[4] <- signif(t_tab[4], 3)
-  colnames(t_tab) <- c("L", "df", "t", "p")
+  colnames(t_tab) <- c("L", "df", "t", p_label)
   rownames(t_tab) <- ""
   out <- list(x$lambda_between, t_tab, f_tab, r_tab)
   names(out) <- c("Lambdas", "tTable", "FTable", "Effects")
@@ -59,9 +60,10 @@ summary.cofad_wi <- function(object, ci = .95, ...) {
               round(c(l_lower_bound, l_upper_bound), 3))
   l_vals <- matrix(l_vals, ncol = length(l_vals))
   l_eff <- round(matrix(c(x[[4]][1], x[[4]][2])), 3)
+  p_label <- paste0("p(t\u2265", round(x$sig[[1]], 3), ")")
   rownames(l_eff) <- c("r-contrast", "g-contrast")
   colnames(l_eff) <- ""
-  colnames(l_vals) <- c("mean of L", "SE", "df", "t", "p",
+  colnames(l_vals) <- c("mean of L", "SE", "df", "t", p_label,
                         paste0(ci*100, "%", c("CI-lower", "CI-upper")))
   rownames(l_vals) <- ""
   out <- list(x$lambda_within, l_vals, l_eff)

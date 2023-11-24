@@ -44,7 +44,9 @@ containing \code{dv} and groups.}
 }
 \value{
 an object of type cofad_bw or cofad_wi or cofad_mx, including
-  p-value, F-value, contrast weights, different effect sizes
+  p-value, F-value, contrast weights, different effect sizes. Call summary
+  on this object to get a nice overview of all relevant statistics. Call
+  print to get a short text that can be used for a report.
 }
 \description{
 Calculate contrast analysis for factorial designs
@@ -52,6 +54,8 @@ Calculate contrast analysis for factorial designs
 \details{
 For multi-factorial designs, the lambda weights of
 the factors must be connected.
+
+Note that cofad returns one-sided p-values for t-tests.
 }
 \examples{
 # Example for between-subjects design Table 3.1 from

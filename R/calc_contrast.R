@@ -20,8 +20,13 @@
 #' @param ID deprecated, use id instead
 #' @details For multi-factorial designs, the lambda weights of
 #' the factors must be connected.
+#'
+#' Note that cofad returns one-sided p-values for t-tests.
+#'
 #' @return an object of type cofad_bw or cofad_wi or cofad_mx, including
-#'   p-value, F-value, contrast weights, different effect sizes
+#'   p-value, F-value, contrast weights, different effect sizes. Call summary
+#'   on this object to get a nice overview of all relevant statistics. Call
+#'   print to get a short text that can be used for a report.
 #' @references Rosenthal, R., Rosnow, R.L., & Rubin, D.B. (2000). Contrasts and
 #'   effect sizes in behavioral research: A correlational approach. New York:
 #'   Cambridge University Press.
