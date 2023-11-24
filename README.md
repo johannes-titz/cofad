@@ -87,7 +87,7 @@ cofad::run_app()
 ```
 
 If you have any problems installing cofad, check that your R version is
-up to date (currently R version 4.3.1 (2023-06-16)). If you are using
+up to date (currently R version 4.3.2 (2023-10-31)). If you are using
 Windows, enable TLS 1.2 in the Internet Options Advanced tab (see
 <https://github.com/r-lib/remotes/issues/130#issuecomment-423830669>).
 Under Windows, you will also need Rtools to build the package:
@@ -222,8 +222,8 @@ summary(ca)
 #>          0          0         -1          1 
 #> 
 #> $tTable
-#>   L df      t     p
-#>  -6  1 -2.481 0.988
+#>   L df      t p(t≥-2.481)
+#>  -6  1 -2.481       0.988
 #> 
 #> $FTable
 #>            SS df     MS     F      p
@@ -341,8 +341,8 @@ summary(within)
 #>         -0.75         -0.75          0.25          1.25 
 #> 
 #> $tTable
-#>  mean of L    SE df     t        p 95%CI-lower 95%CI-upper
-#>      5.875 1.115  7 5.269 0.000581       3.238       8.512
+#>  mean of L    SE df     t p(t≥5.269) 95%CI-lower 95%CI-upper
+#>      5.875 1.115  7 5.269   0.000581       3.238       8.512
 #> 
 #> $Effects
 #>                 
@@ -521,8 +521,8 @@ summary(ca_competing)
 #>  0.68  0.49 -1.17 
 #> 
 #> $tTable
-#>      L df     t     p
-#>  0.582  1 1.136 0.139
+#>      L df     t p(t≥1.136)
+#>  0.582  1 1.136      0.139
 #> 
 #> $FTable
 #>              SS df    MS     F     p
@@ -624,13 +624,15 @@ contr_wi <- calc_contrast(
 #> lambdas are centered and rounded to 3 digits
 summary(contr_wi)
 #> Contrast Analysis Within
+#> 
+#> Attention! Your contrast is negative, meaning that it fits in the opposite direction of your lambdas!
 #> $Lambdas
 #>       classic          jazz   white noise without music 
 #>          0.33          0.33         -0.88          0.22 
 #> 
 #> $tTable
-#>  mean of L    SE df     t     p 95%CI-lower 95%CI-upper
-#>       -2.2 0.584  7 -3.77 0.997       -3.58       -0.82
+#>  mean of L    SE df     t p(t≥-3.77) 95%CI-lower 95%CI-upper
+#>       -2.2 0.584  7 -3.77      0.997       -3.58       -0.82
 #> 
 #> $Effects
 #>                  
