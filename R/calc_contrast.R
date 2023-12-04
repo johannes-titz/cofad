@@ -88,9 +88,9 @@ calc_contrast <- function(dv,
                           data = NULL) {
   if (!is.null(data) & is.data.frame(data)) {
     arguments <- as.list(match.call())
-    dv <- eval(arguments$dv, data)
-    between <- eval(arguments$between, data)
-    within <- eval(arguments$within, data)
+    if (is.character(arguments$dv)) dv <- data[, arguments$dv] else dv <- eval(arguments$dv, data)
+    if (is.character(arguments$between)) between <- data[, arguments$between] else between <- eval(arguments$between, data)
+    if (is.character(arguments$within)) within <- data[, arguments$within] else within <- eval(arguments$within, data)
     if (!missing(ID)) {
       warning("argument ID is deprecated; please use id instead.",
               call. = FALSE)
