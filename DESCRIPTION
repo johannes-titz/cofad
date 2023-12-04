@@ -22,14 +22,14 @@ RoxygenNote: 7.2.3
 Suggests: 
     testthat (>= 3.0.0),
     knitr,
-    rmarkdown
+    rmarkdown,
+    shinytest2
 VignetteBuilder: knitr
 URL: https://github.com/johannes-titz/cofad
 Imports: 
     shinydashboard,
     shiny,
     shinyjs,
-    shinytest2,
     Hmisc,
     stringr,
     utils,
