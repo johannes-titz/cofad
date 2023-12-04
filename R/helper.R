@@ -33,7 +33,7 @@ load_data <- function(datafile) {
         "(not a semicolon or any other delimiter).",
         sep = ""
       )
-      shinyalert::shinyalert("Error", msg)
+      showNotification(msg, type = "error")
       message(error_message)
     }
   )

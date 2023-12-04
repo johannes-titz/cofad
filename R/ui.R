@@ -1,10 +1,7 @@
 options(shiny.sanitize.errors = FALSE) # (handle errors manually)
 #' @importFrom shinydashboard dashboardPage dashboardHeader dashboardSidebar
 #'   dashboardBody box
-#' @importFrom shinyalert useShinyalert
 #' @importFrom shinyjs useShinyjs hidden
-#' @importFrom shinyBS bsTooltip
-#' @importFrom shinybusy add_busy_spinner
 #' @noRd
 myui <- function(request) {
   shinyUI(
@@ -15,11 +12,6 @@ myui <- function(request) {
         title = "cofad-app"),
       # Sidebar-----------------------------------------------------------------
       shinydashboard::dashboardSidebar(
-        shinybusy::add_busy_spinner(
-          spin = "self-building-square",
-          position = "bottom-right",
-          margin = c(50, 0)
-        ),
         tags$head(tags$style(HTML(".sidebar {padding-left: 8px;}"))),
         # load data
         h4("1. Load data"),
@@ -43,8 +35,6 @@ myui <- function(request) {
                navigator.userAgent.indexOf('FxiOS') == -1;
   Shiny.onInputChange('isSafari', isSafari);
 });")),
-        # for manual error handling, has to be in dashboardBody
-        shinyalert::useShinyalert(),
         # Model spec and model display -----------------------------------------
         fluidRow(
           shinyjs::useShinyjs(),
@@ -67,7 +57,6 @@ myui <- function(request) {
                 status = "primary", collapsible = T,
                 width = 6,
                 uiOutput("variables"),
-
               ),
             )
           ),
@@ -78,7 +67,7 @@ myui <- function(request) {
               shinydashboard::box(
                 title = "3. Result",
                 status = "primary",
-                width = 4,
+                width = 6,
                 uiOutput("table_region")
               )
             )
