@@ -7,6 +7,8 @@ modify_hot_table <- function(row, col, value, table) {
 }
 
 test_that("gui between works", {
+  skip_on_cran()
+  skip_on_ci()
   start <- run_app()
   app <- AppDriver$new(start, name = "between")
   app$upload_file(datafile = "sedlmeier_p525.csv") # change path
@@ -26,6 +28,7 @@ test_that("gui between works", {
 })
 
 test_that("gui within works", {
+  skip_on_cran()
   app <- AppDriver$new(run_app())
   app$upload_file(datafile = "sedlmeier_p537.csv") # change path
 
@@ -45,6 +48,7 @@ test_that("gui within works", {
 })
 
 test_that("gui mixed works", {
+  skip_on_cran()
   app <- AppDriver$new(run_app())
   app$upload_file(datafile = "rosenthal_tbl53.csv")
   app$set_inputs("within_name" = "within", "id_name" = "id",
