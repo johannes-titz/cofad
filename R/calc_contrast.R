@@ -528,3 +528,4 @@ calc_r_effectsize <- function(r_alerting, r_contrast) {
   r_effectsize <- as.numeric(numerator / denominator)
   return(cn(r_effectsize))
 }
+
