@@ -237,8 +237,8 @@ expect_equal(round(lambda_diff, 2), lambda_rosenthal)
 # in rosenthal, the values for L1 in Rosenthal are all -0.01 of the correct ones...
 # checked it manually with some examples
 data("rosenthal_tbl68")
-lambda2 <- round(zscale(c(-3, -1, 1, 3)), 10)
-lambda1 <- round(zscale(c(-1, 0, 0, 1)), 10)
+lambda2 <- round(cofad:::zscale(c(-3, -1, 1, 3)), 10)
+lambda1 <- round(cofad:::zscale(c(-1, 0, 0, 1)), 10)
 names(lambda1) <- c("t1", "t2", "t3", "t4")
 names(lambda2) <- names(lambda1)
 
