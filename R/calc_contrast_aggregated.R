@@ -48,30 +48,34 @@ calc_contrast_aggregated <- function(means, sds, ns, between, lambda_between,
   lambda_between <- lambda_between[lambda_between_pos]
 
   df_between <- length(means) - 1
-  df_within <- sum(ns) - length(means)
-  sigma_within <- sum(sds^2 * ns) / (sum(ns))
+  df_inn <- sum(ns) - length(means)
+  ms_within <- sum(sds^2 * ns) / (sum(ns))
+  ss_within <- ms_within * df_inn
   ss_between <- ss(means, ns)
-  sigma_between <- ss_between / df_between
-  f_between <- sigma_between / sigma_within
+  ss_total <- ss_between + ss_within
+  ms_between <- ss_between / df_between
+  f_between <- ms_between / ms_within
   # contrast
   kov <- sum(lambda_between * means)
-  ss_contrast <- kov^2 / (sum((lambda_between^2) / ns))
+  L <- kov
+  ss_kontrast <- kov^2 / (sum((lambda_between^2) / ns))
   # ss contrast is the same as sigma contrast
-  f_contrast <- ss_contrast / sigma_within
+  f_contrast <- ss_kontrast / ms_within
   # which direction?
   sign <- ifelse(kov > 0, 1, -1)
-  r_effectsize <- sign * sqrt(f_contrast / (f_between * df_between + df_within))
-  r_contrast <- sign * sqrt(f_contrast / (f_contrast + df_within))
-  r_alerting <- sign * sqrt(f_contrast / (f_contrast * df_between))
+  r_effectsize <- sign * sqrt(f_contrast / (f_between * df_between + df_inn))
+  r_contrast <- sign * sqrt(f_contrast / (f_contrast + df_inn))
+  r_alerting <- as.numeric(calc_r_alerting(r_contrast, r_effectsize))
+
   n_total <- sum(ns)
-  p_contrast <- 1 - pf(f_contrast, 1, df_within)
-  sig <- c(f_contrast, p_contrast, df_contrast = 1, df_within, sigma_within,
-           ss_between, ss_total = NA, n_total - 1)
-  r <- c(r_effectsize, r_contrast, r_alerting)
+  p_contrast <- 1 - pf(f_contrast, 1, df_inn)
+  sig <- cn(f_contrast, p_contrast, df_contrast = 1, df_inn, ms_within,
+           ss_between, ss_kontrast, ss_total, ss_within,
+           df_total = n_total -1, L)
+  effects <- cn(r_effectsize, r_contrast, r_alerting)
   desc <- matrix(c(means, sds / sqrt(ns)), ncol = 2, byrow = F)
-  colnames(desc) <- c("M", "SE")
-  out_l <- list(sig, desc, lambda_between, r)
-  names(out_l) <- c("sig", "desc", "lambda_between", "effects")
+  colnames(desc) <- c("mean_i", "se_i")
+  out_l <- tibble::lst(sig, desc, lambda_between, effects)
   class(out_l) <- c("cofad_bw")
   structure(out_l)
   return(out_l)
