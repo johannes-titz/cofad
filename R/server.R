@@ -129,7 +129,7 @@ myserver <- shinyServer(function(input, output, session) {
   output$hot_lambda_within <- rhandsontable::renderRHandsontable({
     validate(need(input$within_name, "To specify lambdas within, first select the within variable."))
     lambda_within <- reactive$lambda_within
-    df <- prepare_table(lambda_within, within_var())
+    df <- prepare_table(lambda_within, reactive$data[, input$within_name])
     if (!is.null(df))
       the_tab <- rhandsontable::rhandsontable(df, stretchH = "all",
                                               rowHeaders = NULL)
@@ -158,7 +158,7 @@ myserver <- shinyServer(function(input, output, session) {
   output$hot_lambda_between <- rhandsontable::renderRHandsontable({
     validate(need(input$between_name, "To specify lambdas between, first select the between variable."))
     lambda_between <- reactive$lambda_between
-    df <- prepare_table(lambda_between, input$between_name)
+    df <- prepare_table(lambda_between, reactive$data[, input$between_name])
     if (!is.null(df))
       the_tab <- rhandsontable::rhandsontable(df, stretchH = "all",
                                               rowHeaders = NULL)
