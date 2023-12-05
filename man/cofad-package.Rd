@@ -6,7 +6,7 @@
 \alias{cofad-package}
 \title{cofad: Contrast Analyses for Factorial Designs}
 \description{
-Contrast analysis for factorial designs is an alternative to the classical ANOVA approach with the advantage of testing focused hypotheses. The package is mainly based on Rosenthal, Rosnow and Rubin (2000, ISBN:978-0521659802) and Sedlmeier and Renkewitz (2018, ISBN:978-3868943214).
+Contrast analysis for factorial designs provides an alternative to the traditional ANOVA approach, offering the distinct advantage of testing targeted hypotheses. The foundation of this package is primarily rooted in the works of Rosenthal, Rosnow, and Rubin (2000, ISBN: 978-0521659802) as well as Sedlmeier and Renkewitz (2018, ISBN: 978-3868943214).
 }
 \seealso{
 Useful links:
