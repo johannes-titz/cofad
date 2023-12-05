@@ -1,41 +1,43 @@
-Package: cofad
 Type: Package
+Package: cofad
 Title: Contrast Analyses for Factorial Designs
 Version: 0.2.1.9000
-Authors@R: c(person("Johannes", "Titz", email = "johannes.titz@gmail.com",
-  role = c("aut", "cre")),
-  person("Markus", "Burkhardt",
-  email = "markus.burkhardt@psychologie.tu-chemnitz.de",
-  role = c("aut")),
-  person(given = "Mirka", family = "Henninger", role = c("ctb"),
-  email = "mail@mirka-henninger.de"),
-  person(given = "Simone", family = "Malejka", role = "ctb"))
-Description: Contrast analysis for factorial designs is an alternative to the 
-  classical ANOVA approach with the advantage of testing focused hypotheses. 
-  The package is mainly based on Rosenthal, Rosnow and Rubin (2000,
-  ISBN:978-0521659802) and Sedlmeier and Renkewitz (2018, ISBN:978-3868943214). 
-Depends: R (>= 3.1.0)
+Authors@R: c(
+    person("Johannes", "Titz", , "johannes.titz@gmail.com", role = c("aut", "cre")),
+    person("Markus", "Burkhardt", , "markus.burkhardt@psychologie.tu-chemnitz.de", role = "aut"),
+    person("Mirka", "Henninger", , "mail@mirka-henninger.de", role = "ctb"),
+    person("Simone", "Malejka", role = "ctb")
+  )
+Description: Contrast analysis for factorial designs provides an
+    alternative to the traditional ANOVA approach, offering the distinct
+    advantage of testing targeted hypotheses. The foundation of this
+    package is primarily rooted in the works of Rosenthal, Rosnow, and
+    Rubin (2000, ISBN: 978-0521659802) as well as Sedlmeier and Renkewitz
+    (2018, ISBN: 978-3868943214).
 License: LGPL (>= 3)
+URL: https://github.com/johannes-titz/cofad
+Depends: 
+    R (>= 3.1.0)
+Imports: 
+    dplyr,
+    Hmisc,
+    magrittr,
+    readr,
+    rhandsontable,
+    rlang,
+    shiny,
+    shinydashboard,
+    shinyjs,
+    stringr,
+    tibble,
+    utils
+Suggests: 
+    knitr,
+    rmarkdown,
+    shinytest2,
+    testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.2.3
-Suggests: 
-    testthat (>= 3.0.0),
-    knitr,
-    rmarkdown,
-    shinytest2
-VignetteBuilder: knitr
-URL: https://github.com/johannes-titz/cofad
-Imports: 
-    shinydashboard,
-    shiny,
-    shinyjs,
-    Hmisc,
-    stringr,
-    utils,
-    readr,
-    magrittr,
-    rhandsontable,
-    dplyr,
-    rlang,
-    tibble
