@@ -139,6 +139,25 @@ test_that("rosenthal 53 works", {
   expect_equal(summary(t_53)$Effects[1], 0.871)
   }
 )
+
+t53_B <- calc_contrast(dv = rosenthal_tbl53$dv,
+                       within = rosenthal_tbl53$within,
+                       between = rosenthal_tbl53$between,
+                      id = rosenthal_tbl53$id,
+                      lambda_within = sample(c(
+                        "a" = -3, "b" = -1,
+                        "c" = 1, "d" = 3
+                      ), 4, F),
+                      lambda_between = sample(c(
+                        "age8" = -1, "age10" = 0,
+                        "age12" = 1
+                      ), 3, F)
+)
+
+test_that("calling vectorized works", {
+  expect_equal(t_53, t53_B)
+})
+
 # Rosenthal chap 5 exercise 2
 data(rosenthal_chap5_q2)
 
