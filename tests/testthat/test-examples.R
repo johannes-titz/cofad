@@ -110,18 +110,21 @@ test_that("rosenthal works", {
   expect_setequal(round(ca$sig, 2), c(7.41, 0.00, 4.00))
   }
 )
+
 ## (within_lambda & between_lambda) -----
 
 # Table 5.3. from Rosenthal, Chapter 5 (raw data)
 data(rosenthal_tbl53)
 rosenthal_tbl53 <- rosenthal_tbl53[sample(1:36, 36, F), ]
+rosenthal_tbl53$within <- as.factor(letters[as.numeric(rosenthal_tbl53$within)])
+
 t_53 <- calc_contrast(
   dv = dv, between = between,
   within = within,
   id = id,
   lambda_within = sample(c(
-    "1" = -3, "2" = -1,
-    "3" = 1, "4" = 3
+    "a" = -3, "b" = -1,
+    "c" = 1, "d" = 3
   ), 4, F),
   lambda_between = sample(c(
     "age8" = -1, "age10" = 0,
@@ -131,7 +134,8 @@ t_53 <- calc_contrast(
 )
 
 test_that("rosenthal 53 works", {
-  expect_equal(round(t_53$sig[c(1, 3, 4)], 3), c(20.211, 1, 6))
+  expect_equivalent(round(t_53$sig[c("f_contrast", "df_contrast", "df_inn")], 3),
+               c(20.211, 1, 6))
   expect_equal(summary(t_53)$Effects[1], 0.871)
   }
 )
@@ -149,7 +153,7 @@ c5_e2 <- calc_contrast(
 )
 
 test_that("rosenthal q2 works", {
-  expect_equal(c5_e2$sig[1], c(28.125))
+  expect_equal(round(c5_e2$sig["f_contrast"], 3), c(f_contrast = 28.125))
   }
 )
 

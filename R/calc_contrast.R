@@ -202,82 +202,13 @@ calc_contrast <- function(dv,
   if (case == "mixed-Analysis: between and within factors") {
     lambda_within <- lambda_within[levels(within)]
     lambda_between <- lambda_between[levels(between)]
-    #ni_within <- table(within)
-    ni_between <- table(between)
-    #n_total <- sum(ni_within)
-    k_between <- length(ni_between)
-    df_contrast <- 1
-    l_value <- NULL
-    for (i in seq(table(id))) {
-      var_i <- dv[which(id == levels(id)[i])]
-      l_value[i] <- sum(
-        var_i[order(within[which(id == levels(id)[i])])] * lambda_within
-      )
-    }
-    bw_wide <- matrix(NA, ncol = 2, nrow = length(levels(id)))
-    for (i in seq(levels(id))) {
-      id_bw <- as.character(unique(
-        between[which(id == levels(id)[i])]
-      ))
-      if (length(id_bw) > 1) {
-        stop("some id's are in more than one between group")
-      } else {
-        bw_wide[i, 1] <- levels(id)[i]
-        bw_wide[i, 2] <- id_bw
-      }
-    }
-    #df_id <- length(l_value) - 1
-    l_value_group_mean <- tapply(l_value, bw_wide[, 2], mean)
-    l_value_group_var <- tapply(l_value, bw_wide[, 2], var)
-    if (anyNA(l_value_group_var)) {
-      pos <- which(is.na(l_value_group_var))
-      stop("Some groups have a variance of 0 for the dependent variable. ",
-           "Check group ",
-           names(l_value_group_var)[pos][1],
-           ". Maybe you want to remove this group.")
-    }
-    l_value_group_n <- tapply(l_value,  bw_wide[, 2],
-                              function(x) sum(table(x)))
-    ni_cell <- table(within, between)
-    harm_n <- 1 / mean(1 / ni_cell)
-    ms_contrast <- harm_n *
-      sum(l_value_group_mean * lambda_between) ** 2 /
-      sum(lambda_between ** 2)
-    s2_pooled <- sum(
-      ((l_value_group_n - 1) * l_value_group_var)
-    ) /
-      sum(l_value_group_n - 1)
-    f_contrast <- ms_contrast / s2_pooled
-    df_within <- length(l_value) - k_between
-    p_contrast <- pf(f_contrast, df1 = 1, df2 = df_within,
-                     lower.tail = F)
-    lambda_between_row <- rep(NA, length(l_value))
-    for (i in seq(lambda_between)) {
-      lambda_between_row  <- replace(
-        lambda_between_row,
-        which(bw_wide[, 2] == names(lambda_between)[i]),
-        lambda_between[i]
-      )
-    }
-    r_effectsize <- cor(l_value, lambda_between_row)
-    sign_r_contrast <- sign(r_effectsize)
-    r_contrast <- sign_r_contrast * sqrt(f_contrast / (f_contrast + df_within))
-    r_alerting <- cor(l_value_group_mean, lambda_between)
-    sig <- c(f_contrast, p_contrast, df_contrast, df_within,
-             ms_contrast, s2_pooled)
-    r <- c(r_effectsize, r_contrast, r_alerting)
-    desc_wi <- l_value
-    desc <- matrix(c(l_value_group_mean,
-                     sqrt(l_value_group_var / l_value_group_n)),
-                   ncol = 2, byrow = F)
-    rownames(desc) <- names(l_value_group_mean)
-    colnames(desc) <- c("M", "SE")
-    out_l <- list(sig, desc, lambda_between, lambda_within, r, desc_wi)
-    names(out_l) <- c("sig", "desc", "lambda_between",
-                      "lambda_within", "effects", "desc_wi")
-    class(out_l) <- c("cofad_mx")
-    structure(out_l)
-    return(out_l)
+    data$prodsum <- lambda_within[data$within] * data$dv
+    data_new <- aggregate(prodsum ~ id + between, data = data, FUN = "sum")
+    obj <- run_between_analysis(dv = data_new$prodsum,
+                                between = data_new$between,
+                                lambda_between = lambda_between)
+    class(obj) <- "cofad_mx"
+    obj
   }
 }
 
@@ -288,7 +219,7 @@ calc_contrast <- function(dv,
 #' @inheritParams calc_contrast
 #' @noRd
 run_between_analysis <- function(dv, between, lambda_between) {
-  lambda_between <- lambda_between[order(names(lambda_between))]
+  lambda_between <- lambda_between[levels(between)]
   ni <- table(between)
   n_total <- sum(table(dv))
   k <- length(ni)

@@ -1,13 +1,15 @@
 #' Summary of between subject design contrast analysis
+#'
 #' @param object output of calc_contrast
 #' @param ... further arguments
-#' @return Displays ANOVA table of the contrastanalysis
-#' and the typical effectsizes.
+#' @return Displays type of contrast analysis, lambdas, t-table, ANOVA table and
+#'   typical effect sizes. If you assign this to a variable, it will be a list
+#'   with the elements Lambdas, tTable, FTable, Effects.
+#'
 #' @export
-summary.cofad_bw <- function(object, ...) {
+summary.cofad_bw <- function(object, type = "Contrast Analysis Between", ...) {
   x <- object
   s <- x$sig
-  # @Markus: please put names before calculations!
   # round everything to 3 digits, except p value, which shows 3 sig digits
   f_tab <- matrix(c(
     # first row, kontrast
@@ -36,21 +38,23 @@ summary.cofad_bw <- function(object, ...) {
               f_tab, r_tab)
   names(out) <- c("Lambdas", "tTable", "FTable", "Effects")
   warning <- ifelse(s["L"] < 0, "\n\nYour contrast estimate is negative. This means that your data does not reflect the expected direction of your hypothesis specified by the contrast weights (lambdas).", "")
-  cat(paste0("Contrast Analysis Between", warning, "\n\n", collapse = ""))
+  cat(paste0(type, warning, "\n\n", collapse = ""))
   print(out[1:2], na.print = "")
   cat("\u2460The p-value refers to a one-tailed test.\n\n")
   print(out[3:4], na.print = "")
+  return(out)
 }
 #' Summary of within subject design contrast analysis
+#'
 #' @param object output of calc_contrast
 #' @param ci confidence intervall for composite Score (L-Values)
 #' @param ... further arguments
-#' @return Displays ANOVA table of the contrastanalysis
-#' and the typical effectsizes.
+#' @return Displays type of contrast analysis, lambdas, t-table and typical
+#'   effect sizes. If you assign this to a variable, it will be a list with the
+#'   elements Lambdas, tTable, Effects.
 #' @export
 summary.cofad_wi <- function(object, ci = .95, ...) {
   x <- object
-  # @Markus: please put names before calculation!
   l_mean <- x[[2]][[1]]
   l_se <- x[[2]][2]
   l_df <- x[[1]][3]
@@ -76,40 +80,17 @@ summary.cofad_wi <- function(object, ci = .95, ...) {
   print(out[1:2], na.print = "")
   cat("\u2460The p-value refers to a one-tailed test.\n\n")
   print(out[3], na.print = "")
+  return(out)
 }
+
 #' Summary of a mixed design contrast analysis
+#'
 #' @param object output of calc_contrast
 #' @param ... further arguments
-#' @return Displays ANOVA table of the contrastanalysis
-#' and the typical effectsizes.
+#' @return Displays type of contrast analysis, lambdas, t-table, ANOVA table and
+#'   typical effect sizes. If you assign this to a variable, it will be a list
+#'   with the elements Lambdas, tTable, FTable, Effects.
 #' @export
 summary.cofad_mx <- function(object, ...) {
-  x <- object
-  # @Markus: please put names before calculation!
-  all_l <- as.vector(x[[6]])
-  all_l <- all_l[which(!is.na(all_l))]
-  ss_total <- sum(
-    (all_l - mean(all_l)) ** 2)
-  df_total <- length(all_l) - 1
-  f_tab <- matrix(c(
-    ss_contrast <- x[[1]][5],
-    df_contrast <- 1,
-    ms_contrast <- x[[1]][5],
-    f_contrast <- x[[1]][1],
-    p_contrast <- x[[1]][2],
-    ss_within  <- x[[1]][6] * x[[1]][4],
-    df_within <- x[[1]][4],
-    ms_within <-  x[[1]][6], NA, NA,
-    ss_total, df_total, NA, NA, NA),
-    ncol = 5, byrow = T)
-  f_tab <- round(f_tab, 3)
-  l_tab <- x[[2]]
-  r_tab <- round(matrix(c(x[[5]]), ncol = 1), 3)
-  colnames(r_tab) <- "effect"
-  rownames(r_tab) <- c("r_effectsize", "r_contrast", "r_alerting")
-  rownames(f_tab) <- c("contrast", "within", "total")
-  colnames(f_tab) <- c("SS", "df", "MS", "F", "p")
-  out <- list(f_tab, r_tab, l_tab)
-  names(out) <- c("F_Table", "Effects", "Within_Groups")
-  return(out)
+  summary.cofad_bw(object, type = "Contrast Analysis Mixed", ...)
 }
