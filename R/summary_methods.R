@@ -7,8 +7,10 @@
 #'   with the elements Lambdas, tTable, FTable, Effects.
 #'
 #' @export
-summary.cofad_bw <- function(object, type = "Contrast Analysis Between", ...) {
+summary.cofad_bw <- function(object, ...) {
   x <- object
+  type <- ifelse(class(object) == "cofad_bw", "Contrast Analysis Between",
+                 "Contrast Analysis Mixed")
   s <- x$sig
   # round everything to 3 digits, except p value, which shows 3 sig digits
   f_tab <- matrix(c(
@@ -42,7 +44,7 @@ summary.cofad_bw <- function(object, type = "Contrast Analysis Between", ...) {
   print(out[1:2], na.print = "")
   cat("\u2460The p-value refers to a one-tailed test.\n\n")
   print(out[3:4], na.print = "")
-  return(out)
+  invisible(out)
 }
 #' Summary of within subject design contrast analysis
 #'
@@ -80,7 +82,7 @@ summary.cofad_wi <- function(object, ci = .95, ...) {
   print(out[1:2], na.print = "")
   cat("\u2460The p-value refers to a one-tailed test.\n\n")
   print(out[3], na.print = "")
-  return(out)
+  invisible(out)
 }
 
 #' Summary of a mixed design contrast analysis
@@ -92,5 +94,5 @@ summary.cofad_wi <- function(object, ci = .95, ...) {
 #'   with the elements Lambdas, tTable, FTable, Effects.
 #' @export
 summary.cofad_mx <- function(object, ...) {
-  summary.cofad_bw(object, type = "Contrast Analysis Mixed", ...)
+  summary.cofad_bw(object, ...)
 }
