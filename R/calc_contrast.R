@@ -202,10 +202,10 @@ calc_contrast <- function(dv,
   if (case == "mixed-Analysis: between and within factors") {
     lambda_within <- lambda_within[levels(within)]
     lambda_between <- lambda_between[levels(between)]
-    data$prodsum <- lambda_within[data$within] * data$dv
-    data_new <- aggregate(prodsum ~ id + between, data = data, FUN = "sum")
-    obj <- run_between_analysis(dv = data_new$prodsum,
-                                between = data_new$between,
+    prodsum <- lambda_within[within] * dv
+    data_new <- aggregate(prodsum, by = list(id, between), FUN = "sum")
+    obj <- run_between_analysis(dv = data_new$x,
+                                between = data_new$Group.2,
                                 lambda_between = lambda_between)
     class(obj) <- "cofad_mx"
     obj
