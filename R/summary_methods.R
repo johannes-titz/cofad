@@ -22,7 +22,7 @@ summary.cofad_bw <- function(object, ...) {
   r_tab <- as.matrix(round(x$effects, 3))
   colnames(r_tab) <- c("effects")
   t <- sqrt(s["f_contrast"])*sign(x$effects[1])
-  p_label <- paste0("p(t\u2265", round(t, 3), ")")
+  p_label <- paste0("p(t\u2265", round(t, 3), ")\u2460")
   t_tab <- matrix(
     c(s["L"], "df" = round(s["df_contrast"]),
       "t" = t,
@@ -32,11 +32,14 @@ summary.cofad_bw <- function(object, ...) {
   t_tab[4] <- signif(t_tab[4], 3)
   colnames(t_tab) <- c("L", "df", "t", p_label)
   rownames(t_tab) <- ""
-  out <- list(x$lambda_between, t_tab, f_tab, r_tab)
+  out <- list(x$lambda_between, t_tab,
+              f_tab, r_tab)
   names(out) <- c("Lambdas", "tTable", "FTable", "Effects")
-  warning <- ifelse(s["L"] < 0, "\n\nAttention! Your contrast is negative, meaning that it fits in the opposite direction of your lambdas!", "")
+  warning <- ifelse(s["L"] < 0, "\n\nYour contrast estimate is negative. This means that your data does not reflect the expected direction of your hypothesis specified by the contrast weights (lambdas).", "")
   cat(paste0("Contrast Analysis Between", warning, "\n\n", collapse = ""))
-  return(print(out, na.print = ""))
+  print(out[1:2], na.print = "")
+  cat("\u2460The p-value refers to a one-tailed test.\n\n")
+  print(out[3:4], na.print = "")
 }
 #' Summary of within subject design contrast analysis
 #' @param object output of calc_contrast
@@ -60,7 +63,7 @@ summary.cofad_wi <- function(object, ci = .95, ...) {
               round(c(l_lower_bound, l_upper_bound), 3))
   l_vals <- matrix(l_vals, ncol = length(l_vals))
   l_eff <- round(matrix(c(x[[4]][1], x[[4]][2])), 3)
-  p_label <- paste0("p(t\u2265", round(x$sig[[1]], 3), ")")
+  p_label <- paste0("p(t\u2265", round(x$sig[[1]], 3), ")\u2460")
   rownames(l_eff) <- c("r-contrast", "g-contrast")
   colnames(l_eff) <- ""
   colnames(l_vals) <- c("mean of L", "SE", "df", "t", p_label,
@@ -68,9 +71,11 @@ summary.cofad_wi <- function(object, ci = .95, ...) {
   rownames(l_vals) <- ""
   out <- list(x$lambda_within, l_vals, l_eff)
   names(out) <- c("Lambdas", "tTable", "Effects")
-  warning <- ifelse(l_mean < 0, "\n\nAttention! Your contrast is negative, meaning that it fits in the opposite direction of your lambdas!", "")
+  warning <- ifelse(l_mean < 0, "\n\nYour contrast estimate is negative. This means that your data does not reflect the expected direction of your hypothesis specified by the contrast weights (lambdas).", "")
   cat(paste0("Contrast Analysis Within", warning, "\n\n", collapse = ""))
-  return(out)
+  print(out[1:2], na.print = "")
+  cat("\u2460The p-value refers to a one-tailed test.\n\n")
+  print(out[3], na.print = "")
 }
 #' Summary of a mixed design contrast analysis
 #' @param object output of calc_contrast
