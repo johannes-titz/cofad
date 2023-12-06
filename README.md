@@ -215,15 +215,17 @@ in a publication. With the summary method some more details are shown:
 summary(ca)
 #> Contrast Analysis Between
 #> 
-#> Attention! Your contrast is negative, meaning that it fits in the opposite direction of your lambdas!
+#> Your contrast estimate is negative. This means that your data does not reflect the expected direction of your hypothesis specified by the contrast weights (lambdas).
 #> 
 #> $Lambdas
 #>   business  chemistry  education psychology 
 #>          0          0         -1          1 
 #> 
 #> $tTable
-#>   L df      t p(t≥-2.481)
-#>  -6  1 -2.481       0.988
+#>   L df      t p(t≥-2.481)①
+#>  -6  1 -2.481        0.988
+#> 
+#> ①The p-value refers to a one-tailed test.
 #> 
 #> $FTable
 #>            SS df     MS     F      p
@@ -336,13 +338,16 @@ within <- calc_contrast(dv = reading_test, within = music,
                         id = participant, data = sedlmeier_p537)
 summary(within)
 #> Contrast Analysis Within
+#> 
 #> $Lambdas
 #>       classic          jazz   white noise without music 
 #>         -0.75         -0.75          0.25          1.25 
 #> 
 #> $tTable
-#>  mean of L    SE df     t p(t≥5.269) 95%CI-lower 95%CI-upper
-#>      5.875 1.115  7 5.269   0.000581       3.238       8.512
+#>  mean of L    SE df     t p(t≥5.269)① 95%CI-lower 95%CI-upper
+#>      5.875 1.115  7 5.269    0.000581       3.238       8.512
+#> 
+#> ①The p-value refers to a one-tailed test.
 #> 
 #> $Effects
 #>                 
@@ -426,7 +431,7 @@ contr_mx <- calc_contrast(dv = dv,
                           data = rosenthal_tbl53)
 contr_mx
 #> 
-#> We ran a contrast analysis for the following between contrasts: age10 = 0; age12 = 1; age8 = -1 and within contrasts: 1 = -3; 2 = -1; 3 = 1; 4 = 3. This resulted in statistics of F(1,6) = 20.211; p = 0.004123 and an effect magnitude of r_effectsize = 0.871.
+#> We ran a contrast analysis for the following between contrasts: age10 = 0; age12 = 1; age8 = -1. This resulted in statistics of F(1,6) = 20.211; p = 0.004123 and an effect magnitude of r_effectsize = 0.871.
 ```
 
 The results look like a contrast analysis for between-subject designs.
@@ -435,23 +440,29 @@ means and standard errors of the *L*-values.
 
 ``` r
 summary(contr_mx)
-#> $F_Table
-#>              SS df     MS      F     p
-#> contrast 42.667  1 42.667 20.211 0.004
-#> within   12.667  6  2.111     NA    NA
-#> total    56.222  8     NA     NA    NA
+#> Contrast Analysis Mixed
+#> 
+#> $Lambdas
+#> age10 age12  age8 
+#>     0     1    -1 
+#> 
+#> $tTable
+#>      L df     t p(t≥4.496)①
+#>  5.333  1 4.496     0.00206
+#> 
+#> ①The p-value refers to a one-tailed test.
+#> 
+#> $FTable
+#>              SS df     MS      F       p
+#> contrast 42.667  1 42.667 20.211 0.00412
+#> within   12.667  6  2.111               
+#> total    56.222  8                      
 #> 
 #> $Effects
-#>              effect
-#> r_effectsize  0.871
-#> r_contrast    0.878
-#> r_alerting    0.990
-#> 
-#> $Within_Groups
-#>              M        SE
-#> age10 4.000000 1.0000000
-#> age12 7.333333 0.8819171
-#> age8  2.000000 0.5773503
+#>              effects
+#> r_effectsize   0.871
+#> r_contrast     0.878
+#> r_alerting     0.990
 ```
 
 ## Comparing two hypotheses
@@ -521,8 +532,10 @@ summary(ca_competing)
 #>  0.68  0.49 -1.17 
 #> 
 #> $tTable
-#>      L df     t p(t≥1.136)
-#>  0.582  1 1.136      0.139
+#>      L df     t p(t≥1.136)①
+#>  0.582  1 1.136       0.139
+#> 
+#> ①The p-value refers to a one-tailed test.
 #> 
 #> $FTable
 #>              SS df    MS     F     p
@@ -625,14 +638,17 @@ contr_wi <- calc_contrast(
 summary(contr_wi)
 #> Contrast Analysis Within
 #> 
-#> Attention! Your contrast is negative, meaning that it fits in the opposite direction of your lambdas!
+#> Your contrast estimate is negative. This means that your data does not reflect the expected direction of your hypothesis specified by the contrast weights (lambdas).
+#> 
 #> $Lambdas
 #>       classic          jazz   white noise without music 
 #>          0.33          0.33         -0.88          0.22 
 #> 
 #> $tTable
-#>  mean of L    SE df     t p(t≥-3.77) 95%CI-lower 95%CI-upper
-#>       -2.2 0.584  7 -3.77      0.997       -3.58       -0.82
+#>  mean of L    SE df     t p(t≥-3.77)① 95%CI-lower 95%CI-upper
+#>       -2.2 0.584  7 -3.77       0.997       -3.58       -0.82
+#> 
+#> ①The p-value refers to a one-tailed test.
 #> 
 #> $Effects
 #>                  
