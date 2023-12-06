@@ -12,8 +12,9 @@
 \item{...}{further arguments}
 }
 \value{
-Displays ANOVA table of the contrastanalysis
-and the typical effectsizes.
+Displays type of contrast analysis, lambdas, t-table, ANOVA table and
+  typical effect sizes. If you assign this to a variable, it will be a list
+  with the elements Lambdas, tTable, FTable, Effects.
 }
 \description{
 Summary of a mixed design contrast analysis
