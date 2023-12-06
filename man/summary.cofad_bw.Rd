@@ -4,7 +4,7 @@
 \alias{summary.cofad_bw}
 \title{Summary of between subject design contrast analysis}
 \usage{
-\method{summary}{cofad_bw}(object, type = "Contrast Analysis Between", ...)
+\method{summary}{cofad_bw}(object, ...)
 }
 \arguments{
 \item{object}{output of calc_contrast}
