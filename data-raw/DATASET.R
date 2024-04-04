@@ -112,8 +112,11 @@ usethis::use_data(rosenthal_tbl68, overwrite = T)
 # new data, Mirka and Simone
 working_memory <- read.csv("data-raw/Akan_etal_2018_Exp2B.csv")
 testing_effect <- read.csv("data-raw/dat_testing.csv")
-usethis::use_data(testing_effect)
-usethis::use_data(working_memory)
+usethis::use_data(testing_effect, overwrite = T)
+
+akan <- data.frame(readr::read_csv("data-raw/Akan_etal_2018_Exp2B.csv"))
+akan$condition <- as.factor(akan$condition)
+usethis::use_data(akan, overwrite = T)
 
 # Haans 2018
 
