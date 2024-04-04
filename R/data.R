@@ -102,8 +102,8 @@
 
 #' Data set by Rosenthal and Rosnow (2000)
 #'
-#' Fictitious example corresponding to aggregated data set on p. 141 in Rosenthal
-#' and Rosnow (2000)
+#' Fictitious example corresponding to aggregated data set on p. 141 in
+#' Rosenthal and Rosnow (2000)
 #'
 #' @format a data frame with 12 rows and 4 columns
 #' \describe{
@@ -158,14 +158,14 @@
 #' Testing Effect data
 #'
 #' This dataset originates from a study conducted as part of a research seminar
-#' in the Psychology B.Sc. program of the University of Cologne.
-#' The study participants learned a list of 20 non-associated word pairs.
-#' Each half of the word pair was associated with one of two sources (imaginating
-#' the word pair in the sky or underwater). The final memory test (cued recall) was
-#' conducted two days later. Cued recall means that one word of the word pair was
-#' presented, and the participant had to recall the other word.
-#' The participants were randomly assigned into one of three between-participant
-#' conditions: restudy, source test, item test.
+#' in the Psychology B.Sc. program of the University of Cologne. The study
+#' participants learned a list of 20 non-associated word pairs. Each half of the
+#' word pair was associated with one of two sources (imaginating the word pair
+#' in the sky or underwater). The final memory test (cued recall) was conducted
+#' two days later. Cued recall means that one word of the word pair was
+#' presented, and the participant had to recall the other word. The participants
+#' were randomly assigned into one of three between-participant conditions:
+#' restudy, source test, item test.
 #'
 #' @format a data frame with 60 rows and 3 variables:
 #' \describe{
@@ -176,28 +176,35 @@
 #'
 "testing_effect"
 
-#' Working memory data
+#' Data from Akan et al. (2018)
 #'
-#' This dataset originates from a study conducted at the University of Zurich
-#' in the area of visual working memory. This is a vast simplification of
-#' the original study for illustrative purposes.
-#' The experiment consisted of 324 trials per participant. The participants were
-#' presented either two, four, or eight colored squares (set size manipulation)
-#' and they had to reproduce the color shortly afterwards. Then they were asked
-#' to judge their confidence on the given response.
+#' For the entire dataset and analysis scripts see: \url{https://osf.io/bqr5f/}
 #'
-#' For more details see: https://psyarxiv.com/xmf24/
-#'
-#' For the entire dataset and analysis scripts see: https://osf.io/5mgzt/
-#'
-#' @format a data frame with 6660 rows and 4 variables:
+#' @format a data frame with 270 rows and 3 variables:
 #' \describe{
-#'   \item{confidence_setsize_2}{mean confidence rating per participants at set size = 2}
-#'   \item{confidence_setsize_3}{mean confidence rating per participants at set size = 4}
-#'   \item{confidence_setsize_8}{mean confidence rating per participants at set size = 8}
+#'   \item{subject}{subject id}
+#'   \item{condition}{experimental condition (itemtest, restudy, control)}
+#'   \item{recalled}{dependent variable}
 #' }
+#' @source Akan, M., Stanley, S. E., & Benjamin, A. S. (2018). Testing enhances
+#'   memory for context. Journal of Memory and Language, 103, 19–27.
+#'   \url{https://doi.org/10.1016/j.jml.2018.07.003}
+"akan"
+
+#' Data from Schwoebel et al. (2018)
 #'
-"working_memory"
+#' For the entire dataset and analysis scripts see:
+#'
+#' @format a data frame with 64 rows and 2 variables:
+#' \describe{
+#'   \item{condition}{experimental condition (massed-same, massed-different,
+#'     spaced-same, spaced-different)}
+#'   \item{percent_recalled}{dependent variable}
+#' }
+#' @source Schwoebel, J., Depperman, A. K., & Scott, J. L. (2018). Distinct
+#'   episodic contexts enhance retrieval-based learning. Memory, 26(9),
+#'   1291–1296. \url{https://doi.org/10.1080/09658211.2018.1464190}
+"schwoebel"
 
 #' Haans within data example
 #'

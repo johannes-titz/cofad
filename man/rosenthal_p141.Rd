@@ -22,7 +22,7 @@ Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
 rosenthal_p141
 }
 \description{
-Fictitious example corresponding to aggregated data set on p. 141 in Rosenthal
-and Rosnow (2000)
+Fictitious example corresponding to aggregated data set on p. 141 in
+Rosenthal and Rosnow (2000)
 }
 \keyword{datasets}
