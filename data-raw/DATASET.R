@@ -126,3 +126,13 @@ usethis::use_data(haans_within1by4)
 # res <- calc_contrast(value, id = person, within = name,
 #                      lambda_within = l, data = haans_within1by4)
 # summary(res)
+
+# Schwöbel
+
+# exclude the control condition, and relabel the conditions
+dat_schwoebel <- readr::read_csv("data-raw/Schwoebel_etal_2018.csv")
+dat_schwoebel <- dat_schwoebel[dat_schwoebel$condition!=1,]
+dat_schwoebel$condition <- factor(dat_schwoebel$condition,
+                                  labels = c("massed-same", "massed-different", "spaced-same", "spaced-different"))
+schwoebel <- dat_schwoebel
+usethis::use_data(schwoebel, overwrite = T)
