@@ -701,7 +701,7 @@ Note that this will only work for between-subjects designs.
 
 ## Testing
 
-The current test coverage for the package stands at 89%. Within `cofad`,
+The current test coverage for the package stands at 88%. Within `cofad`,
 there exists a Shiny app, subjected to testing through shinytest2.
 Regrettably, this testing approach proves less robust, leading to
 unpredictable failures specifically on the Windows OS when executed
