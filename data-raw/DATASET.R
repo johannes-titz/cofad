@@ -110,7 +110,7 @@ usethis::use_data(rosenthal_chap5_q2, overwrite = T)
 usethis::use_data(rosenthal_tbl68, overwrite = T)
 
 # new data, Mirka and Simone
-working_memory <- read.csv("data-raw/Akan_etal_2018_Exp2B.csv")
+#working_memory <- read.csv("data-raw/Akan_etal_2018_Exp2B.csv")
 testing_effect <- read.csv("data-raw/dat_testing.csv")
 usethis::use_data(testing_effect, overwrite = T)
 
