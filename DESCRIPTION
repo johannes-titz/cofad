@@ -31,13 +31,10 @@ Imports:
     stringr,
     tibble,
     utils
-Suggests: 
-    knitr,
+Suggests:
     rmarkdown,
     shinytest2,
     testthat (>= 3.0.0)
-VignetteBuilder: 
-    knitr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.1
