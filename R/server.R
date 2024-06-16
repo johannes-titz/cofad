@@ -62,7 +62,8 @@ myserver <- shinyServer(function(input, output, session) {
   output$variables <- renderUI({
     div(
     fluidRow(column(width = 3,
-             radioButtons("dv_name", label = "DV", reactive$varnames))),
+             radioButtons("dv_name", label = "DV",
+                          reactive$varnames[sapply(reactive$data, is.numeric)]))),
     fluidRow(
       column(width = 3,
       radioButtons("between_name", label = "IV between",
