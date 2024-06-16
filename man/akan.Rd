@@ -3,12 +3,12 @@
 \docType{data}
 \name{akan}
 \alias{akan}
-\title{Data from Akan et al. (2018)}
+\title{Data from Akan et al. (2018), experiment 2B}
 \format{
 a data frame with 270 rows and 3 variables:
 \describe{
   \item{subject}{subject id}
-  \item{condition}{experimental condition (itemtest, restudy, control)}
+  \item{condition}{experimental condition (test, restudy, control)}
   \item{recalled}{dependent variable}
 }
 }
@@ -21,6 +21,10 @@ Akan, M., Stanley, S. E., & Benjamin, A. S. (2018). Testing enhances
 akan
 }
 \description{
-For the entire dataset and analysis scripts see: \url{https://osf.io/bqr5f/}
+Data contains information from a within-subjects experiment with N = 90
+participants. The goal of the experiment was to investigate the benefits of
+retrieval practice on memory performance. For the entire dataset and analysis
+scripts see: \url{https://osf.io/bqr5f/}. The data was licsensed under CC-BY
+4.0 Melisa Akan, Aaron Benjamin.
 }
 \keyword{datasets}
