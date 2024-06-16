@@ -35,6 +35,8 @@ options(width = 80)
 #clean_bib("paper/paper.md", "library.bib", "paper/library_paper.bib")
 ```
 
+# <img src='logo/cover.png' align='right' height='100px'/>
+
 [![R-CMD-check](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/package=cofad)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.03822/status.svg)](https://doi.org/10.21105/joss.03822)

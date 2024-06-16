@@ -1,6 +1,8 @@
 Cofad User Guide
 ================
 
+# <img src='logo/cover.png' align='right' height='100px'/>
+
 [![R-CMD-check](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/package=cofad)
@@ -87,7 +89,7 @@ cofad::run_app()
 ```
 
 If you have any problems installing cofad, check that your R version is
-up to date (currently R version 4.3.2 (2023-10-31)). If you are using
+up to date (currently R version 4.4.1 (2024-06-14)). If you are using
 Windows, enable TLS 1.2 in the Internet Options Advanced tab (see
 <https://github.com/r-lib/remotes/issues/130#issuecomment-423830669>).
 Under Windows, you will also need Rtools to build the package:
@@ -266,13 +268,16 @@ ca <- calc_contrast(dv = empathy, between = major,
 ca
 #> 
 #> We ran a contrast analysis for the following between contrasts: business = 1; chemistry = -1; education = 0; psychology = 0. This resulted in statistics of F(1,16) = 0.684; p = 0.4205 and an effect magnitude of r_effectsize = 0.092.
+```
+
+``` r
 ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 1, "education" = 1,
                                        "business" = -1, "chemistry" = -1),
                     data = furr_p4)
 ca
 #> 
-#> We ran a contrast analysis for the following between contrasts: business = -1; chemistry = -1; education = 1; psychology = 1. This resulted in statistics of F(1,16) = 57.778; p = 1.07e-06 and an effect magnitude of r_effectsize = 0.847.
+#> We ran a contrast analysis for the following between contrasts: business = -1; chemistry = -1; education = 1; psychology = 1. This resulted in statistics of F(1,16) = 57.778; p = 0.00000107 and an effect magnitude of r_effectsize = 0.847.
 ```
 
 When you compare the numbers to the ones presented in Furr (2004), you
@@ -294,9 +299,12 @@ ca <- calc_contrast(dv = empathy, between = major,
                                        "business" = 51, "chemistry" = 38),
                     data = furr_p4)
 #> lambdas are centered and rounded to 3 digits
+```
+
+``` r
 ca
 #> 
-#> We ran a contrast analysis for the following between contrasts: business = -4.75; chemistry = -17.75; education = 5.25; psychology = 17.25. This resulted in statistics of F(1,16) = 37.466; p = 1.475e-05 and an effect magnitude of r_effectsize = 0.682.
+#> We ran a contrast analysis for the following between contrasts: business = -4.75; chemistry = -17.75; education = 5.25; psychology = 17.25. This resulted in statistics of F(1,16) = 37.466; p = 0.00001475 and an effect magnitude of r_effectsize = 0.682.
 ```
 
 The manual test gives the same effect size:
@@ -330,6 +338,9 @@ head(sedlmeier_p537)
 #> 4           29           4 without music
 #> 5           30           5 without music
 #> 6           33           6 without music
+```
+
+``` r
 within <- calc_contrast(dv = reading_test, within = music,
                         lambda_within = c("without music" = 1.25, 
                                           "white noise" = 0.25,
@@ -353,6 +364,9 @@ summary(within)
 #>                 
 #> r-contrast 0.687
 #> g-contrast 1.863
+```
+
+``` r
 within
 #> 
 #> We ran a contrast analysis for the following within contrasts: classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25. This resulted in statistics of t(7) = 5.269; p = 0.000581 and an effect magnitude of g_effectsize = 1.863.
@@ -419,6 +433,9 @@ head(rosenthal_tbl53)
 #> 4  4   age10  4      1
 #> 5  5   age10  5      1
 #> 6  5   age10  6      1
+```
+
+``` r
 lambda_within <- c("1" = -3, "2" = -1, "3" = 1, "4" = 3)
 lambda_between <-c("age8" = -1, "age10" = 0, "age12" = 1)
 
@@ -524,6 +541,9 @@ ca_competing <- calc_contrast(
   data = sedlmeier_p525
 )
 #> lambdas are centered and rounded to 3 digits
+```
+
+``` r
 summary(ca_competing)
 #> Contrast Analysis Between
 #> 
@@ -548,6 +568,9 @@ summary(ca_competing)
 #> r_effectsize   0.264
 #> r_contrast     0.312
 #> r_alerting     0.445
+```
+
+``` r
 ca_competing
 #> 
 #> We ran a contrast analysis for the following between contrasts: JT = 0.68; KT = 0.49; MT = -1.17. This resulted in statistics of F(1,12) = 1.291; p = 0.278 and an effect magnitude of r_effectsize = 0.264.
@@ -635,6 +658,9 @@ contr_wi <- calc_contrast(
   data = sedlmeier_p537
 )
 #> lambdas are centered and rounded to 3 digits
+```
+
+``` r
 summary(contr_wi)
 #> Contrast Analysis Within
 #> 
@@ -654,6 +680,9 @@ summary(contr_wi)
 #>                  
 #> r-contrast -0.561
 #> g-contrast -1.333
+```
+
+``` r
 contr_wi
 #> 
 #> We ran a contrast analysis for the following within contrasts: classic = 0.33; jazz = 0.33; white noise = -0.88; without music = 0.22. This resulted in statistics of t(7) = -3.77; p = 0.9965 and an effect magnitude of g_effectsize = -1.333. Attention: Contrast fits in the opposite direction!
@@ -738,7 +767,7 @@ and giving helpful feedback.
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent"
-line-spacing="2">
+entry-spacing="0" line-spacing="2">
 
 <div id="ref-furr2004" class="csl-entry">
 
