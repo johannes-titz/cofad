@@ -1,4 +1,5 @@
 library(dplyr)
+data(furr_p4)
 furr_agg <- furr_p4 %>%
   group_by(major) %>%
   summarize(mean = mean(empathy), sd = sd(empathy), n = n())
