@@ -69,7 +69,7 @@ offers an intuitive graphical user interface.
 
 If you just want to use the cofad-app, you do not need to install it.
 Just go to <https://cofad.titz.science> and use it there. An example
-data file is loaded when you go to <https://cofad.titz.science/example>.
+data file is loaded when you add /example after the url.
 
 If you prefer the command line interface or want to use the cofad-app
 locally, install it from github (you need the package devtools for
@@ -111,7 +111,7 @@ The graphical-user-interface is self-explanatory. Just load your data
 and drag the variables to the correct position. At the moment you can
 only read .sav (SPSS) and .csv files.
 
-As an example go to <https://cofad.titz.science/example> which will load
+As an example go to `https://cofad.titz.science/example` which will load
 a data set from Rosenthal et al. (2000) (Table 5.3). The cognitive
 ability of nine children belonging to different age groups (between) was
 measured four times (within).
@@ -277,7 +277,7 @@ ca <- calc_contrast(dv = empathy, between = major,
                     data = furr_p4)
 ca
 #> 
-#> We ran a contrast analysis for the following between contrasts: business = -1; chemistry = -1; education = 1; psychology = 1. This resulted in statistics of F(1,16) = 57.778; p = 0.00000107 and an effect magnitude of r_effectsize = 0.847.
+#> We ran a contrast analysis for the following between contrasts: business = -1; chemistry = -1; education = 1; psychology = 1. This resulted in statistics of F(1,16) = 57.778; p = 1.07e-06 and an effect magnitude of r_effectsize = 0.847.
 ```
 
 When you compare the numbers to the ones presented in Furr (2004), you
@@ -304,7 +304,7 @@ ca <- calc_contrast(dv = empathy, between = major,
 ``` r
 ca
 #> 
-#> We ran a contrast analysis for the following between contrasts: business = -4.75; chemistry = -17.75; education = 5.25; psychology = 17.25. This resulted in statistics of F(1,16) = 37.466; p = 0.00001475 and an effect magnitude of r_effectsize = 0.682.
+#> We ran a contrast analysis for the following between contrasts: business = -4.75; chemistry = -17.75; education = 5.25; psychology = 17.25. This resulted in statistics of F(1,16) = 37.466; p = 1.475e-05 and an effect magnitude of r_effectsize = 0.682.
 ```
 
 The manual test gives the same effect size:
@@ -757,7 +757,7 @@ than welcome.
 If you want to make a pull request, please check that you can still
 build the package without any errors, warnings, or notes. Overall,
 simply stick to the R packages book: <https://r-pkgs.org/> and follow
-the code style described here: <http://r-pkgs.had.co.nz/r.html#style>
+the code style described here: <https://style.tidyverse.org/>
 
 ## Acknowledgments
 
