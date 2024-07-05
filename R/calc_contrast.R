@@ -347,11 +347,6 @@ run_within_analysis <- function(dv, within, between, lambda_within, id) {
 }
 
 run_within_analysis_r <- function(dv, within, lambda_within, id) {
-  # map lambda_within on within
-  dv <- rosenthal_tbl53$dv
-  within <- rosenthal_tbl53$within
-  id <- rosenthal_tbl53$id
-  lambda_within <- c("1" = -3, "2" = -1, "3" = 1, "4" = 3)
   within_num <- as.numeric(factor(within, levels = names(lambda_within),
                                   labels = lambda_within))
   r <- as.numeric(by(data.frame(dv, within_num),
