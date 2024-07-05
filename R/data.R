@@ -211,7 +211,7 @@
 #' }
 #' @source Akan, M., Stanley, S. E., & Benjamin, A. S. (2018). Testing enhances
 #'   memory for context. Journal of Memory and Language, 103, 19–27.
-#'   \url{https://doi.org/10.1016/j.jml.2018.07.003}
+#'   \doi{10.1016/j.jml.2018.07.003}
 #'
 #' @usage data(akan)
 "akan"
@@ -228,7 +228,7 @@
 #' }
 #' @source Schwoebel, J., Depperman, A. K., & Scott, J. L. (2018). Distinct
 #'   episodic contexts enhance retrieval-based learning. Memory, 26(9),
-#'   1291–1296. \url{https://doi.org/10.1080/09658211.2018.1464190}
+#'   1291–1296. \doi{10.1080/09658211.2018.1464190}
 #'
 #' @usage data(schwoebel)
 "schwoebel"

@@ -15,7 +15,7 @@ a data frame with 64 rows and 2 variables:
 \source{
 Schwoebel, J., Depperman, A. K., & Scott, J. L. (2018). Distinct
   episodic contexts enhance retrieval-based learning. Memory, 26(9),
-  1291–1296. \url{https://doi.org/10.1080/09658211.2018.1464190}
+  1291–1296. \doi{10.1080/09658211.2018.1464190}
 }
 \usage{
 data(schwoebel)
