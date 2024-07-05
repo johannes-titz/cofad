@@ -16,7 +16,7 @@ sedlmeier_p525 <- data.frame(
 )
 
 # Example for within-subjects design Calculation 16.6 from
-# Sedlmeier and Renkewitz (2018, p. 537)
+# Sedlmeier and Renkewitz (2018, p. 537)----
 
 sedlmeier_p537 <- d <- data.frame(
   reading_test = c(
@@ -35,7 +35,7 @@ sedlmeier_p537 <- d <- data.frame(
 
 
 # Example for between-subjects design Table 3.1 from
-# Rosenthal, Rosnow and Rubin (2001)
+# Rosenthal, Rosnow and Rubin (2001)-----
 
 rosenthal_tbl31 <- data.frame(
   dv = c(2, 6, 8, 4, 10, 6, 8, 10, 4, 12, 8, 16, 10, 14, 12, 12, 18, 14, 20,
@@ -44,7 +44,7 @@ rosenthal_tbl31 <- data.frame(
 )
 
 # Example for mixed-designs Table 5.3 from
-# Rosenthal, Rosnow and Rubin (2001)
+# Rosenthal, Rosnow and Rubin (2001)----
 rosenthal_tbl53 <- data.frame(
   dv = c(3, 1, 4, 4, 5, 5, 6, 5, 7, 2, 2, 5, 5, 6, 7, 6, 6, 8, 3, 1, 5, 4, 5,
           6, 7, 6, 8, 3, 2, 5, 6, 6, 7, 8, 8, 9),
