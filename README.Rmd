@@ -75,7 +75,13 @@ Cofad has two components, the plain R package and a shiny-app that offers an int
 
 If you just want to use the cofad-app, you do not need to install it. Just go to https://cofad.titz.science and use it there. An example data file is loaded when you add /example after the url.
 
-If you prefer the command line interface or want to use the cofad-app locally, install it from github (you need the package devtools for this):
+If you prefer the command line interface or want to use the cofad-app locally, install it from CRAN:
+
+```{r}
+install.packages("cofad")
+```
+
+Alternatively, you can also install the development version from github (you need the package devtools for this):
 
 ```{r echo = T, results = "hide", eval = F}
 # install.packages("devtools") # uncomment if you do not have devtools installed
@@ -90,9 +96,9 @@ You can also run the app:
 cofad::run_app()
 ```
 
-If you have any problems installing cofad, check that your R version is up to date (currently `r version$version.string`). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/.
+<!-- If you have any problems installing cofad, check that your R version is up to date (currently `r version$version.string`). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/. -->
 
-If it still does not work drop an e-mail at johannes at titz.science or at johannes.titz at gmail.com.
+<!-- If it still does not work drop an e-mail at johannes at titz.science or at johannes.titz at gmail.com. -->
 
 ## Using cofad
 

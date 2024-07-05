@@ -72,8 +72,16 @@ Just go to <https://cofad.titz.science> and use it there. An example
 data file is loaded when you add /example after the url.
 
 If you prefer the command line interface or want to use the cofad-app
-locally, install it from github (you need the package devtools for
-this):
+locally, install it from CRAN:
+
+``` r
+install.packages("cofad")
+#> Installing package into '/tmp/Rtmpl1xjgl/temp_libpath342fc6426ca78'
+#> (as 'lib' is unspecified)
+```
+
+Alternatively, you can also install the development version from github
+(you need the package devtools for this):
 
 ``` r
 # install.packages("devtools") # uncomment if you do not have devtools installed
@@ -88,15 +96,8 @@ You can also run the app:
 cofad::run_app()
 ```
 
-If you have any problems installing cofad, check that your R version is
-up to date (currently R version 4.4.1 (2024-06-14)). If you are using
-Windows, enable TLS 1.2 in the Internet Options Advanced tab (see
-<https://github.com/r-lib/remotes/issues/130#issuecomment-423830669>).
-Under Windows, you will also need Rtools to build the package:
-<https://cran.r-project.org/bin/windows/Rtools/>.
-
-If it still does not work drop an e-mail at johannes at titz.science or
-at johannes.titz at gmail.com.
+<!-- If you have any problems installing cofad, check that your R version is up to date (currently R version 4.4.1 (2024-06-14)). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/. -->
+<!-- If it still does not work drop an e-mail at johannes at titz.science or at johannes.titz at gmail.com. -->
 
 ## Using cofad
 
