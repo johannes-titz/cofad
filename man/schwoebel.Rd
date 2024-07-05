@@ -18,7 +18,7 @@ Schwoebel, J., Depperman, A. K., & Scott, J. L. (2018). Distinct
   1291–1296. \url{https://doi.org/10.1080/09658211.2018.1464190}
 }
 \usage{
-schwoebel
+data(schwoebel)
 }
 \description{
 For the entire dataset and analysis scripts see:

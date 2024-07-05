@@ -13,7 +13,7 @@ a data frame with 60 rows and 3 variables:
 }
 }
 \usage{
-testing_effect
+data(testing_effect)
 }
 \description{
 This dataset originates from a study conducted as part of a research seminar

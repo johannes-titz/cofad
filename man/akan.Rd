@@ -18,7 +18,7 @@ Akan, M., Stanley, S. E., & Benjamin, A. S. (2018). Testing enhances
   \url{https://doi.org/10.1016/j.jml.2018.07.003}
 }
 \usage{
-akan
+data(akan)
 }
 \description{
 Data contains information from a within-subjects experiment with N = 90

@@ -22,7 +22,7 @@ Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
   University Press.
 }
 \usage{
-rosenthal_chap5_q2
+data(rosenthal_chap5_q2)
 }
 \description{
 Exercise 2 from Chapter 5 (table on p. 147) in Rosenthal and Rosnow (2000)

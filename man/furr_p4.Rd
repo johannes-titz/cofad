@@ -17,7 +17,7 @@ Furr, R. M. (2004). Interpreting effect sizes in contrast analysis.
   https://doi.org/10.1207/s15328031us0301_1
 }
 \usage{
-furr_p4
+data(furr_p4)
 }
 \description{
 fictitious data set on empathy ratings of students from different majors

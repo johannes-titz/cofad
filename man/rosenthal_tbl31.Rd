@@ -17,7 +17,7 @@ Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
   University Press.
 }
 \usage{
-rosenthal_tbl31
+data(rosenthal_tbl31)
 }
 \description{
 Table 3.1 in Rosenthal and Rosnow (2000) on p. 38.

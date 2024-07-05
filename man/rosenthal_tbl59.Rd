@@ -19,7 +19,7 @@ Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
   University Press.
 }
 \usage{
-rosenthal_tbl59
+data(rosenthal_tbl59)
 }
 \description{
 Table 5.9 in Rosenthal and Rosnow (2000)

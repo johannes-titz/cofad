@@ -13,7 +13,7 @@ a data frame with 20 rows and 3 variables:
 }
 }
 \usage{
-haans_within1by4
+data(haans_within1by4)
 }
 \description{
 Fictitious data set from Haans, A. (2018). Contrast Analysis: A Tutorial.

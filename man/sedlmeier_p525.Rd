@@ -18,7 +18,7 @@ Sedlmeier, P., & Renkewitz, F. (2018). Forschungsmethoden und
   Studium.
 }
 \usage{
-sedlmeier_p525
+data(sedlmeier_p525)
 }
 \description{
 Example 16.2, table 16.1 in Sedlmeier & Renkewitz (2018). Fictitious data set

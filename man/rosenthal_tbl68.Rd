@@ -19,7 +19,7 @@ Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
   University Press.
 }
 \usage{
-rosenthal_tbl68
+data(rosenthal_tbl68)
 }
 \description{
 Fictitious example of children ability, Table 6.8 in Rosenthal and Rosnow
