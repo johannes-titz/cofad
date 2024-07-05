@@ -1,25 +1,17 @@
----
-title: "cran-comments"
-output: html_document
----
-## Test environments
-* local Win 7, R 3.6.0
-* local Scientific Linux 7.6, R 3.6.0
-* win-builder (devel and release)
-
 ## R CMD check results
-There were no ERRORs or WARNINGs or NOTES. 
 
+0 errors | 0 warnings | 1 note
 
-## Note in Win builder
-checking CRAN incoming feasibility ... NOTE
+* checking CRAN incoming feasibility ... NOTE
+  Maintainer: ‘Johannes Titz <johannes.titz@gmail.com>’
+  
+  New maintainer:
+    Johannes Titz <johannes.titz@gmail.com>
+  Old maintainer(s):
+    Markus Burkhardt <markus.burkhardt@psychologie.tu-chemnitz.de>
 
-## Additional info
+  The maintainer has indeed changed.
+  
+## revdepcheck results
 
-Resubmission after Fixing.
-
-Analysis  --> analysis
-Designs   --> designs
-,and      --> , and
-
-add ISBN to reference Description text in the form
+There are currently no downstream dependencies for this package
