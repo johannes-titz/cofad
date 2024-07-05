@@ -11,6 +11,8 @@
 #' @source Furr, R. M. (2004). Interpreting effect sizes in contrast analysis.
 #'   Understanding Statistics, 3, 1–25.
 #'   https://doi.org/10.1207/s15328031us0301_1
+#'
+#' @usage data(furr_p4)
 "furr_p4"
 
 #' Children data set by Rosenthal and Rosnow (2000)
@@ -28,6 +30,8 @@
 #' @source Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
 #'   Effect Sizes in Behavioral Research: A Correlational Approach. Cambridge
 #'   University Press.
+#'
+#' @usage data(rosenthal_tbl53)
 "rosenthal_tbl53"
 
 #' Data set by Rosenthal and Rosnow (2000)
@@ -43,6 +47,8 @@
 #' @source Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
 #'   Effect Sizes in Behavioral Research: A Correlational Approach. Cambridge
 #'   University Press.
+#'
+#' @usage data(rosenthal_tbl31)
 "rosenthal_tbl31"
 
 #' Therapy data set by Rosenthal and Rosnow (2000)
@@ -60,6 +66,8 @@
 #' @source Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
 #'   Effect Sizes in Behavioral Research: A Correlational Approach. Cambridge
 #'   University Press.
+#'
+#' @usage data(rosenthal_tbl59)
 "rosenthal_tbl59"
 
 #' Complexity data set by Rosenthal and Rosnow (2000)
@@ -80,6 +88,8 @@
 #' @source Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
 #'   Effect Sizes in Behavioral Research: A Correlational Approach. Cambridge
 #'   University Press.
+#'
+#' @usage data(rosenthal_chap5_q2)
 "rosenthal_chap5_q2"
 
 #' Data set by Rosenthal and Rosnow (2000)
@@ -98,6 +108,8 @@
 #' @source Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
 #'   Effect Sizes in Behavioral Research: A Correlational Approach. Cambridge
 #'   University Press.
+#'
+#' @usage data(rosenthal_tbl68)
 "rosenthal_tbl68"
 
 #' Data set by Rosenthal and Rosnow (2000)
@@ -116,6 +128,8 @@
 #' @source Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
 #'   Effect Sizes in Behavioral Research: A Correlational Approach. Cambridge
 #'   University Press.
+#'
+#' @usage data(rosenthal_p141)
 "rosenthal_p141"
 
 #' Music data set by Sedlmeier & Renkewitz (2018)
@@ -134,6 +148,8 @@
 #' @source Sedlmeier, P., & Renkewitz, F. (2018). Forschungsmethoden und
 #'   Statistik für Psychologen und Sozialwissenschaftler (3rd ed.). Pearson
 #'   Studium.
+#'
+#' @usage data(sedlmeier_p537)
 "sedlmeier_p537"
 
 #' Problem solving data set by Sedlmeier & Renkewitz (2018)
@@ -153,6 +169,8 @@
 #' @source Sedlmeier, P., & Renkewitz, F. (2018). Forschungsmethoden und
 #'   Statistik für Psychologen und Sozialwissenschaftler (3rd ed.). Pearson
 #'   Studium.
+#'
+#' @usage data(sedlmeier_p525)
 "sedlmeier_p525"
 
 #' Testing Effect data
@@ -174,6 +192,7 @@
 #'   \item{recalled}{the number of words recalled in the cued-recall test}
 #' }
 #'
+#' @usage data(testing_effect)
 "testing_effect"
 
 #' Data from Akan et al. (2018), experiment 2B
@@ -193,6 +212,8 @@
 #' @source Akan, M., Stanley, S. E., & Benjamin, A. S. (2018). Testing enhances
 #'   memory for context. Journal of Memory and Language, 103, 19–27.
 #'   \url{https://doi.org/10.1016/j.jml.2018.07.003}
+#'
+#' @usage data(akan)
 "akan"
 
 #' Data from Schwoebel et al. (2018)
@@ -208,6 +229,8 @@
 #' @source Schwoebel, J., Depperman, A. K., & Scott, J. L. (2018). Distinct
 #'   episodic contexts enhance retrieval-based learning. Memory, 26(9),
 #'   1291–1296. \url{https://doi.org/10.1080/09658211.2018.1464190}
+#'
+#' @usage data(schwoebel)
 "schwoebel"
 
 #' Haans within data example
@@ -222,4 +245,5 @@
 #'   \item{value}{dv, final exam grade}
 #' }
 #'
+#' @usage data(haans_within1by4)
 "haans_within1by4"
