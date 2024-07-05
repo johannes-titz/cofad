@@ -355,7 +355,7 @@ run_within_analysis_r <- function(dv, within, lambda_within, id) {
   n <- as.numeric(by(dv, id, length))
   # https://stats.stackexchange.com/questions/73621/standard-error-from-correlation-coefficient
   se <- sqrt((1-r^2)/(n-2))
-  metafor::rma(r, sei = se)
+  # use rma from metafor to calculcate average effect
   # we could also use permutation instead!
 }
 
