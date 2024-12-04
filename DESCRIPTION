@@ -17,7 +17,7 @@ Description: Contrast analysis for factorial designs provides an
 License: LGPL (>= 3)
 URL: https://github.com/johannes-titz/cofad
 Depends: 
-    R (>= 3.1.0)
+    R (>= 3.5)
 Imports: 
     dplyr,
     Hmisc,
