@@ -24,7 +24,7 @@ data(akan)
 Data contains information from a within-subjects experiment with N = 90
 participants. The goal of the experiment was to investigate the benefits of
 retrieval practice on memory performance. For the entire dataset and analysis
-scripts see: \url{https://osf.io/bqr5f/}. The data was licsensed under CC-BY
+scripts see: \url{https://osf.io/bqr5f/}. The data was licensed under CC-BY
 4.0 Melisa Akan, Aaron Benjamin.
 }
 \keyword{datasets}
