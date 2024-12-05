@@ -1,4 +1,4 @@
-dat <- haven::read_sav("imagination_facilitation.sav")
+dat <- haven::read_sav("data-raw/imagination_facilitation.sav")
 
 # rename variables
 dat$id <- dat$Nr.PP
