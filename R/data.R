@@ -247,3 +247,26 @@
 #'
 #' @usage data(haans_within1by4)
 "haans_within1by4"
+
+
+#' Data from Maraver et al. (2021)
+#'
+#' The dataset originates from a between-subjects experiment with N = 120
+#' participants. The experiment aimed to examine whether instructions to imagine
+#' the study material could reduce false memories. Full dataset and analysis
+#' scripts are available at:
+#' \url{https://osf.io/v8apj/?view_only=9969d17536f54053a72be19c050c4767}.
+#'
+#' @format a data frame with 120 rows and 3 variables:
+#' \describe{
+#'   \item{id}{subject id}
+#'   \item{condition}{experimental condition (imagine, memorize, pay_attention)}
+#'   \item{prop_recalled}{dependent variable}
+#' }
+#' @source Maraver, M. J., Lapa, A., Garcia-Marques, L., Carneiro, P., & Raposo,
+#'   A. (2021). Imagination Reduces False Memories for Everyday Action
+#'   Sentences: Evidence From Pragmatic Inferences. Frontiers in Psychology, 12.
+#'   \doi{10.3389/fpsyg.2021.668899}
+#'
+#' @usage data(maraver)
+"maraver"
