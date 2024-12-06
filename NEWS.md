@@ -1,8 +1,15 @@
-#
+# cofad 0.3.1
+
+* fix github action for joss paper
+* fix some typos
+* add install instructions for cran
+* remove rtools instructions (only relevant for dev version)
+* change order of condition variable for akan data set
+* add Maraver 2021 data set
 
 # cofad 0.3.0
 
-* several bugs were fixed including rare ocassions, where the order of factors was not treated correctly
+* several bugs were fixed including rare occasions, where the order of factors was not treated correctly
 * included a helper function to calculate differences between two sets of lambdas for a competing contrast analysis, including documentation
 * added data examples
 * remove plyr as dependency
