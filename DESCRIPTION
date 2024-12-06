@@ -1,7 +1,7 @@
 Type: Package
 Package: cofad
 Title: Contrast Analyses for Factorial Designs
-Version: 0.3.1
+Version: 0.3.1.9000
 Authors@R: c(
     person("Johannes", "Titz", , "johannes.titz@gmail.com", role = c("aut", "cre")),
     person("Markus", "Burkhardt", , "markus.burkhardt@psychologie.tu-chemnitz.de", role = "aut"),
