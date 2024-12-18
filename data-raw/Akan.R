@@ -42,7 +42,7 @@ aggr.dat <- raw.dat %>%
 akan <- aggr.dat %>%
   transmute(subject=SubjectNo,
             condition=NewCondition,
-            recalled=Recalled) # 16 seems to be the max according to Simone
+            contexts=Recalled) # 16 seems to be the max according to Simone
 
 akan$condition <- factor(akan$condition, levels = c("test", "restudy", "control"))
 

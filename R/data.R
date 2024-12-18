@@ -207,7 +207,7 @@
 #' \describe{
 #'   \item{subject}{subject id}
 #'   \item{condition}{experimental condition (test, restudy, control)}
-#'   \item{recalled}{dependent variable}
+#'   \item{contexts}{dependent variable}
 #' }
 #' @source Akan, M., Stanley, S. E., & Benjamin, A. S. (2018). Testing enhances
 #'   memory for context. Journal of Memory and Language, 103, 19–27.
