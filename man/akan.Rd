@@ -9,7 +9,7 @@ a data frame with 270 rows and 3 variables:
 \describe{
   \item{subject}{subject id}
   \item{condition}{experimental condition (test, restudy, control)}
-  \item{recalled}{dependent variable}
+  \item{contexts}{dependent variable}
 }
 }
 \source{
