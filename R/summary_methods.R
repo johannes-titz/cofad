@@ -28,7 +28,7 @@ summary.cofad_bw <- function(object, ...) {
   t <- sqrt(s["f_contrast"])*sign(x$effects[1])
   p_label <- paste0("p(t\u2265", round(t, 3), ")\u2460")
   t_tab <- matrix(
-    c(s["L"], "df" = round(s["df_contrast"]),
+    c(s["L"], "df" = round(s["df_inn"]),
       "t" = t,
       "p" = pt(t, s["df_inn"], lower.tail = F)),
     nrow = 1)

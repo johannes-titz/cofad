@@ -62,6 +62,7 @@ test_that("sedlmeier 525 works", {
   expect_equal(round(t16_2$sig["f_contrast"], 3),
                c("f_contrast" = 6.519))
   expect_equal(as.numeric(round(t16_2$effects[2], 2)), 0.59)
+  expect_equal(summary(t16_2)$tTable[2], 12)
 }
 )
 # within (no between)------

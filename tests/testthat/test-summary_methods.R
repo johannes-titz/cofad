@@ -39,7 +39,7 @@ cofad_ftable <- round(summary(ca)$FTable, 2)
 
 test_that("furr p4 summary works", {
   expect_equal(cofad_ftable, furr_ftable)
-  expect_equal(round(summary(ca)$tTable[2:4], 2), c(1, -2.48, 0.99))
+  expect_equal(round(summary(ca)$tTable[2:4], 2), c(16, -2.48, 0.99))
   }
 )
 
