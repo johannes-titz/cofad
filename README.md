@@ -94,7 +94,7 @@ You can also run the app:
 cofad::run_app()
 ```
 
-<!-- If you have any problems installing cofad, check that your R version is up to date (currently R version 4.4.2 (2024-10-31)). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/. -->
+<!-- If you have any problems installing cofad, check that your R version is up to date (currently R version 4.4.3 (2025-02-28)). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/. -->
 <!-- If it still does not work drop an e-mail at johannes at titz.science or at johannes.titz at gmail.com. -->
 
 ## Using cofad
@@ -224,7 +224,7 @@ summary(ca)
 #> 
 #> $tTable
 #>   L df      t p(t≥-2.481)①
-#>  -6  1 -2.481        0.988
+#>  -6 16 -2.481        0.988
 #> 
 #> ①The p-value refers to a one-tailed test.
 #> 
@@ -273,7 +273,7 @@ ca <- calc_contrast(dv = empathy, between = major,
                     data = furr_p4)
 ca
 #> 
-#> We ran a contrast analysis for the following between contrasts: business = -1; chemistry = -1; education = 1; psychology = 1. This resulted in statistics of F(1,16) = 57.778; p = 1.07e-06 and an effect magnitude of r_effectsize = 0.847.
+#> We ran a contrast analysis for the following between contrasts: business = -1; chemistry = -1; education = 1; psychology = 1. This resulted in statistics of F(1,16) = 57.778; p = 0.00000107 and an effect magnitude of r_effectsize = 0.847.
 ```
 
 When you compare the numbers to the ones presented in Furr (2004), you
@@ -297,7 +297,7 @@ ca <- calc_contrast(dv = empathy, between = major,
 #> lambdas are centered and rounded to 3 digits
 ca
 #> 
-#> We ran a contrast analysis for the following between contrasts: business = -4.75; chemistry = -17.75; education = 5.25; psychology = 17.25. This resulted in statistics of F(1,16) = 37.466; p = 1.475e-05 and an effect magnitude of r_effectsize = 0.682.
+#> We ran a contrast analysis for the following between contrasts: business = -4.75; chemistry = -17.75; education = 5.25; psychology = 17.25. This resulted in statistics of F(1,16) = 37.466; p = 0.00001475 and an effect magnitude of r_effectsize = 0.682.
 ```
 
 The manual test gives the same effect size:
@@ -449,7 +449,7 @@ summary(contr_mx)
 #> 
 #> $tTable
 #>      L df     t p(t≥4.496)①
-#>  5.333  1 4.496     0.00206
+#>  5.333  6 4.496     0.00206
 #> 
 #> ①The p-value refers to a one-tailed test.
 #> 
@@ -534,7 +534,7 @@ summary(ca_competing)
 #> 
 #> $tTable
 #>      L df     t p(t≥1.136)①
-#>  0.582  1 1.136       0.139
+#>  0.582 12 1.136       0.139
 #> 
 #> ①The p-value refers to a one-tailed test.
 #> 

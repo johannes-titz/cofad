@@ -77,7 +77,7 @@ If you just want to use the cofad-app, you do not need to install it. Just go to
 
 If you prefer the command line interface or want to use the cofad-app locally, install it from CRAN:
 
-```{r message=FALSE}
+```{r message=FALSE, eval=F}
 install.packages("cofad")
 ```
 
