@@ -94,7 +94,7 @@ You can also run the app:
 cofad::run_app()
 ```
 
-<!-- If you have any problems installing cofad, check that your R version is up to date (currently R version 4.4.3 (2025-02-28)). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/. -->
+<!-- If you have any problems installing cofad, check that your R version is up to date (currently R version 4.5.0 (2025-04-11)). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/. -->
 <!-- If it still does not work drop an e-mail at johannes at titz.science or at johannes.titz at gmail.com. -->
 
 ## Using cofad
