@@ -1,3 +1,5 @@
+# cofad (development version)
+
 # cofad 0.3.3
 
 * report correct df for t test
