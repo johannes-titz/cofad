@@ -10,13 +10,13 @@ status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/
 
 <!-- [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116) -->
 
-To cite cofad in publications use:
+To cite cofad in publications, please use the following reference:
 
 Titz J. & Burkhardt M. (2021). cofad: An R package and shiny app for
 contrast analysis. Journal of Open Source Software, 6(67), 3822,
 <https://doi.org/10.21105/joss.03822>
 
-A BibTeX entry for LaTeX users is
+For LaTeX users, a BibTeX entry is provided below:
 
     @article{titz2021, 
       doi = {10.21105/joss.03822}, 
@@ -33,34 +33,42 @@ A BibTeX entry for LaTeX users is
 ## Introduction
 
 Cofad is an R package for conducting COntrast analysis in FActorial
-Designs like ANOVAs. If contrast analysis was to win a price it would be
-the one for the most underestimated, underused statistical technique.
-This is unfortunate because in every case a contrast analysis is at
-least as good as an ANOVA, but in most cases it is better. Contrast
-analysis gets rid off the unspecific omnibus-hypothesis *there are
-differences somewhere* and replaces it with a very specific numerical
-hypothesis. Furthermore, contrast analysis focuses on effects instead of
-significance. This is expressed doubly: First, there are three different
-effect sizes for contrast analysis:
-![r\_\mathrm{effectsize}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D "r_\mathrm{effectsize}"),
-![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}")
-and
-![r\_\mathrm{alerting}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Balerting%7D "r_\mathrm{alerting}").
-Second, the effect size refers not to the data but to the tested
-hypothesis. The larger the effect, the more this speaks for the
-hypothesis. One can even compare different hypotheses against each other
-(experimentum crucis!) by looking at the effect size for each
-hypothesis.
+Designs, such as ANOVAs. If contrast analysis were to win an award, it
+might be for the most underestimated and underused statistical
+technique. This is unfortunate, because contrast analysis is at least as
+informative as ANOVA—and often more so. Rather than testing an
+unspecific omnibus hypothesis like “there are differences somewhere”,
+contrast analysis allows you to test a precise, numerically specified
+hypothesis. It also shifts the focus from mere significance testing to
+the evaluation of effects.
 
-Sounds interesting? Then check out some introductory literature such as
-Furr (2004), Rosenthal & Rosnow (1985), Rosenthal, Rosnow, & Rubin
-(2000), or, for the German-speaking audience, Sedlmeier & Renkewitz
-(2018). Contrast analysis is fairly easy to understand if you know what
-an ANOVA and a correlation is. In this vignette we assume you are
-familiar with the basics of contrast analysis and want to apply it to a
-specific data set. First we show how to install cofad and use the
-graphical user interface. Then we demonstrate some exemplary analyses
-for between, within and mixed designs in R.
+This focus on effects is reflected in two key ways:
+
+1.  Contrast analysis offers three distinct effect size measures:
+    ![r\_\mathrm{effectsize}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D "r_\mathrm{effectsize}"),
+    ![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}"),
+    and
+    ![r\_\mathrm{alerting}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Balerting%7D "r_\mathrm{alerting}").
+
+2.  These effect sizes relate not just to the data, but to the
+    hypothesis being tested—the stronger the effect, the more it
+    supports the hypothesis.
+
+Cofad also makes it possible to compare two competing hypotheses
+directly (experimentum crucis) by examining the effect sizes associated
+with each.
+
+Sounds interesting? Then take a look at some introductory literature,
+such as Furr (2004), Rosenthal & Rosnow (1985), Rosenthal, Rosnow, &
+Rubin (2000), or—for German-speaking readers— Sedlmeier & Renkewitz
+(2018). Contrast analysis is relatively easy to grasp if you’re already
+familiar with ANOVA and correlation.
+
+In this vignette, we assume you have a basic understanding of contrast
+analysis and are ready to apply it to a specific dataset. We begin by
+showing how to install cofad and use its graphical user interface. Then,
+we walk through several example analyses for between-subjects,
+within-subjects, and mixed designs using R.
 
 ## Installation
 
@@ -79,11 +87,11 @@ install.packages("cofad")
 ```
 
 Alternatively, you can also install the development version from github
-(you need the package devtools for this):
+(you need the package remotes for this):
 
 ``` r
-# install.packages("devtools") # uncomment if you do not have devtools installed
-devtools::install_github("johannes-titz/cofad")
+# install.packages("remotes") # uncomment if you do not have devtools installed
+remotes::install_github("johannes-titz/cofad")
 ```
 
 Now you can load cofad and use it in your R scripts.
@@ -94,7 +102,8 @@ You can also run the app:
 cofad::run_app()
 ```
 
-<!-- If you have any problems installing cofad, check that your R version is up to date (currently R version 4.5.0 (2025-04-11)). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/. -->
+<!-- If you have any problems installing cofad, check that your R version is up to date (currently R version 4.5.1 (2025-06-13)). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/. -->
+
 <!-- If it still does not work drop an e-mail at johannes at titz.science or at johannes.titz at gmail.com. -->
 
 ## Using cofad
