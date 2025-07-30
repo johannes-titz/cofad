@@ -134,61 +134,87 @@ cite <- function() {
 #' If you want to test two competing hypotheses, you can use this helper
 #' function to create the correct difference lambdas. There is no magic here.
 #' The two contrasts are z-standardized first and then subtracted
-#' (lambda_preferred - lambda_competing). You can use the new difference lambdas
+#' (lambda_favored - lambda_rival). You can use the new difference lambdas
 #' as the input for calc_contrast.
 #'
-#' @param lambda_preferred Lambdas of the preferred hypothesis. Has to be a
+#' @param lambda_favored Lambdas of the favored hypothesis. Has to be a
 #'   named vector with the names corresponding with the groups in the analyzed
-#'   data set. Alternatively, use the parameter labels.
-#' @param lambda_competing Lambdas of the competing hypothesis. Has to be a
-#' named vector with the names corresponding with the groups in the analyzed
-#' data set. Alternatively, use the parameter labels.
+#'   data set. Alternatively, use the parameter `labels`.
+#' @param lambda_rival Lambdas of the rival hypothesis. Has to be a
+#'   named vector with the names corresponding with the groups in the analyzed
+#'   data set. Alternatively, use the parameter `labels`.
 #' @param labels If you provide lambdas without names, you can set the group
 #'   labels for both contrasts here.
+#' @param lambda_preferred Deprecated. Use `lambda_favored` instead.
+#' @param lambda_competing Deprecated. Use `lambda_rival` instead.
 #'
-#' @return Lambdas for difference between lambda_preferred and lambda_competing
+#' @return Lambdas for difference between lambda_favored and lambda_rival
 #'
 #' @examples
-#' lambda <- lambda_diff(c("A" = 1, "B" = 2, "C" = 3),
-#'                       c("A" = 1, "B" = 2, "C" = 6))
+#' lambda <- lambda_diff(lambda_favored = c("A" = 1, "B" = 2, "C" = 3),
+#'                       lambda_rival = c("A" = 1, "B" = 2, "C" = 6))
 #' lambda
 #' # same result
-#' lambda2 <- lambda_diff(c(1, 2, 3), c(1, 2, 6),
+#' lambda2 <- lambda_diff(lambda_favored = c(1, 2, 3),
+#'                        lambda_rival = c(1, 2, 6),
 #'                        labels = c("A", "B", "C"))
 #' lambda2
 #' @export
-lambda_diff <- function(lambda_preferred, lambda_competing, labels = NULL) {
-  if (cor(lambda_preferred, lambda_competing) == 1) {
+#' @importFrom lifecycle deprecate_warn
+lambda_diff <- function(lambda_favored = NULL,
+                        lambda_rival = NULL,
+                        labels = NULL,
+                        lambda_preferred = NULL,
+                        lambda_competing = NULL) {
+
+  # Deprecation handling
+  if (!is.null(lambda_preferred)) {
+    lifecycle::deprecate_warn("0.4.3", "lambda_diff(lambda_preferred)",
+                              "lambda_diff(lambda_favored)")
+    lambda_favored <- lambda_preferred
+  }
+  if (!is.null(lambda_competing)) {
+    lifecycle::deprecate_warn("0.4.3", "lambda_diff(lambda_competing)",
+                              "lambda_diff(lambda_rival)")
+    lambda_rival <- lambda_competing
+  }
+
+  # Argument checks
+  if (cor(lambda_favored, lambda_rival) == 1) {
     stop('Your lambdas are perfectly correlated. ',
          'It does not make sense to compare them.')
   }
-  if ((is.null(names(lambda_preferred)) | is.null(names(lambda_competing))) &
+  if ((is.null(names(lambda_favored)) | is.null(names(lambda_rival))) &
       is.null(labels)) {
     stop('Please provide group labels for your lambdas. ',
          'For instance, c("A" = 1, "B" = 2, ...)')
   }
-  if ((!is.null(names(lambda_preferred)) | !is.null(names(lambda_competing))) &
+  if ((!is.null(names(lambda_favored)) | !is.null(names(lambda_rival))) &
       !is.null(labels)) {
     stop('Use either a named vector for the lambdas',
          ' or the labels parameter to specify the group labels. ',
          'Do not use both.')
   }
   if (!is.null(labels)) {
-    names(lambda_preferred) <- names(lambda_competing) <- labels
+    names(lambda_favored) <- names(lambda_rival) <- labels
   }
-  lambda_preferred <- lambda_preferred[sort(names(lambda_preferred))]
-  lambda_competing <- lambda_competing[sort(names(lambda_competing))]
-  if (!(identical(names(lambda_preferred), names(lambda_competing)))) {
+
+  lambda_favored <- lambda_favored[sort(names(lambda_favored))]
+  lambda_rival <- lambda_rival[sort(names(lambda_rival))]
+
+  if (!(identical(names(lambda_favored), names(lambda_rival)))) {
     stop('Please provide the same labels for your lambdas\n',
-         'current labels of preferred lambdas: ',
-         paste(names(lambda_preferred), collapse = " "),
-         '\ncurrent labels of competing lambdas: ',
-         paste(names(lambda_competing), collapse = " "))
+         'current labels of favored lambdas: ',
+         paste(names(lambda_favored), collapse = " "),
+         '\ncurrent labels of rival lambdas: ',
+         paste(names(lambda_rival), collapse = " "))
   }
-  lambda_diff <- as.numeric(zscale(lambda_preferred) - zscale(lambda_competing))
-  names(lambda_diff) <- names(lambda_preferred)
+
+  lambda_diff <- as.numeric(zscale(lambda_favored) - zscale(lambda_rival))
+  names(lambda_diff) <- names(lambda_favored)
   return(lambda_diff)
 }
+
 
 zscale <- function(x) {
   n <- length(x)

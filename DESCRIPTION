@@ -30,7 +30,8 @@ Imports:
     shinyjs,
     stringr,
     tibble,
-    utils
+    utils,
+    lifecycle
 Suggests:
     rmarkdown,
     shinytest2,

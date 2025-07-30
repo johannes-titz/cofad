@@ -4,36 +4,47 @@
 \alias{lambda_diff}
 \title{Calculate lambdas for two competing hypotheses}
 \usage{
-lambda_diff(lambda_preferred, lambda_competing, labels = NULL)
+lambda_diff(
+  lambda_favored = NULL,
+  lambda_rival = NULL,
+  labels = NULL,
+  lambda_preferred = NULL,
+  lambda_competing = NULL
+)
 }
 \arguments{
-\item{lambda_preferred}{Lambdas of the preferred hypothesis. Has to be a
+\item{lambda_favored}{Lambdas of the favored hypothesis. Has to be a
 named vector with the names corresponding with the groups in the analyzed
-data set. Alternatively, use the parameter labels.}
+data set. Alternatively, use the parameter `labels`.}
 
-\item{lambda_competing}{Lambdas of the competing hypothesis. Has to be a
+\item{lambda_rival}{Lambdas of the rival hypothesis. Has to be a
 named vector with the names corresponding with the groups in the analyzed
-data set. Alternatively, use the parameter labels.}
+data set. Alternatively, use the parameter `labels`.}
 
 \item{labels}{If you provide lambdas without names, you can set the group
 labels for both contrasts here.}
+
+\item{lambda_preferred}{Deprecated. Use `lambda_favored` instead.}
+
+\item{lambda_competing}{Deprecated. Use `lambda_rival` instead.}
 }
 \value{
-Lambdas for difference between lambda_preferred and lambda_competing
+Lambdas for difference between lambda_favored and lambda_rival
 }
 \description{
 If you want to test two competing hypotheses, you can use this helper
 function to create the correct difference lambdas. There is no magic here.
 The two contrasts are z-standardized first and then subtracted
-(lambda_preferred - lambda_competing). You can use the new difference lambdas
+(lambda_favored - lambda_rival). You can use the new difference lambdas
 as the input for calc_contrast.
 }
 \examples{
-lambda <- lambda_diff(c("A" = 1, "B" = 2, "C" = 3),
-                      c("A" = 1, "B" = 2, "C" = 6))
+lambda <- lambda_diff(lambda_favored = c("A" = 1, "B" = 2, "C" = 3),
+                      lambda_rival = c("A" = 1, "B" = 2, "C" = 6))
 lambda
 # same result
-lambda2 <- lambda_diff(c(1, 2, 3), c(1, 2, 6),
+lambda2 <- lambda_diff(lambda_favored = c(1, 2, 3),
+                       lambda_rival = c(1, 2, 6),
                        labels = c("A", "B", "C"))
 lambda2
 }
