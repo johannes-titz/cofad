@@ -1,0 +1,42 @@
+citHeader("Please cite both the cofad tutorial and software paper:")
+
+citEntry(
+  entry = "Article",
+  title = "Contrast analysis for competing hypotheses: A tutorial using the R package cofad",
+  author = personList(
+    as.person("Mirka Henninger"),
+    as.person("Simone Malejka"),
+    as.person("Johannes Titz")
+  ),
+  journal = "Behavior Research Methods",
+  year = "2025",
+  volume = "57",
+  pages = "326",
+  doi = "10.3758/s13428-025-02833-w",
+  textVersion = paste(
+    "Henninger, M., Malejka, S., & Titz, J. (2025).",
+    "Contrast analysis for competing hypotheses: A tutorial using the R",
+    "package cofad. Behavior Research Methods, 57, Article 326.",
+    "https://doi.org/10.3758/s13428-025-02833-w"
+  )
+)
+
+citEntry(
+  entry = "Article",
+  title = "cofad: An R package and Shiny app for contrast analysis",
+  author = personList(
+    as.person("Johannes Titz"),
+    as.person("Markus Burkhardt")
+  ),
+  journal = "Journal of Open Source Software",
+  year = "2021",
+  volume = "6",
+  number = "67",
+  pages = "3822",
+  doi = "10.21105/joss.03822",
+  textVersion = paste(
+    "Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for",
+    "contrast analysis. Journal of Open Source Software, 6(67), 3822.",
+    "https://doi.org/10.21105/joss.03822"
+  )
+)

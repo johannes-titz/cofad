@@ -2,46 +2,66 @@
 #'
 #' Depending on file ending, the data is loaded.
 #'
-#' @importFrom Hmisc spss.get
+#' @importFrom foreign read.spss
 #' @importFrom utils read.csv read.csv2 count.fields
-#' @importFrom readr guess_encoding
-#' @importFrom stringr str_match
 #' @param datafile yep, the data file to upload
 #' @return data as an R object or an error
 #' @noRd
 load_data <- function(datafile) {
-  fileending <- stringr::str_match(datafile$datapath, "(\\..+$)")[1, 1]
-  data <- tryCatch({
-    if (fileending == ".sav") {
-      data <- Hmisc::spss.get(datafile$datapath, use.value.labels = F)
-    } else if (fileending == ".csv") {
-      encoding <- unlist(readr::guess_encoding(datafile$datapath)[1, 1])
-      lines <- readLines(datafile$datapath, n = 1)
-      numfields_semicolon <- count.fields(textConnection(lines), sep = ";")
-      numfields_colon <- count.fields(textConnection(lines), sep = ",")
-      if (numfields_semicolon == 1) {
-        data <- utils::read.csv(datafile$datapath, fileEncoding = encoding)
-      } else if (numfields_colon == 1) {
-        data <- utils::read.csv2(datafile$datapath, fileEncoding = encoding)
+  fileending <- tolower(sub("^.*(\\.[^.]+)$", "\\1", basename(datafile$name)))
+  data <- tryCatch(
+    {
+      if (identical(fileending, ".sav")) {
+        data <- foreign::read.spss(
+          datafile$datapath, to.data.frame = TRUE, use.value.labels = FALSE,
+          trim.factor.names = TRUE
+        )
+      } else if (identical(fileending, ".csv")) {
+        encoding <- detect_text_encoding(datafile$datapath)
+        lines <- readLines(datafile$datapath, n = 1)
+        numfields_semicolon <- count.fields(textConnection(lines), sep = ";")
+        numfields_comma <- count.fields(textConnection(lines), sep = ",")
+        if (numfields_semicolon > numfields_comma) {
+          data <- utils::read.csv2(datafile$datapath, fileEncoding = encoding)
+        } else {
+          data <- utils::read.csv(datafile$datapath, fileEncoding = encoding)
+        }
+      } else {
+        stop("Unsupported file extension: ", fileending)
       }
-    }
-    data},
+      data
+    },
     error = function(error_message) {
       msg <- paste(
         "Sorry, I could not read your data. Please check that it is in the ",
-        "SPSS format .sav or a regular .csv file with a comma as a separator ",
-        "(not a semicolon or any other delimiter).",
+        "SPSS .sav format or a regular .csv file with a comma or semicolon ",
+        "as the separator.",
         sep = ""
       )
-      showNotification(msg, type = "error")
-      message(error_message)
+      session <- shiny::getDefaultReactiveDomain()
+      if (!is.null(session) && is.function(session$sendNotification)) {
+        showNotification(msg, type = "error")
+      }
+      message(conditionMessage(error_message))
+      NULL
     }
   )
 }
 
+detect_text_encoding <- function(path) {
+  connection <- file(path, open = "rb")
+  on.exit(close(connection), add = TRUE)
+  bytes <- readBin(connection, what = "raw", n = 3)
+  if (length(bytes) == 3 && identical(as.integer(bytes), c(239L, 187L, 191L))) {
+    "UTF-8-BOM"
+  } else {
+    ""
+  }
+}
+
 #' Make column names to html tags
 #'
-#' This is a sortable helper that covert column names of a data frame to
+#' This is a sortable helper that converts column names of a data frame to
 #' proper html tags for use with sortable_js
 #'
 #' @importFrom utils tail
@@ -101,21 +121,42 @@ create_table <- function(levels) {
 
 #' prepares lambda table
 #'
-#' Used in shiny to pepare a UI for setting lambda values.
+#' Used in Shiny to prepare a UI for setting lambda values.
 #'
 #' @param levels levels to create default lambdas for
 #' @return data frame with levels, lambda values and n per group
 #' @noRd
-#' @importFrom rlang .data
 prepare_table <- function(lambda, var) {
   df <- data.frame("level" = names(lambda), lambda = lambda)
-  freq_between <- as.data.frame(table(var))
-  freq_between <- dplyr::transmute(freq_between,
-                                   level = as.character(.data$var),
-                                   n = .data$Freq)
   df$level <- as.character(df$level)
-  df <- dplyr::left_join(df, freq_between, by = "level")
+  frequencies <- table(as.character(var), useNA = "no")
+  df$n <- as.integer(frequencies[df$level])
   df
+}
+
+cofad_resource <- function(...) {
+  resource_root <- getOption("cofad.resource_dir", "")
+  if (nzchar(resource_root)) {
+    file.path(resource_root, ...)
+  } else {
+    system.file("extdata", ..., package = "cofad")
+  }
+}
+
+load_cofad_example <- function(name) {
+  data_root <- getOption("cofad.data_dir", "")
+  data_env <- new.env(parent = emptyenv())
+  if (nzchar(data_root)) {
+    path <- file.path(data_root, paste0(name, ".rda"))
+    if (!file.exists(path)) return(NULL)
+    load(path, envir = data_env)
+  } else {
+    suppressWarnings(utils::data(
+      list = name, package = "cofad", envir = data_env
+    ))
+  }
+  if (!exists(name, envir = data_env, inherits = FALSE)) return(NULL)
+  get(name, envir = data_env, inherits = FALSE)
 }
 
 #' Cites useful references for cofad in html
@@ -125,8 +166,175 @@ prepare_table <- function(lambda, var) {
 #' @return HTML character
 #' @noRd
 cite <- function() {
-  paste(readLines(system.file("extdata", "citation.txt", package = "cofad")),
+  paste(readLines(cofad_resource("citation.txt")),
         collapse = "")
+}
+
+#' Create a detailed variance-decomposition table
+#'
+#' The contrast accounts for one degree of freedom of the between-group sum of
+#' squares. The remaining between-group variation is shown separately.
+#'
+#' @param object A `cofad_bw` or `cofad_mx` object.
+#' @return A formatted data frame for display in the Shiny app.
+#' @noRd
+detailed_f_table <- function(object) {
+  format_statistic <- function(x, digits = 3) {
+    ifelse(
+      is.na(x), "",
+      formatC(x, format = "f", digits = digits, drop0trailing = FALSE)
+    )
+  }
+  format_probability <- function(x) {
+    ifelse(is.na(x), "", format.pval(x, digits = 3, eps = 0.001))
+  }
+  s <- object$sig
+  df_between <- unname(s["df_total"] - s["df_inn"])
+  df_residual <- df_between - unname(s["df_contrast"])
+  ss_residual <- unname(s["ss_between"] - s["ss_kontrast"])
+  if (abs(ss_residual) < sqrt(.Machine$double.eps)) ss_residual <- 0
+
+  ms_between <- unname(s["ss_between"]) / df_between
+  ms_residual <- if (df_residual > 0) ss_residual / df_residual else NA_real_
+  f_between <- ms_between / unname(s["ms_within"])
+  f_residual <- if (df_residual > 0) {
+    ms_residual / unname(s["ms_within"])
+  } else {
+    NA_real_
+  }
+
+  tab <- data.frame(
+    Source = c(
+      "Between groups (overall)", "Contrast", "Residual between groups",
+      "Within groups (error)", "Total"
+    ),
+    SS = c(
+      s["ss_between"], s["ss_kontrast"], ss_residual,
+      s["ss_within"], s["ss_total"]
+    ),
+    df = c(
+      df_between, s["df_contrast"], df_residual, s["df_inn"], s["df_total"]
+    ),
+    MS = c(
+      ms_between, s["ss_kontrast"] / s["df_contrast"], ms_residual,
+      s["ms_within"], NA_real_
+    ),
+    F = c(f_between, s["f_contrast"], f_residual, NA_real_, NA_real_),
+    p = c(
+      stats::pf(f_between, df_between, s["df_inn"], lower.tail = FALSE),
+      s["p_contrast"],
+      if (df_residual > 0) {
+        stats::pf(f_residual, df_residual, s["df_inn"], lower.tail = FALSE)
+      } else {
+        NA_real_
+      },
+      NA_real_, NA_real_
+    ),
+    check.names = FALSE
+  )
+
+  tab$SS <- format_statistic(tab$SS)
+  tab$df <- format_statistic(tab$df, digits = 0)
+  tab$MS <- format_statistic(tab$MS)
+  tab$F <- format_statistic(tab$F)
+  tab$p <- format_probability(tab$p)
+  rownames(tab) <- NULL
+  tab
+}
+
+#' Create a detailed effect-size table
+#'
+#' @param object A cofad result.
+#' @return A formatted data frame for display in the Shiny app.
+#' @noRd
+detailed_effect_table <- function(object) {
+  format_statistic <- function(x, digits = 3) {
+    ifelse(
+      is.na(x), "",
+      formatC(x, format = "f", digits = digits, drop0trailing = FALSE)
+    )
+  }
+  if (inherits(object, "cofad_bw") || inherits(object, "cofad_mx")) {
+    s <- object$sig
+    r <- unname(object$effects[c(
+      "r_effectsize", "r_contrast", "r_alerting"
+    )])
+    r_squared <- c(
+      s["ss_kontrast"] / s["ss_total"],
+      s["ss_kontrast"] / (s["ss_kontrast"] + s["ss_within"]),
+      s["ss_kontrast"] / s["ss_between"]
+    )
+    data.frame(
+      Measure = c("r effect size", "r contrast", "r alerting"),
+      Estimate = format_statistic(r),
+      `Squared / explained proportion` = format_statistic(r_squared),
+      `Sum-of-squares definition` = c(
+        "SS contrast / SS total",
+        "SS contrast / (SS contrast + SS within)",
+        "SS contrast / SS between"
+      ),
+      check.names = FALSE
+    )
+  } else {
+    data.frame(
+      Measure = c("r contrast", "g contrast"),
+      Estimate = format_statistic(unname(object$effects)),
+      Interpretation = c(
+        "Correlation-form effect linked to the contrast test",
+        "Standardized mean of participants' L values"
+      ),
+      check.names = FALSE
+    )
+  }
+}
+
+#' Convert a data frame to a small Bootstrap-compatible HTML table
+#' @noRd
+cofad_html_table <- function(x) {
+  shiny::tags$table(
+    class = "table table-striped table-condensed",
+    shiny::tags$thead(shiny::tags$tr(lapply(names(x), shiny::tags$th))),
+    shiny::tags$tbody(lapply(seq_len(nrow(x)), function(i) {
+      shiny::tags$tr(lapply(x[i, , drop = TRUE], shiny::tags$td))
+    }))
+  )
+}
+
+#' Plot the partition of total variation
+#' @noRd
+plot_variance_partition <- function(object) {
+  s <- object$sig
+  components <- c(
+    "Contrast" = unname(s["ss_kontrast"]),
+    "Other between-group" = unname(s["ss_between"] - s["ss_kontrast"]),
+    "Within-group" = unname(s["ss_within"])
+  )
+  components[abs(components) < sqrt(.Machine$double.eps)] <- 0
+  proportions <- components / unname(s["ss_total"])
+  colors <- c("#E69F00", "#56B4E9", "#BDBDBD")
+
+  old_par <- graphics::par(mar = c(4, 1, 3.5, 1))
+  on.exit(graphics::par(old_par), add = TRUE)
+  mids <- graphics::barplot(
+    as.matrix(proportions), horiz = TRUE, axes = FALSE, border = NA,
+    col = colors, xlim = c(0, 1), ylim = c(0, 1.6), width = 0.45
+  )
+  graphics::axis(
+    1, at = seq(0, 1, by = 0.2),
+    labels = paste0(seq(0, 100, by = 20), "%")
+  )
+  graphics::mtext("Proportion of total sum of squares", side = 1, line = 2.6)
+  centers <- cumsum(proportions) - proportions / 2
+  labels <- ifelse(
+    proportions >= 0.04,
+    paste0(round(100 * proportions, 1), "%"), ""
+  )
+  graphics::text(centers, mids, labels = labels, cex = 0.9)
+  graphics::legend(
+    "top", legend = names(components), fill = colors, border = NA,
+    horiz = TRUE, bty = "n", inset = c(0, -0.02), xpd = TRUE, cex = 0.85
+  )
+  invisible(components)
 }
 
 #' Calculate lambdas for two competing hypotheses
@@ -160,7 +368,6 @@ cite <- function() {
 #'                        labels = c("A", "B", "C"))
 #' lambda2
 #' @export
-#' @importFrom lifecycle deprecate_warn
 lambda_diff <- function(lambda_favored = NULL,
                         lambda_rival = NULL,
                         labels = NULL,
@@ -169,13 +376,17 @@ lambda_diff <- function(lambda_favored = NULL,
 
   # Deprecation handling
   if (!is.null(lambda_preferred)) {
-    lifecycle::deprecate_warn("0.4.3", "lambda_diff(lambda_preferred)",
-                              "lambda_diff(lambda_favored)")
+    warning(
+      "`lambda_preferred` is deprecated; use `lambda_favored` instead.",
+      call. = FALSE
+    )
     lambda_favored <- lambda_preferred
   }
   if (!is.null(lambda_competing)) {
-    lifecycle::deprecate_warn("0.4.3", "lambda_diff(lambda_competing)",
-                              "lambda_diff(lambda_rival)")
+    warning(
+      "`lambda_competing` is deprecated; use `lambda_rival` instead.",
+      call. = FALSE
+    )
     lambda_rival <- lambda_competing
   }
 
@@ -221,7 +432,11 @@ zscale <- function(x) {
   sqrt(n / (n - 1)) * (x - mean(x)) / sd(x)
 }
 
-#' @importFrom tibble lst
 cn <- function(...) {
-  unlist(tibble::lst(...))
+  values <- list(...)
+  expressions <- as.character(substitute(list(...)))[-1]
+  supplied_names <- names(values)
+  if (is.null(supplied_names)) supplied_names <- rep("", length(values))
+  names(values) <- ifelse(nzchar(supplied_names), supplied_names, expressions)
+  unlist(values)
 }

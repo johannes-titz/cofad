@@ -1,4 +1,4 @@
-#' Starts the mimosa shiny app
+#' Start the cofad Shiny app
 #'
 #' @import shiny
 #' @export

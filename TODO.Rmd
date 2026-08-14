@@ -2,77 +2,67 @@
 output: github_document
 ---
 
-# todos
+# cofad TODO
 
-[] strwrap print -- does not work!
+## Data and numerical verification
 
-[] KI für Korrelationen
-[] abbildung?
-[] jamovi
-[] convert to tags, check data type when there are two classes, currently this 
-is only a hot-fix!
+- [ ] Rebuild `rosenthal_tbl68` from Table 6.8. The packaged `between` column
+  currently alternates girl/boy within participant, whereas the source describes
+  the first four children as female and the last four as male. Add a regression
+  test for the corrected participant-to-group assignment.
+- [ ] Systematically compare every packaged example and expected statistic with
+  the Rosenthal and Sedlmeier source tables. Record intentional differences such
+  as rounding, corrected apparent book errors, and one- versus two-sided tests.
+- [ ] Add source/provenance scripts for packaged data that cannot currently be
+  regenerated directly from `data-raw/`.
 
-# paar hinweise zur reaktivität
+## Design detection
 
-mit reactive$.. , also eigenen reactive werten hat man viel mehr flexibilität; man kann z. B. beim laden der daten alles auf NULL setzen; das geht z. b. nicht bei inputs, oder doch? über updateTextInput updateNumericInput, aber was ist mit sortable usw.?
+- [ ] Exercise `detect_design()` on additional incomplete, unbalanced, and
+  irregular real-world data. Keep ambiguous cases conservative and document
+  cases that require manual selection.
+- [ ] Add UI explanations of the detector diagnostics when a suggestion has low
+  confidence, rather than displaying only the aggregate confidence percentage.
+- [ ] In Mimosa, benchmark the existing structural ID/level detector against an
+  optional covariance/ICC diagnostic. Treat covariance as supporting evidence,
+  not as a replacement for crossing and within-group constancy checks.
 
-# bug
+## Shiny and webR
 
-wenn neue datei geladen wird mit gleichen var-names, dann bring tdas ziehen (drag) nichts, es wird offensichtlich kein observeEvent rausgehauen.
+- [ ] Manually acceptance-test editing the model and contrast tables after
+  repeated file uploads, especially when two files have identical column names.
+- [ ] Add browser regression coverage for table edits, validation messages, the
+  detailed F table, and the variance-partition figure once the browser test
+  runner is sufficiently reliable.
+- [ ] Monitor the deployed Shinylive/webR build, measure cached startup and
+  mobile-browser behavior, and investigate reducing the current 65 MiB
+  static bundle and approximately 72-second cold start.
+- [ ] Remove the obsolete sortable/drag-and-drop helper code after confirming it
+  is not used by downstream code.
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+## Testing and releases
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
-```
+- [ ] Raise coverage in the remaining branches of `server.R` and
+  `calc_contrast.R`, prioritizing error handling and malformed uploaded data.
+- [ ] Consider enforcing a minimum coverage percentage in CI after the new
+  baseline has proved stable.
+- [ ] Run release checks on current, old-release, and development R, including
+  Windows and macOS, before the next CRAN submission.
 
-# cofad
+## Longer-term ideas
 
-<!-- badges: start -->
-<!-- badges: end -->
+- [ ] Add confidence intervals for correlation-based effect sizes.
+- [ ] Investigate a jamovi integration.
+- [ ] Improve packaged-data names without breaking existing users; prefer aliases
+  and deprecation periods over renaming objects directly.
 
-The goal of cofad is to ...
+## Completed in the August 2026 audit
 
-## Installation
-
-You can install the released version of cofad from [CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("cofad")
-```
-
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-library(cofad)
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
-
-# TODOS
-
-- improve names of data sets
-- document data sets
-- load data sets in shiny as examples
+- [x] Restore editable table-based model and contrast inputs.
+- [x] Automatically suggest between-, within-, ID-, and outcome-variable roles.
+- [x] Add detailed SS/QS, F, effect-size, and variance-partition output.
+- [x] Load packaged examples in the Shiny app.
+- [x] Add in-process Shiny tests and ordinary package coverage.
+- [x] Add an optional Shinylive/webR build.
+- [x] Configure automatic GitHub Pages deployment for the webR app.
+- [x] Add the 2025 tutorial and JOSS software citation.

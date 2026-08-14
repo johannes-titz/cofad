@@ -3,6 +3,7 @@
 ^cran-comments.md
 ^data-raw$
 ^README\.Rmd$
+^README\.html$
 ^TODO.Rmd$
 ^apa.csl$
 ^clean_bib.R$
@@ -28,3 +29,5 @@
 ^gitstats\.txt$
 ^logo$
 ^CRAN-SUBMISSION$
+^docs$
+^_shinylive_app$

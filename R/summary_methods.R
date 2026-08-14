@@ -49,7 +49,7 @@ summary.cofad_bw <- function(object, ...) {
 #' Summary of within subject design contrast analysis
 #'
 #' @param object output of calc_contrast
-#' @param ci confidence intervall for composite Score (L-Values)
+#' @param ci confidence interval for the composite score (L values)
 #' @param ... further arguments
 #' @return Displays type of contrast analysis, lambdas, t-table and typical
 #'   effect sizes. If you assign this to a variable, it will be a list with the

@@ -21,9 +21,10 @@ Sedlmeier, P., & Renkewitz, F. (2018). Forschungsmethoden und
 data(sedlmeier_p525)
 }
 \description{
-Example 16.2, table 16.1 in Sedlmeier & Renkewitz (2018). Fictitious data set
+Example 16.2, Table 16.1 in Sedlmeier & Renkewitz (2018). Fictitious data set
 with 15 boys divided into three groups (no training, boys-specific material,
 girls-specific training material). The DV is the number of solved problem
-(similar to the training).
+tasks. Table 16.2 in the book repeats these observations and adds the three
+sets of contrast weights discussed in the example.
 }
 \keyword{datasets}

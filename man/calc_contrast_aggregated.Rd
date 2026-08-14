@@ -4,7 +4,7 @@
 \alias{calc_contrast_aggregated}
 \title{Calculate between contrast analysis from aggregated data (means, sds and ns)}
 \usage{
-calc_contrast_aggregated(means, sds, ns, between, lambda_between, data)
+calc_contrast_aggregated(means, sds, ns, between, lambda_between, data = NULL)
 }
 \arguments{
 \item{means}{numeric vector of mean values for every condition}
@@ -31,12 +31,16 @@ an object of type cofad_bw, including p-value, F-value, contrast
 Calculate between contrast analysis from aggregated data (means, sds and ns)
 }
 \examples{
-library(dplyr)
-furr_agg <- furr_p4 \%>\%
-  group_by(major) \%>\%
-  summarize(mean = mean(empathy), sd = sd(empathy), n = n())
-lambdas = c("psychology" = 1, "education" = -1, "business" = 0,
-            "chemistry" = 0)
+furr_agg <- aggregate(
+  empathy ~ major, furr_p4,
+  function(x) c(mean = mean(x), sd = sd(x), n = length(x))
+)
+furr_agg <- data.frame(
+  major = furr_agg$major, mean = furr_agg$empathy[, "mean"],
+  sd = furr_agg$empathy[, "sd"], n = furr_agg$empathy[, "n"]
+)
+lambdas <- c("psychology" = 1, "education" = -1, "business" = 0,
+             "chemistry" = 0)
 calc_contrast_aggregated(mean, sd, n, major, lambdas, furr_agg)
 
 }

@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{output of calc_contrast}
 
-\item{ci}{confidence intervall for composite Score (L-Values)}
+\item{ci}{confidence interval for the composite score (L values)}
 
 \item{...}{further arguments}
 }

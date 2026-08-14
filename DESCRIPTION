@@ -19,23 +19,21 @@ URL: https://github.com/johannes-titz/cofad
 Depends: 
     R (>= 3.5)
 Imports: 
-    dplyr,
-    Hmisc,
+    foreign,
     magrittr,
-    readr,
     rhandsontable,
-    rlang,
     shiny,
     shinydashboard,
     shinyjs,
-    stringr,
-    tibble,
-    utils,
-    lifecycle
+    utils
 Suggests:
+    dplyr,
+    readr,
     rmarkdown,
+    shinylive,
     shinytest2,
     testthat (>= 3.0.0)
 Encoding: UTF-8
+Language: en-US
 LazyData: true
-RoxygenNote: 7.3.2
+Config/roxygen2/version: 8.0.0

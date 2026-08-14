@@ -18,17 +18,21 @@
 #'   Cambridge University Press.
 #'
 #' @examples
-#' library(dplyr)
-#' furr_agg <- furr_p4 %>%
-#'   group_by(major) %>%
-#'   summarize(mean = mean(empathy), sd = sd(empathy), n = n())
-#' lambdas = c("psychology" = 1, "education" = -1, "business" = 0,
-#'             "chemistry" = 0)
+#' furr_agg <- aggregate(
+#'   empathy ~ major, furr_p4,
+#'   function(x) c(mean = mean(x), sd = sd(x), n = length(x))
+#' )
+#' furr_agg <- data.frame(
+#'   major = furr_agg$major, mean = furr_agg$empathy[, "mean"],
+#'   sd = furr_agg$empathy[, "sd"], n = furr_agg$empathy[, "n"]
+#' )
+#' lambdas <- c("psychology" = 1, "education" = -1, "business" = 0,
+#'              "chemistry" = 0)
 #' calc_contrast_aggregated(mean, sd, n, major, lambdas, furr_agg)
 #'
 #' @export
 calc_contrast_aggregated <- function(means, sds, ns, between, lambda_between,
-                                     data) {
+                                     data = NULL) {
   if (!is.null(data) & (is.data.frame(data))) {
     arguments <- as.list(match.call())
     means <- eval(arguments$means, data)
@@ -49,7 +53,7 @@ calc_contrast_aggregated <- function(means, sds, ns, between, lambda_between,
 
   df_between <- length(means) - 1
   df_inn <- sum(ns) - length(means)
-  ms_within <- sum(sds^2 * ns) / (sum(ns))
+  ms_within <- sum((ns - 1) * sds^2) / df_inn
   ss_within <- ms_within * df_inn
   ss_between <- ss(means, ns)
   ss_total <- ss_between + ss_within
@@ -75,7 +79,9 @@ calc_contrast_aggregated <- function(means, sds, ns, between, lambda_between,
   effects <- cn(r_effectsize, r_contrast, r_alerting)
   desc <- matrix(c(means, sds / sqrt(ns)), ncol = 2, byrow = F)
   colnames(desc) <- c("mean_i", "se_i")
-  out_l <- tibble::lst(sig, desc, lambda_between, effects)
+  out_l <- list(
+    sig = sig, desc = desc, lambda_between = lambda_between, effects = effects
+  )
   class(out_l) <- c("cofad_bw")
   structure(out_l)
   return(out_l)
@@ -87,5 +93,5 @@ calc_contrast_aggregated <- function(means, sds, ns, between, lambda_between,
 #' @param n vector of sample sizes values
 #' @noRd
 ss <- function(x, n) {
-  sum(n * (x - mean(x))^2)
+  sum(n * (x - stats::weighted.mean(x, n))^2)
 }

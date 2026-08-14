@@ -30,8 +30,8 @@ does not sum up to zero, this will be done automatically.}
 dependent groups. This must be a factor.}
 
 \item{lambda_within}{contrast must be a named numeric.
-Names must match the levels of \code{between}. If
-\code{lambda_between}
+Names must match the levels of \code{within}. If
+\code{lambda_within}
 does not sum up to zero, this will be done automatically.}
 
 \item{ID}{deprecated, use id instead}
@@ -44,7 +44,7 @@ containing \code{dv} and groups.}
 }
 \value{
 an object of type cofad_bw or cofad_wi or cofad_mx, including
-  p-value, F-value, contrast weights, different effect sizes. Call summary
+  p-value, F-value, contrast weights, and different effect sizes. Call summary
   on this object to get a nice overview of all relevant statistics. Call
   print to get a short text that can be used for a report.
 }
@@ -59,7 +59,7 @@ Note that cofad returns one-sided p-values for t-tests.
 }
 \examples{
 # Example for between-subjects design Table 3.1 from
-# Rosenthal, Rosnow and Rubin (2001)
+# Rosenthal, Rosnow and Rubin (2000)
 
 data(rosenthal_tbl31)
 contr_bw <- calc_contrast(
@@ -90,7 +90,7 @@ contr_wi
 summary(contr_wi, ci = .90)
 
 # Example for mixed-design Table 5.3 from
-# Rosenthal, Rosnow and Rubin (2001)
+# Rosenthal, Rosnow and Rubin (2000)
 
 data(rosenthal_tbl53)
 

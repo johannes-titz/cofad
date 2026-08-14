@@ -20,6 +20,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Johannes Titz \email{johannes.titz@gmail.com}
   \item Markus Burkhardt \email{markus.burkhardt@psychologie.tu-chemnitz.de}
 }
 

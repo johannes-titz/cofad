@@ -154,10 +154,11 @@
 
 #' Problem solving data set by Sedlmeier & Renkewitz (2018)
 #'
-#' Example 16.2, table 16.1 in Sedlmeier & Renkewitz (2018). Fictitious data set
+#' Example 16.2, Table 16.1 in Sedlmeier & Renkewitz (2018). Fictitious data set
 #' with 15 boys divided into three groups (no training, boys-specific material,
 #' girls-specific training material). The DV is the number of solved problem
-#' (similar to the training).
+#' tasks. Table 16.2 in the book repeats these observations and adds the three
+#' sets of contrast weights discussed in the example.
 #'
 #' @format a data frame with 15 rows and 3 columns
 #' \describe{
@@ -178,7 +179,7 @@
 #' This dataset originates from a study conducted as part of a research seminar
 #' in the Psychology B.Sc. program of the University of Cologne. The study
 #' participants learned a list of 20 non-associated word pairs. Each half of the
-#' word pair was associated with one of two sources (imaginating the word pair
+#' word pair was associated with one of two sources (imagining the word pair
 #' in the sky or underwater). The final memory test (cued recall) was conducted
 #' two days later. Cued recall means that one word of the word pair was
 #' presented, and the participant had to recall the other word. The participants
@@ -188,7 +189,7 @@
 #' @format a data frame with 60 rows and 3 variables:
 #' \describe{
 #'   \item{subject}{the participant's id}
-#'   \item{condition}{the between-partipant condition}
+#'   \item{condition}{the between-participant condition}
 #'   \item{recalled}{the number of words recalled in the cued-recall test}
 #' }
 #'

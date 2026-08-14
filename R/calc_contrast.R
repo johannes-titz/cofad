@@ -10,8 +10,8 @@
 #' @param within independent variable which divides the data into
 #' dependent groups. This must be a factor.
 #' @param lambda_within contrast must be a named numeric.
-#' Names must match the levels of \code{between}. If
-#' \code{lambda_between}
+#' Names must match the levels of \code{within}. If
+#' \code{lambda_within}
 #' does not sum up to zero, this will be done automatically.
 #' @param id identifier for cases or subjects is needed
 #' for within- and mixed contrast analysis.
@@ -24,7 +24,7 @@
 #' Note that cofad returns one-sided p-values for t-tests.
 #'
 #' @return an object of type cofad_bw or cofad_wi or cofad_mx, including
-#'   p-value, F-value, contrast weights, different effect sizes. Call summary
+#'   p-value, F-value, contrast weights, and different effect sizes. Call summary
 #'   on this object to get a nice overview of all relevant statistics. Call
 #'   print to get a short text that can be used for a report.
 #' @references Rosenthal, R., Rosnow, R.L., & Rubin, D.B. (2000). Contrasts and
@@ -32,7 +32,7 @@
 #'   Cambridge University Press.
 #' @examples
 #' # Example for between-subjects design Table 3.1 from
-#' # Rosenthal, Rosnow and Rubin (2001)
+#' # Rosenthal, Rosnow and Rubin (2000)
 #'
 #' data(rosenthal_tbl31)
 #' contr_bw <- calc_contrast(
@@ -63,7 +63,7 @@
 #' summary(contr_wi, ci = .90)
 #'
 #' # Example for mixed-design Table 5.3 from
-#' # Rosenthal, Rosnow and Rubin (2001)
+#' # Rosenthal, Rosnow and Rubin (2000)
 #'
 #' data(rosenthal_tbl53)
 #'
@@ -191,6 +191,13 @@ calc_contrast <- function(dv,
     warning("NAs in id are omitted")
   }
 
+  between <- if (is.factor(between)) droplevels(between) else between
+  within <- if (is.factor(within)) droplevels(within) else within
+  id <- if (is.factor(id)) droplevels(id) else id
+  if (!is.null(within)) {
+    validate_repeated_structure(id, within, between)
+  }
+
   if (case == "Analysis between groups") {
     return(run_between_analysis(dv, between, lambda_between))
   }
@@ -212,6 +219,31 @@ calc_contrast <- function(dv,
   }
 }
 
+validate_repeated_structure <- function(id, within, between = NULL) {
+  if (is.null(id)) return(invisible(TRUE))
+  cells <- table(id, within)
+  if (any(cells > 1)) {
+    stop(
+      "Each participant must have at most one observation per within-subjects level."
+    )
+  }
+  if (any(cells == 0)) {
+    stop(
+      "The repeated-measures data must contain every participant-by-within-level cell."
+    )
+  }
+  if (!is.null(between)) {
+    groups_per_id <- tapply(
+      as.character(between), id,
+      function(x) length(unique(x[!is.na(x)]))
+    )
+    if (any(groups_per_id != 1)) {
+      stop("Each participant must belong to exactly one between-subjects group.")
+    }
+  }
+  invisible(TRUE)
+}
+
 #' Between contrast analysis
 #'
 #' internal function
@@ -221,20 +253,10 @@ calc_contrast <- function(dv,
 run_between_analysis <- function(dv, between, lambda_between) {
   lambda_between <- lambda_between[levels(between)]
   ni <- table(between)
-  n_total <- sum(table(dv))
+  n_total <- length(dv)
   k <- length(ni)
   df_inn <- n_total - k
   df_contrast <- 1
-  lambda_between_row <- rep(NA, sum(ni))
-  for (i in seq(lambda_between)) {
-    lambda_between_row <- replace(
-      x = lambda_between_row,
-      list = which(between == names(lambda_between)[i]),
-      lambda_between[i]
-    )
-  }
-  var_within <- tapply(X = dv, INDEX = between, FUN = var)
-  ms_within <- mean(var_within, na.rm = T)
   mean_i <- tapply(X = dv, INDEX = between, FUN = mean)
   se_i <- tapply(X = dv, INDEX = between, FUN = sd) / sqrt(ni)
 
@@ -243,23 +265,23 @@ run_between_analysis <- function(dv, between, lambda_between) {
   L <- sum(mean_i * lambda_between)
   ss_kontrast <- L^2/(sum(lambda_between^2 / ni))
   ss_total <- sum((dv - mean(dv)) ** 2)
-  ss_between <- sum(ni * (mean_i - mean(mean_i))^2)
-  ss_within <- ss_total - ss_between
+  ss_between <- sum(ni * (mean_i - mean(dv))^2)
+  ss_within <- sum((dv - mean_i[between])^2)
+  ms_within <- ss_within / df_inn
   f_contrast <- ((L ** 2) / (ms_within)) *
     (1 / sum((lambda_between ** 2) / ni))
   p_contrast <- pf(f_contrast, 1, df_inn, lower.tail = F)
-  r_effectsize <- cor(lambda_between_row, dv)
-  if (sd(mean_i) == 0) {
+  direction <- sign(L)
+  r_effectsize <- direction * sqrt(ss_kontrast / ss_total)
+  if (ss_between == 0) {
     r_alerting <- NA
     r_contrast <- NA
     warning("SD of group means is zero")
   } else {
-    r_alerting <- cor(lambda_between, mean_i)
-    sign_r_contrast <- sign(r_effectsize)
-    r_contrast <- sign_r_contrast * (r_effectsize * r_alerting) /
-      (sqrt(
-        r_effectsize ** 2 * r_alerting ** 2 - r_effectsize ** 2
-        + r_alerting ** 2))
+    r_alerting <- direction * sqrt(ss_kontrast / ss_between)
+    r_contrast <- direction * sqrt(
+      ss_kontrast / (ss_kontrast + ss_within)
+    )
   }
   sig <- cn(f_contrast, p_contrast, df_contrast, df_inn, ms_within,
             ss_between, ss_kontrast, ss_total, ss_within,
@@ -267,7 +289,9 @@ run_between_analysis <- function(dv, between, lambda_between) {
   effects <- cn(r_effectsize, r_contrast, r_alerting)
   desc <- matrix(c(mean_i, se_i), ncol = 2, byrow = F)
   colnames(desc) <- c("mean_i", "se_i")
-  out_l <- tibble::lst(sig, desc, lambda_between, effects)
+  out_l <- list(
+    sig = sig, desc = desc, lambda_between = lambda_between, effects = effects
+  )
   class(out_l) <- c("cofad_bw")
   structure(out_l)
   return(out_l)
@@ -421,7 +445,8 @@ check_if_factor <- function(variable) {
 #'
 #' @export
 calc_r_alerting <- function(r_contrast, r_effectsize) {
-  numerator <- - r_effectsize * r_contrast
+  direction <- sign(r_effectsize)
+  numerator <- direction * abs(r_effectsize * r_contrast)
   denominator <- sqrt((1 + r_effectsize^2) * r_contrast^2 - r_effectsize^2)
   r_alerting <- as.numeric(numerator / denominator)
   return(cn(r_alerting))
@@ -466,10 +491,10 @@ calc_r_contrast <- function(r_alerting, r_effectsize) {
 #'
 #' @export
 calc_r_effectsize <- function(r_alerting, r_contrast) {
-  numerator <- - r_contrast * r_alerting
+  direction <- sign(r_contrast)
+  numerator <- direction * abs(r_contrast * r_alerting)
   denominator <- sqrt(- (r_contrast^2) * r_alerting^2 + r_contrast^2 +
                         r_alerting^2)
   r_effectsize <- as.numeric(numerator / denominator)
   return(cn(r_effectsize))
 }
-

@@ -4,19 +4,41 @@ Cofad User Guide
 # <img src='logo/cover.png' align='right' height='100px'/>
 
 [![R-CMD-check](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml)
+[![webR
+app](https://github.com/johannes-titz/cofad/actions/workflows/deploy-shinylive.yaml/badge.svg)](https://johannes-titz.github.io/cofad/)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/package=cofad)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.03822/status.svg)](https://doi.org/10.21105/joss.03822)
 
 <!-- [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116) -->
 
-To cite cofad in publications, please use the following reference:
+## Citation
 
-Titz J. & Burkhardt M. (2021). cofad: An R package and shiny app for
-contrast analysis. Journal of Open Source Software, 6(67), 3822,
+If you use `cofad`, please cite both the current tutorial and the
+software paper:
+
+Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for
+competing hypotheses: A tutorial using the R package cofad. *Behavior
+Research Methods, 57*, Article 326.
+<https://doi.org/10.3758/s13428-025-02833-w>
+
+Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for
+contrast analysis. *Journal of Open Source Software, 6*(67), 3822.
 <https://doi.org/10.21105/joss.03822>
 
 For LaTeX users, a BibTeX entry is provided below:
+
+    @article{henninger2025,
+      doi = {10.3758/s13428-025-02833-w},
+      url = {https://doi.org/10.3758/s13428-025-02833-w},
+      year = {2025},
+      volume = {57},
+      pages = {326},
+      author = {Mirka Henninger and Simone Malejka and Johannes Titz},
+      title = {Contrast analysis for competing hypotheses: A tutorial using the
+               R package cofad},
+      journal = {Behavior Research Methods}
+    }
 
     @article{titz2021, 
       doi = {10.21105/joss.03822}, 
@@ -50,9 +72,8 @@ This focus on effects is reflected in two key ways:
     and
     ![r\_\mathrm{alerting}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Balerting%7D "r_\mathrm{alerting}").
 
-2.  These effect sizes relate not just to the data, but to the
-    hypothesis being tested—the stronger the effect, the more it
-    supports the hypothesis.
+2.  These effect sizes describe different aspects of how closely the
+    observed data align with the specified contrast.
 
 Cofad also makes it possible to compare two competing hypotheses
 directly (experimentum crucis) by examining the effect sizes associated
@@ -72,8 +93,8 @@ within-subjects, and mixed designs using R.
 
 ## Installation
 
-Cofad has two components, the plain R package and a shiny-app that
-offers an intuitive graphical user interface.
+Cofad has two components: the R package and a Shiny app that offers a
+graphical user interface.
 
 If you just want to use the cofad-app, you do not need to install it.
 Just go to <https://cofad.titz.science> and use it there. An example
@@ -86,8 +107,8 @@ locally, install it from CRAN:
 install.packages("cofad")
 ```
 
-Alternatively, you can also install the development version from github
-(you need the package remotes for this):
+Alternatively, you can install the development version from GitHub (you
+need the `remotes` package for this):
 
 ``` r
 # install.packages("remotes") # uncomment if you do not have devtools installed
@@ -102,22 +123,26 @@ You can also run the app:
 cofad::run_app()
 ```
 
-<!-- If you have any problems installing cofad, check that your R version is up to date (currently R version 4.5.1 (2025-06-13)). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/. -->
+<!-- If you have any problems installing cofad, check that your R version is up to date (currently R version 4.6.1 (2026-06-24)). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/. -->
 
 <!-- If it still does not work drop an e-mail at johannes at titz.science or at johannes.titz at gmail.com. -->
 
 ## Using cofad
 
-Before we start: Your data has to be in the long-format (also referred
-to as narrow or tidy)! If you do not know what this means, please check
-the short description of the Wikipedia-article:
+Before you start, your data must be in long format (also referred to as
+narrow or tidy format). If you do not know what this means, see the
+short description in the Wikipedia article:
 <https://en.wikipedia.org/wiki/Wide_and_narrow_data>
 
-### Graphical-User-Interface
+### Graphical user interface
 
-The graphical-user-interface is self-explanatory. Just load your data
-and drag the variables to the correct position. At the moment you can
-only read .sav (SPSS) and .csv files.
+Load a `.csv` or `.sav` (SPSS) file. Cofad suggests the dependent
+variable and any between-subjects factor, within-subjects factor, and
+participant ID from the data’s replication and nesting structure. Check
+these editable suggestions in the model table, then enter the contrast
+weights in the corresponding lambda tables. The detector is
+conservative: it does not infer scientific intent from correlations and
+may leave ambiguous roles empty.
 
 As an example go to `https://cofad.titz.science/example` which will load
 a data set from Rosenthal et al. (2000) (Table 5.3). The cognitive
@@ -128,28 +153,23 @@ There are two hypotheses:
 
 1.  cognitive ability linearly increases over time (within)
     (![\lambda\_\mathrm{1} = -3, \lambda\_\mathrm{2} = -1, \lambda\_\mathrm{3} = 1, \lambda\_\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3"))
-2.  cognitive ability linearly increase over age groups (between)
+2.  cognitive ability linearly increases over age groups (between)
     (![\lambda\_\mathrm{Age 8} = -1, \lambda\_\mathrm{Age 10} = 0, \lambda\_\mathrm{Age12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge12%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1"))
 
-Now drag the variables to the correct position and set the lambdas
-accordingly:
+Select the variables in the model table and edit the default contrast
+weights in the lambda tables. The app reports the contrast, a detailed
+variance decomposition, the three between-subjects effect sizes and
+their squared values, and a plot that partitions total variation:
 
-<figure>
-<img src="gui1b.png" alt="cofad GUI" />
-<figcaption aria-hidden="true">cofad GUI</figcaption>
-</figure>
+A mixed design is ideal for trying the cofad app. You can construct a
+separate within-subjects model by setting the between-subjects factor to
+`NONE`. Likewise, set the within-subjects factor and participant ID to
+`NONE` to obtain a between-subjects model.
 
-The result should look like this:
-
-<figure>
-<img src="gui2b.png" alt="cofad GUI" />
-<figcaption aria-hidden="true">cofad GUI</figcaption>
-</figure>
-
-A mixed design is ideal for testing out the cofad-app. You can now
-construct a separate within-model by removing the between variable
-“age”. Then you can construct a separate between-model by removing
-“time” from within and dragging “age” back into the between panel.
+You can also inspect the same suggestion from R with
+`detect_design(your_data)`. It reports structural diagnostics and a
+confidence score, but its result should always be verified against the
+study design.
 
 The graphical user interface will suffice for most users, but some will
 prefer to use the scripting capabilities of R. In the next sections we
@@ -285,12 +305,13 @@ ca
 #> We ran a contrast analysis for the following between contrasts: business = -1; chemistry = -1; education = 1; psychology = 1. This resulted in statistics of F(1,16) = 57.778; p = 0.00000107 and an effect magnitude of r_effectsize = 0.847.
 ```
 
-When you compare the numbers to the ones presented in Furr (2004), you
-will find the same result, except that Furr (2004) uses t-values and the
-p-values are halved. This is because in contrast analysis you can always
-test one-sided. The assumption is that your lambdas covariate positively
-with the mean values, not that they either covariate positively or
-negatively. Thus, you can always halve the p-value from the F-Test.
+When you compare the numbers with those presented in Furr (2004), you
+will find the same result, except that Furr (2004) uses a *t* statistic
+and a directional, one-sided *p* value. A one-sided test is appropriate
+when the direction was specified in advance. The *F* test itself is
+non-directional; for a single contrast, the corresponding directional
+test uses the signed value of
+![t = \sqrt{F}](https://latex.codecogs.com/png.latex?t%20%3D%20%5Csqrt%7BF%7D "t = \sqrt{F}").
 
 Now, imagine we have a more fun hypothesis and not just mean
 differences. From an elaborate theory we could derive that the means
@@ -380,15 +401,15 @@ conducting the analysis by hand, we can see why:
 mtr <- matrix(sedlmeier_p537$reading_test, ncol = 4)
 lambdas <- c(1.25, 0.25, -0.75, -0.75)
 lc1 <- mtr %*% lambdas
-t.test(lc1)
+t.test(lc1, alternative = "greater")
 #> 
 #>  One Sample t-test
 #> 
 #> data:  lc1
-#> t = 5.2689, df = 7, p-value = 0.001162
-#> alternative hypothesis: true mean is not equal to 0
+#> t = 5.2689, df = 7, p-value = 0.000581
+#> alternative hypothesis: true mean is greater than 0
 #> 95 percent confidence interval:
-#>  3.238361 8.511639
+#>  3.762478      Inf
 #> sample estimates:
 #> mean of x 
 #>     5.875
@@ -414,7 +435,7 @@ There are two hypotheses:
 
 1.  cognitive ability linearly increases over time (within)
     (![\lambda\_\mathrm{1} = -3, \lambda\_\mathrm{2} = -1, \lambda\_\mathrm{3} = 1, \lambda\_\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3"))
-2.  cognitive ability linearly increase over age groups (between)
+2.  cognitive ability linearly increases over age groups (between)
     (![\lambda\_\mathrm{Age 8} = -1, \lambda\_\mathrm{Age 10} = 0, \lambda\_\mathrm{Age12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge12%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1"))
 
 Let’s have a look at the data and calculation:
@@ -501,9 +522,9 @@ sedlmeier_p525
 #> 15   2      MT     -1
 ```
 
-Where lsg is the number of solved exercises and the groups are KT = no
-training, JT = boys-specific training, MT=girls-specific training. Two
-hypotheses are competing:
+Here, `lsg` is the number of solved exercises, and the groups are KT =
+no training, JT = boys-specific training, and MT = girls-specific
+training. Two hypotheses are competing:
 
 - -2, 3, -1 (boys benefit from boys-specific training)
 - -2, 1, 1 (boys benefit from training, independently of the type of
@@ -564,10 +585,12 @@ ca_competing
 ```
 
 Here, we rounded the lambdas so that the result is similar to the one in
-Sedlmeier & Renkewitz (2013), who found t=1.137 and r_effectsize=0.26.
-The effet size is the same. For the t-value, we need to take the root of
-the F-value, 1.291, which is 1.136. There is still a slight difference
-to the original result of 1.137, which is likely due to rounding errors.
+Sedlmeier & Renkewitz (2013), who found *t* = 1.137 and
+![r\_\mathrm{effectsize} = 0.26](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D%20%3D%200.26 "r_\mathrm{effectsize} = 0.26").
+The effect size is the same. For the *t* value, we take the signed
+square root of the *F* value, 1.291, which is 1.136. There is still a
+slight difference from the original result of 1.137, which is likely due
+to rounding errors.
 
 The same also works for within-designs. The reading comprehension data
 from above can serve as an example. Reading ability was assessed for
@@ -669,11 +692,13 @@ contr_wi
 #> We ran a contrast analysis for the following within contrasts: classic = 0.33; jazz = 0.33; white noise = -0.88; without music = 0.22. This resulted in statistics of t(7) = -3.77; p = 0.9965 and an effect magnitude of g_effectsize = -1.333. Attention: Contrast fits in the opposite direction!
 ```
 
-Sedlmeier & Renkewitz (2013) found a t-value of -3.75 and a g_contrast
-of -1.33. Again, there is a slight difference for the t-value when
-compared to our calculation, likely due to rounding errors. Further
-note, that hypothesis 1 fits better because the statistic and effect are
-negative.
+Sedlmeier & Renkewitz (2013) found a *t* value of -3.75 and a
+![g\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?g_%5Cmathrm%7Bcontrast%7D "g_\mathrm{contrast}")
+of -1.33. Again, there is a slight difference in the *t* value compared
+with our calculation, likely due to rounding errors. The negative
+statistic and effect indicate that hypothesis 1 fits better, given that
+the difference contrast above was defined as hypothesis 2 minus
+hypothesis 1.
 
 ## Aggregated Data
 
@@ -684,10 +709,16 @@ cofad. For instance, if we take our first example and aggregate it, we
 can still run the contrast analysis:
 
 ``` r
-library(dplyr)
-furr_agg <- furr_p4 %>% 
-  group_by(major) %>% 
-  summarize(mean = mean(empathy), sd = sd(empathy), n = n())
+furr_agg <- aggregate(
+  empathy ~ major, furr_p4,
+  function(x) c(mean = mean(x), sd = sd(x), n = length(x))
+)
+furr_agg <- data.frame(
+  major = furr_agg$major,
+  mean = furr_agg$empathy[, "mean"],
+  sd = furr_agg$empathy[, "sd"],
+  n = furr_agg$empathy[, "n"]
+)
 lambdas = c("psychology" = 1, "education" = -1, "business" = 0, "chemistry" = 0)
 calc_contrast_aggregated(mean, sd, n, major, lambdas, furr_agg)
 #> 
@@ -711,12 +742,31 @@ Note that this will only work for between-subjects designs.
 
 ## Testing
 
-The current test coverage for the package stands at 88%. Within `cofad`,
-there exists a Shiny app, subjected to testing through shinytest2.
-Regrettably, this testing approach proves less robust, leading to
-unpredictable failures specifically on the Windows OS when executed
-through GitHub Actions. Consequently, these tests are omitted during
-GitHub runs and are exclusively conducted on a local environment.
+The test suite includes unit, regression, example, summary-method,
+validation, in-process Shiny server, and browser integration tests. The
+server tests use `shiny::testServer()`, so ordinary
+`covr::package_coverage(type = "tests")` now measures the app logic
+without starting another R process. As of August 2026, line coverage is
+88.9% overall and 85.8% for `server.R`. Browser tests remain as a
+thinner end-to-end layer and are skipped on CRAN and continuous
+integration because their timing has been unreliable on some runners.
+
+## Browser-only webR version
+
+A static Shinylive build can run cofad entirely in the browser through
+webR, without a Shiny server. It is published to
+<https://johannes-titz.github.io/cofad/> by the `deploy-shinylive`
+GitHub Actions workflow on every push to the main branch. GitHub Pages
+must be configured to use **GitHub Actions** as its source in the
+repository settings.
+
+For a local build, run `source("tools/build-shinylive.R")` from the
+repository root; the generated `docs/` directory can be served by any
+static web host. The current static artifact is approximately 65 MiB. In
+an earlier uncached browser measurement, the interface took
+approximately 72 seconds to become ready; subsequent cached starts
+should be faster, but the server-backed app remains preferable when low
+startup latency matters.
 
 ## Issues and Support
 
