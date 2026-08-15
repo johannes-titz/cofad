@@ -50,7 +50,8 @@ invisible(file.copy(
 ))
 files <- c(
   "calc_contrast.R", "calc_contrast_aggregated.R", "design_detection.R",
-  "helper.R", "print_methods.R", "summary_methods.R", "ui.R", "server.R"
+  "examples.R", "helper.R", "print_methods.R", "summary_methods.R", "ui.R",
+  "server.R"
 )
 invisible(file.copy(
   file.path(root, "R", files), file.path(stage_dir, "R"), overwrite = TRUE

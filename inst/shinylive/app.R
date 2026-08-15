@@ -14,6 +14,7 @@ options(
 source("R/calc_contrast.R", local = TRUE)
 source("R/calc_contrast_aggregated.R", local = TRUE)
 source("R/design_detection.R", local = TRUE)
+source("R/examples.R", local = TRUE)
 source("R/helper.R", local = TRUE)
 source("R/print_methods.R", local = TRUE)
 source("R/summary_methods.R", local = TRUE)
