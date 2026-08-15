@@ -7,8 +7,9 @@ myserver <- shinyServer(function(input, output, session) {
   shinyjs::show("help")
   shinyjs::hide("output_region")
 
-  set_data <- function(data) {
+  set_data <- function(data, example_spec = NULL) {
     reactive$data <- data
+    reactive$example_spec <- example_spec
     reactive$varnames <- names(data)
     numeric_names <- names(data)[vapply(data, is.numeric, logical(1))]
     default_dv <- if (length(numeric_names)) numeric_names[[1]] else ""
@@ -22,12 +23,27 @@ myserver <- shinyServer(function(input, output, session) {
     } else {
       reactive$design_suggestion <- NULL
     }
-    reactive$model_spec <- c(
-      dv_name = default_dv,
-      between_name = if (is.null(suggestion)) "" else suggestion$between_name,
-      within_name = if (is.null(suggestion)) "" else suggestion$within_name,
-      id_name = if (is.null(suggestion)) "" else suggestion$id_name
-    )
+    reactive$model_spec <- if (!is.null(example_spec)) {
+      example_spec$roles
+    } else {
+      c(
+        dv_name = default_dv,
+        between_name = if (is.null(suggestion)) "" else suggestion$between_name,
+        within_name = if (is.null(suggestion)) "" else suggestion$within_name,
+        id_name = if (is.null(suggestion)) "" else suggestion$id_name
+      )
+    }
+    reactive$use_between_contrast <- if (is.null(example_spec)) {
+      nzchar(reactive$model_spec[["between_name"]])
+    } else {
+      !is.null(example_spec$between)
+    }
+    reactive$use_within_contrast <- if (is.null(example_spec)) {
+      nzchar(reactive$model_spec[["within_name"]])
+    } else {
+      !is.null(example_spec$within)
+    }
+    reactive$compare_competing <- isTRUE(example_spec$competing)
     reactive$lambda_between <- NULL
     reactive$lambda_between_rival <- NULL
     reactive$lambda_within <- NULL
@@ -47,7 +63,7 @@ myserver <- shinyServer(function(input, output, session) {
     req(nzchar(input$example_dataset))
     example_data <- load_cofad_example(input$example_dataset)
     validate(need(!is.null(example_data), "Example data set not found."))
-    set_data(example_data)
+    set_data(example_data, cofad_example_spec(input$example_dataset))
   }, ignoreInit = FALSE)
 
   observe({
@@ -62,7 +78,7 @@ myserver <- shinyServer(function(input, output, session) {
       example_data <- load_cofad_example(example)
       validate(need(!is.null(example_data), "Example data set not found."))
       updateSelectInput(session, "example_dataset", selected = example)
-      set_data(example_data)
+      set_data(example_data, cofad_example_spec(example))
     }
   })
 
@@ -82,9 +98,18 @@ myserver <- shinyServer(function(input, output, session) {
 
     tagList(
       tags$p(
-        "Suggested roles are inferred from replication and nesting. Please ",
-        "verify them, especially for incomplete or unusual designs. Use NONE ",
-        "for roles that are not part of the design."
+        if (is.null(reactive$example_spec)) {
+          paste(
+            "Suggested roles are inferred from replication and nesting.",
+            "Please verify them, especially for incomplete or unusual designs."
+          )
+        } else {
+          paste(
+            "The model roles and planned weights below reproduce the example's",
+            "book, paper, or documented study hypothesis."
+          )
+        },
+        " Use NONE for roles that are not part of the design."
       ),
       if (is.null(reactive$design_suggestion)) {
         tags$p(
@@ -130,7 +155,7 @@ myserver <- shinyServer(function(input, output, session) {
           ),
           "Compare two competing contrasts"
         ),
-        value = FALSE
+        value = isTRUE(reactive$compare_competing)
       ),
       # These canonical inputs keep old bookmarks and automated clients working.
       tags$div(
@@ -158,20 +183,42 @@ myserver <- shinyServer(function(input, output, session) {
       conditionalPanel(
         condition = "input.between_name != ''",
         tags$h4("Between-subjects contrast weights"),
-        tags$div(
-          class = "cofad-hot-wrap",
-          rhandsontable::rHandsontableOutput(
-            "hot_lambda_between", width = "auto", height = "130px"
+        checkboxInput(
+          "use_between_contrast", "Specify a between-subjects contrast",
+          value = isTRUE(reactive$use_between_contrast)
+        ),
+        conditionalPanel(
+          condition = "input.between_name != '' && input.use_between_contrast",
+          tags$div(
+            class = "cofad-hot-wrap",
+            rhandsontable::rHandsontableOutput(
+              "hot_lambda_between", width = "auto", height = "130px"
+            )
+          )
+        ),
+        conditionalPanel(
+          condition = "input.between_name != '' && !input.use_between_contrast",
+          tags$p(
+            class = "cofad-note",
+            "This factor is retained for grouping and error pooling, but the ",
+            "source analysis does not assign it planned contrast weights."
           )
         )
       ),
       conditionalPanel(
         condition = "input.within_name != ''",
         tags$h4("Within-subjects contrast weights"),
-        tags$div(
-          class = "cofad-hot-wrap",
-          rhandsontable::rHandsontableOutput(
-            "hot_lambda_within", width = "auto", height = "130px"
+        checkboxInput(
+          "use_within_contrast", "Specify a within-subjects contrast",
+          value = isTRUE(reactive$use_within_contrast)
+        ),
+        conditionalPanel(
+          condition = "input.within_name != '' && input.use_within_contrast",
+          tags$div(
+            class = "cofad-hot-wrap",
+            rhandsontable::rHandsontableOutput(
+              "hot_lambda_within", width = "auto", height = "130px"
+            )
           )
         ),
         radioButtons(
@@ -255,15 +302,65 @@ myserver <- shinyServer(function(input, output, session) {
     ignoreInit = TRUE
   )
 
+  observeEvent(input$compare_competing, {
+    reactive$compare_competing <- isTRUE(input$compare_competing)
+  }, ignoreInit = TRUE)
+
+  observeEvent(input$use_within_contrast, {
+    reactive$use_within_contrast <- isTRUE(input$use_within_contrast)
+    if (!isTRUE(input$use_within_contrast)) {
+      reactive$lambda_within <- NULL
+      reactive$lambda_within_rival <- NULL
+    } else if (is.null(reactive$lambda_within)) {
+      within_name <- reactive$model_spec[["within_name"]]
+      if (nzchar(within_name)) {
+        levels <- levels(as.factor(reactive$data[[within_name]]))
+        reactive$lambda_within <- create_default_lambdas(levels)
+        reactive$lambda_within_rival <- -reactive$lambda_within
+      }
+    }
+  }, ignoreInit = TRUE)
+
+  observeEvent(input$use_between_contrast, {
+    reactive$use_between_contrast <- isTRUE(input$use_between_contrast)
+    if (!isTRUE(input$use_between_contrast)) {
+      reactive$lambda_between <- NULL
+      reactive$lambda_between_rival <- NULL
+    } else if (is.null(reactive$lambda_between)) {
+      between_name <- reactive$model_spec[["between_name"]]
+      if (nzchar(between_name)) {
+        levels <- levels(as.factor(reactive$data[[between_name]]))
+        reactive$lambda_between <- create_default_lambdas(levels)
+        reactive$lambda_between_rival <- -reactive$lambda_between
+      }
+    }
+  }, ignoreInit = TRUE)
+
   observeEvent(list(reactive$model_spec[["within_name"]], reactive$data_version), {
     within_name <- reactive$model_spec[["within_name"]]
     if (is.null(within_name) || !nzchar(within_name)) {
       reactive$lambda_within <- NULL
       reactive$lambda_within_rival <- NULL
     } else {
-      within_levels <- levels(as.factor(reactive$data[, within_name]))
-      reactive$lambda_within <- create_default_lambdas(within_levels)
-      reactive$lambda_within_rival <- -reactive$lambda_within
+      within_levels <- levels(as.factor(reactive$data[[within_name]]))
+      spec <- isolate(reactive$example_spec)
+      preset <- !is.null(spec) &&
+        identical(within_name, unname(spec$roles[["within_name"]]))
+      if (preset) {
+        reactive$use_within_contrast <- !is.null(spec$within)
+        reactive$lambda_within <- spec$within
+        reactive$lambda_within_rival <- if (!is.null(spec$within_rival)) {
+          spec$within_rival
+        } else if (!is.null(spec$within)) {
+          -spec$within
+        } else {
+          NULL
+        }
+      } else {
+        reactive$use_within_contrast <- TRUE
+        reactive$lambda_within <- create_default_lambdas(within_levels)
+        reactive$lambda_within_rival <- -reactive$lambda_within
+      }
     }
   }, ignoreInit = FALSE)
 
@@ -273,9 +370,9 @@ myserver <- shinyServer(function(input, output, session) {
       within_name,
       "Select a within-subjects factor in the model table first."
     ))
-    within_data <- reactive$data[, within_name]
+    within_data <- reactive$data[[within_name]]
     lambda <- reactive$lambda_within
-    competing <- isTRUE(input$compare_competing)
+    competing <- isTRUE(reactive$compare_competing)
     expected_levels <- levels(as.factor(within_data))
     if (!length(lambda) || !setequal(names(lambda), expected_levels)) {
       lambda <- create_default_lambdas(expected_levels)
@@ -334,9 +431,25 @@ myserver <- shinyServer(function(input, output, session) {
       reactive$lambda_between <- NULL
       reactive$lambda_between_rival <- NULL
     } else {
-      between_levels <- levels(as.factor(reactive$data[, between_name]))
-      reactive$lambda_between <- create_default_lambdas(between_levels)
-      reactive$lambda_between_rival <- -reactive$lambda_between
+      between_levels <- levels(as.factor(reactive$data[[between_name]]))
+      spec <- isolate(reactive$example_spec)
+      preset <- !is.null(spec) &&
+        identical(between_name, unname(spec$roles[["between_name"]]))
+      if (preset) {
+        reactive$use_between_contrast <- !is.null(spec$between)
+        reactive$lambda_between <- spec$between
+        reactive$lambda_between_rival <- if (!is.null(spec$between_rival)) {
+          spec$between_rival
+        } else if (!is.null(spec$between)) {
+          -spec$between
+        } else {
+          NULL
+        }
+      } else {
+        reactive$use_between_contrast <- TRUE
+        reactive$lambda_between <- create_default_lambdas(between_levels)
+        reactive$lambda_between_rival <- -reactive$lambda_between
+      }
     }
   }, ignoreInit = FALSE)
 
@@ -346,9 +459,9 @@ myserver <- shinyServer(function(input, output, session) {
       between_name,
       "Select a between-subjects factor in the model table first."
     ))
-    between_data <- reactive$data[, between_name]
+    between_data <- reactive$data[[between_name]]
     lambda <- reactive$lambda_between
-    competing <- isTRUE(input$compare_competing)
+    competing <- isTRUE(reactive$compare_competing)
     expected_levels <- levels(as.factor(between_data))
     if (!length(lambda) || !setequal(names(lambda), expected_levels)) {
       lambda <- create_default_lambdas(expected_levels)
@@ -403,12 +516,12 @@ myserver <- shinyServer(function(input, output, session) {
 
   selected_variable <- function(name, factor = FALSE) {
     if (is.null(name) || !nzchar(name)) return(NULL)
-    value <- reactive$data[, name]
+    value <- reactive$data[[name]]
     if (factor) as.factor(value) else value
   }
 
   active_lambda <- function(lambda_favored, lambda_rival, factor_label) {
-    if (!isTRUE(input$compare_competing) || is.null(lambda_favored)) {
+    if (!isTRUE(reactive$compare_competing) || is.null(lambda_favored)) {
       return(lambda_favored)
     }
     difference <- tryCatch(
@@ -430,7 +543,7 @@ myserver <- shinyServer(function(input, output, session) {
       "Select a dependent variable from the current data set."
     ))
     validate(
-      need(is.numeric(reactive$data[, input$dv_name]),
+      need(is.numeric(reactive$data[[input$dv_name]]),
            "The dependent variable must be numeric."),
       need(nzchar(input$between_name) || nzchar(input$within_name),
            "Specify at least one between- or within-subjects factor."),
@@ -457,7 +570,7 @@ myserver <- shinyServer(function(input, output, session) {
     )
 
     calc_contrast(
-      dv = reactive$data[, input$dv_name],
+      dv = reactive$data[[input$dv_name]],
       between = selected_variable(input$between_name, factor = TRUE),
       lambda_between = lambda_between,
       id = selected_variable(input$id_name, factor = TRUE),
@@ -471,7 +584,7 @@ myserver <- shinyServer(function(input, output, session) {
   output$table_region <- renderText({
     contr <- analysis()
 
-    if (!isTRUE(input$compare_competing) &&
+    if (!isTRUE(reactive$compare_competing) &&
         length(reactive$lambda_between) &&
         sum(reactive$lambda_between) != 0) {
       showNotification(
@@ -483,7 +596,7 @@ myserver <- shinyServer(function(input, output, session) {
     } else {
       removeNotification(id = "lambda_btw")
     }
-    if (!isTRUE(input$compare_competing) &&
+    if (!isTRUE(reactive$compare_competing) &&
         length(reactive$lambda_within) &&
         sum(reactive$lambda_within) != 0) {
       showNotification(
@@ -497,7 +610,7 @@ myserver <- shinyServer(function(input, output, session) {
     }
 
     report <- trimws(paste(utils::capture.output(print(contr)), collapse = "\n"))
-    if (isTRUE(input$compare_competing)) {
+    if (isTRUE(reactive$compare_competing)) {
       report <- paste(
         paste(
           "We compared two competing contrasts by z-standardizing the",

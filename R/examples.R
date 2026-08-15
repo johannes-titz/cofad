@@ -67,6 +67,114 @@ cofad_default_example <- function() {
   "rosenthal_tbl31"
 }
 
+#' Source-defined model roles and planned contrasts for app examples
+#'
+#' The examples should open with the hypotheses used in their books or papers,
+#' rather than with weights inferred from the alphabetical order of factor
+#' levels. A NULL contrast for a present factor means that the factor is used
+#' only for grouping or pooling the error term in the source analysis.
+#'
+#' @param name example data-set key
+#' @return A list containing model roles and source-defined contrast weights.
+#' @noRd
+cofad_example_spec <- function(name) {
+  spec <- switch(
+    name,
+    maraver = list(
+      roles = c(dv_name = "prop_recalled", between_name = "condition",
+                within_name = "", id_name = ""),
+      between = c(imagine = 1, memorize = -0.5, pay_attention = -0.5),
+      between_rival = c(imagine = 1, memorize = 0, pay_attention = -1)
+    ),
+    furr_p4 = list(
+      roles = c(dv_name = "empathy", between_name = "major",
+                within_name = "", id_name = ""),
+      between = c(psychology = 1, education = -1,
+                  business = 0, chemistry = 0)
+    ),
+    rosenthal_tbl31 = list(
+      roles = c(dv_name = "dv", between_name = "between",
+                within_name = "", id_name = ""),
+      between = c(A = -3, B = -1, C = 1, D = 3)
+    ),
+    sedlmeier_p525 = list(
+      roles = c(dv_name = "lsg", between_name = "between",
+                within_name = "", id_name = ""),
+      between = c(KT = -2, JT = 3, MT = -1),
+      between_rival = c(KT = -2, JT = 1, MT = 1)
+    ),
+    testing_effect = list(
+      roles = c(dv_name = "recalled", between_name = "condition",
+                within_name = "", id_name = ""),
+      between = c(itemtest = 1, restudy = -0.5, sourcetest = -0.5)
+    ),
+    schwoebel = list(
+      roles = c(dv_name = "percent_recalled", between_name = "condition",
+                within_name = "", id_name = ""),
+      between = c(`massed-same` = -1, `massed-different` = -1,
+                  `spaced-same` = 1, `spaced-different` = 1)
+    ),
+    akan = list(
+      roles = c(dv_name = "contexts", between_name = "",
+                within_name = "condition", id_name = "subject"),
+      within = c(test = 1, restudy = -0.5, control = -0.5),
+      within_rival = c(test = 0.5, restudy = 0.5, control = -1)
+    ),
+    rosenthal_tbl54 = list(
+      roles = c(dv_name = "dv", between_name = "",
+                within_name = "within", id_name = "id"),
+      within = c(`1` = -3, `2` = -1, `3` = 1, `4` = 3)
+    ),
+    sedlmeier_p537 = list(
+      roles = c(dv_name = "reading_test", between_name = "",
+                within_name = "music", id_name = "participant"),
+      # The book evaluates hypothesis 2 minus hypothesis 1.
+      within = c(`without music` = 3, `white noise` = -1,
+                 classic = -1, jazz = -1),
+      within_rival = c(`without music` = 1.25, `white noise` = 0.25,
+                       classic = -0.75, jazz = -0.75)
+    ),
+    haans_within1by4 = list(
+      roles = c(dv_name = "value", between_name = "",
+                within_name = "name", id_name = "person"),
+      within = c(row1 = 3, row2 = 1, row3 = -1, row4 = -3)
+    ),
+    rosenthal_tbl53 = list(
+      roles = c(dv_name = "dv", between_name = "between",
+                within_name = "within", id_name = "id"),
+      between = c(age8 = -1, age10 = 0, age12 = 1),
+      within = c(`1` = -3, `2` = -1, `3` = 1, `4` = 3)
+    ),
+    rosenthal_tbl59 = list(
+      roles = c(dv_name = "dv", between_name = "pt",
+                within_name = "med", id_name = "id"),
+      within = c(treatment = 1, placebo = -1)
+    ),
+    rosenthal_p141 = list(
+      roles = c(dv_name = "dv", between_name = "bw",
+                within_name = "med", id_name = "id"),
+      within = c(treatment = -1, placebo = 1)
+    ),
+    rosenthal_chap5_q2 = list(
+      roles = c(dv_name = "dv", between_name = "between",
+                within_name = "within", id_name = "id"),
+      between = c(high = 1, low = -1),
+      within = c(low = -1, medium = 0, high = 1)
+    ),
+    rosenthal_tbl68_mixed = list(
+      roles = c(dv_name = "dv", between_name = "between",
+                within_name = "within", id_name = "id"),
+      # The school-year theory is compared directly with the linear age theory.
+      within = c(t1 = -1, t2 = 0, t3 = 0, t4 = 1),
+      within_rival = c(t1 = -3, t2 = -1, t3 = 1, t4 = 3)
+    ),
+    NULL
+  )
+  if (is.null(spec)) return(NULL)
+  spec$competing <- !is.null(spec$between_rival) || !is.null(spec$within_rival)
+  spec
+}
+
 cofad_example_description <- function(name) {
   info <- cofad_example_info()
   match_row <- match(name, info$name)
