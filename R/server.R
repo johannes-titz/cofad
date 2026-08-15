@@ -6,10 +6,12 @@ myserver <- shinyServer(function(input, output, session) {
   shinyjs::hide("create_model")
   shinyjs::show("help")
   shinyjs::hide("output_region")
+  shinyjs::hide("code_region")
 
-  set_data <- function(data, example_spec = NULL) {
+  set_data <- function(data, example_spec = NULL, example_name = NULL) {
     reactive$data <- data
     reactive$example_spec <- example_spec
+    reactive$example_name <- example_name
     reactive$varnames <- names(data)
     numeric_names <- names(data)[vapply(data, is.numeric, logical(1))]
     default_dv <- if (length(numeric_names)) numeric_names[[1]] else ""
@@ -51,6 +53,7 @@ myserver <- shinyServer(function(input, output, session) {
     reactive$data_version <- reactive$data_version + 1
     shinyjs::show("create_model")
     shinyjs::show("output_region")
+    shinyjs::show("code_region")
     compare_default <- isTRUE(example_spec$competing)
     between_default <- isTRUE(reactive$use_between_contrast)
     within_default <- isTRUE(reactive$use_within_contrast)
@@ -77,7 +80,10 @@ myserver <- shinyServer(function(input, output, session) {
     req(nzchar(input$example_dataset))
     example_data <- load_cofad_example(input$example_dataset)
     validate(need(!is.null(example_data), "Example data set not found."))
-    set_data(example_data, cofad_example_spec(input$example_dataset))
+    set_data(
+      example_data, cofad_example_spec(input$example_dataset),
+      input$example_dataset
+    )
   }, ignoreInit = FALSE)
 
   observe({
@@ -92,7 +98,7 @@ myserver <- shinyServer(function(input, output, session) {
       example_data <- load_cofad_example(example)
       validate(need(!is.null(example_data), "Example data set not found."))
       updateSelectInput(session, "example_dataset", selected = example)
-      set_data(example_data, cofad_example_spec(example))
+      set_data(example_data, cofad_example_spec(example), example)
     }
   })
 
@@ -772,17 +778,42 @@ myserver <- shinyServer(function(input, output, session) {
                   )
                 ),
                 tags$p(
-                  class = "cofad-note", cofad_effect_order_note(contr)
-                ),
-                tags$p(
                   class = "cofad-note",
                   "A within-subjects contrast is tested through participants' ",
                   contr$within_score,
-                  paste(
-                    " scores, so the between-subjects F-table partition",
-                    "does not apply."
-                  )
+                  " scores."
                 )
+              )
+            ),
+            tags$h4("F equivalent of the within-subjects contrast"),
+            tags$div(
+              class = "cofad-copy-layout",
+              tags$div(
+                class = "cofad-table-content",
+                cofad_html_table(
+                  detailed_within_f_table(contr), id = "cofad-within-f-table",
+                  right_align = c("df1", "df2", "F", "p")
+                )
+              ),
+              tags$div(
+                class = "cofad-copy-actions",
+                cofad_copy_button(
+                  "cofad-within-f-table", "Copy F-equivalent table"
+                ),
+                tags$span(
+                  id = "cofad-within-f-table-copy-status",
+                  class = "cofad-copy-status", role = "status"
+                )
+              )
+            ),
+            tags$p(
+              class = "cofad-note",
+              shiny::HTML("This is the nondirectional equivalent <i>F</i>(1, "),
+              unname(contr$sig[[3]]),
+              shiny::HTML(") = <i>t</i><sup>2</sup> of the same planned "),
+              paste(
+                "contrast. It is not a full repeated-measures ANOVA; the",
+                "report retains the prespecified directional p value."
               )
             )
           )
@@ -796,6 +827,43 @@ myserver <- shinyServer(function(input, output, session) {
     if (inherits(contr, "cofad_bw") || inherits(contr, "cofad_mx")) {
       plotly_variance_partition(contr)
     }
+  })
+
+  output$r_code_region <- renderUI({
+    req(reactive$data, reactive$model_spec)
+    code <- cofad_r_code(
+      model = reactive$model_spec,
+      lambda_between = reactive$lambda_between,
+      lambda_between_rival = reactive$lambda_between_rival,
+      lambda_within = reactive$lambda_within,
+      lambda_within_rival = reactive$lambda_within_rival,
+      compare_competing = isTRUE(reactive$compare_competing),
+      within_score = if (is.null(input$within_score)) "L" else input$within_score,
+      example_name = reactive$example_name
+    )
+    tagList(
+      tags$div(
+        class = "cofad-copy-layout cofad-copy-layout-code",
+        tags$pre(id = "cofad-r-code", class = "cofad-r-code", tags$code(code)),
+        tags$div(
+          class = "cofad-copy-actions",
+          tags$button(
+            type = "button",
+            class = "btn btn-default btn-sm cofad-copy-button",
+            onclick = "cofadCopyRCode(); return false;",
+            "Copy R code"
+          ),
+          tags$span(
+            id = "cofad-r-code-copy-status", class = "cofad-copy-status",
+            role = "status"
+          )
+        )
+      ),
+      tags$textarea(
+        code, id = "cofad-r-code-copy-text", style = "display: none;",
+        `aria-hidden` = "true", tabindex = "-1"
+      )
+    )
   })
 
   output$citation_region <- renderUI({

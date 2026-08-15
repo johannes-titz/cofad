@@ -110,6 +110,11 @@ myui <- function(request) {
              .cofad-copy-layout-report .cofad-report {
                flex: 1 1 520px; min-width: 0; }
              .cofad-copy-content { min-width: 0; }
+             .cofad-copy-layout-code { width: 100%; }
+             .cofad-r-code { flex: 1 1 520px; min-width: 0;
+               max-width: 100%; max-height: 420px; overflow: auto;
+               white-space: pre; border: 1px solid #ddd; border-radius: 4px;
+               background: #fafafa; }
              .cofad-table-layout { width: 100%; }
              .cofad-table-content { flex: 0 1 auto; min-width: 0;
                overflow-x: auto; }
@@ -228,6 +233,18 @@ myui <- function(request) {
                       "variance_partition", height = "300px"
                     )
                   )
+                )
+              )
+            ),
+            shinyjs::hidden(
+              div(
+                id = "code_region",
+                shinydashboard::box(
+                  title = "4. R code",
+                  status = "primary",
+                  collapsible = TRUE,
+                  width = 12,
+                  uiOutput("r_code_region")
                 )
               )
             )

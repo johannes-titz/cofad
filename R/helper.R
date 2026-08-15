@@ -424,6 +424,40 @@ detailed_f_table <- function(object) {
   tab
 }
 
+#' Create the one-df F equivalent of a within-subjects contrast test
+#'
+#' A planned within-subjects contrast is tested as a t test of participants'
+#' contrast scores. Squaring that statistic gives the exactly equivalent
+#' nondirectional F test with one numerator degree of freedom.
+#'
+#' @param object A `cofad_wi` object.
+#' @return A formatted one-row data frame for display in the Shiny app.
+#' @noRd
+detailed_within_f_table <- function(object) {
+  stopifnot(inherits(object, "cofad_wi"))
+  t_value <- unname(object$sig[[1]])
+  df_error <- unname(object$sig[[3]])
+  f_value <- t_value^2
+  tab <- data.frame(
+    Source = "Within-subjects contrast",
+    df1 = "1",
+    df2 = formatC(df_error, format = "f", digits = 0),
+    F = formatC(f_value, format = "f", digits = 3),
+    p = format_report_p(stats::pf(
+      f_value, df1 = 1, df2 = df_error, lower.tail = FALSE
+    )),
+    check.names = FALSE
+  )
+  attr(tab, "header_tooltips") <- c(
+    F = "The one-df F equivalent of the reported contrast test: F = t squared.",
+    p = paste(
+      "Nondirectional p value from F(1, df2). The report above instead uses",
+      "the prespecified contrast direction."
+    )
+  )
+  tab
+}
+
 #' Create a detailed effect-size table
 #'
 #' @param object A cofad result.
@@ -616,6 +650,86 @@ cofad_f_table_export_buttons <- function(target = "cofad-f-table") {
       "Download DOCX"
     )
   )
+}
+
+#' Generate reproducible R code for the current app model
+#'
+#' @param model Named character vector containing the four app model roles.
+#' @param lambda_between,lambda_within Favored contrast weights.
+#' @param lambda_between_rival,lambda_within_rival Rival contrast weights.
+#' @param compare_competing Whether favored and rival contrasts are compared.
+#' @param within_score Participant-level within score, `"L"` or `"r"`.
+#' @param example_name Optional package example data-set name.
+#' @return A single character string containing runnable R code.
+#' @noRd
+cofad_r_code <- function(
+    model, lambda_between = NULL, lambda_between_rival = NULL,
+    lambda_within = NULL, lambda_within_rival = NULL,
+    compare_competing = FALSE, within_score = "L", example_name = NULL) {
+  quote_r <- function(value) encodeString(value, quote = '"')
+  format_weight <- function(value) {
+    format(signif(value, 10), trim = TRUE, scientific = FALSE)
+  }
+  weight_code <- function(name, values) {
+    if (is.null(values)) return(character())
+    entries <- paste0(
+      "  ", quote_r(names(values)), " = ",
+      vapply(values, format_weight, character(1))
+    )
+    paste0(name, " <- c(\n", paste(entries, collapse = ",\n"), "\n)")
+  }
+  factor_argument <- function(argument, variable) {
+    if (!nzchar(variable)) return(character())
+    paste0("  ", argument, " = as.factor(dat[[", quote_r(variable), "]])")
+  }
+  contrast_code <- function(prefix, favored, rival) {
+    if (is.null(favored)) return(character())
+    if (isTRUE(compare_competing) && !is.null(rival)) {
+      c(
+        weight_code(paste0(prefix, "_favored"), favored),
+        weight_code(paste0(prefix, "_rival"), rival),
+        paste0(
+          prefix, " <- cofad::lambda_diff(\n",
+          "  lambda_favored = ", prefix, "_favored,\n",
+          "  lambda_rival = ", prefix, "_rival\n)"
+        )
+      )
+    } else {
+      weight_code(prefix, favored)
+    }
+  }
+
+  preamble <- if (!is.null(example_name) && nzchar(example_name)) {
+    c(
+      paste0("data(", quote_r(example_name), ", package = \"cofad\")"),
+      paste0("dat <- ", example_name)
+    )
+  } else {
+    "# Replace dat with the data frame you imported."
+  }
+  definitions <- c(
+    contrast_code(
+      "lambda_between", lambda_between, lambda_between_rival
+    ),
+    contrast_code("lambda_within", lambda_within, lambda_within_rival)
+  )
+  arguments <- c(
+    paste0("  dv = dat[[", quote_r(model[["dv_name"]]), "]]"),
+    factor_argument("between", model[["between_name"]]),
+    if (!is.null(lambda_between)) "  lambda_between = lambda_between",
+    factor_argument("within", model[["within_name"]]),
+    if (!is.null(lambda_within)) "  lambda_within = lambda_within",
+    factor_argument("id", model[["id_name"]]),
+    if (nzchar(model[["within_name"]])) {
+      paste0("  within_score = ", quote_r(within_score))
+    }
+  )
+  call <- paste0(
+    "result <- cofad::calc_contrast(\n",
+    paste(arguments, collapse = ",\n"),
+    "\n)"
+  )
+  paste(c(preamble, definitions, call, "result"), collapse = "\n\n")
 }
 
 #' Calculate variance shares under the three effect-size denominators

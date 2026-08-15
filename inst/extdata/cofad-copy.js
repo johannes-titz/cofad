@@ -73,6 +73,16 @@
     showStatus(status, "HTML copied.");
   };
 
+  window.cofadCopyRCode = function() {
+    var source = document.getElementById("cofad-r-code-copy-text");
+    if (!source) return;
+    window.cofadCopyText(
+      source.value.trim(),
+      document.getElementById("cofad-r-code-copy-status"),
+      "R code copied."
+    );
+  };
+
   function tableValues(id) {
     var table = document.getElementById(id);
     if (!table) return null;

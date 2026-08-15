@@ -45,6 +45,13 @@ test_that("within Shiny workflow runs in-process", {
     expect_match(output$hot_lambda_within, "without music")
     expect_match(output$table_region, "within-subjects contrast")
     expect_match(output$table_region, "g contrast")
+    expect_match(output$table_region, "F equivalent")
+    expect_match(output$table_region, 'id="cofad-within-f-table"', fixed = TRUE)
+    expect_false(grepl(
+      "different metrics", output$table_region, fixed = TRUE
+    ))
+    expect_match(output$r_code_region$html, "cofad::calc_contrast", fixed = TRUE)
+    expect_match(output$r_code_region$html, "within_score", fixed = TRUE)
   })
 })
 

@@ -161,9 +161,9 @@ test_that("the app title includes version and webR build information", {
   expect_match(as.character(cofad_version_title()), "dev abc12345", fixed = TRUE)
 })
 
-test_that("all three main app panels are collapsible and Help starts open", {
+test_that("all four main app panels are collapsible and Help starts open", {
   html <- as.character(myui(NULL))
   collapse_controls <- gregexpr('data-widget="collapse"', html, fixed = TRUE)
-  expect_length(regmatches(html, collapse_controls)[[1]], 3)
+  expect_length(regmatches(html, collapse_controls)[[1]], 4)
   expect_false(grepl("collapsed-box", html, fixed = TRUE))
 })
