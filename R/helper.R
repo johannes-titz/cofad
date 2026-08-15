@@ -159,15 +159,108 @@ load_cofad_example <- function(name) {
   get(name, envir = data_env, inherits = FALSE)
 }
 
-#' Cites useful references for cofad in html
+#' Citation formats used by the cofad app
 #'
-#' Used in shiny to list some references for contrast analysis.
+#' Keep these strings in sync with `inst/CITATION`. The app deliberately shows
+#' the two package citations rather than the broader methodological reading
+#' list.
 #'
-#' @return HTML character
+#' @return A single character string.
 #' @noRd
-cite <- function() {
-  paste(readLines(cofad_resource("citation.txt")),
-        collapse = "")
+cofad_citation_plain <- function() {
+  paste(
+    paste(
+      "Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for",
+      "competing hypotheses: A tutorial using the R package cofad.",
+      "Behavior Research Methods, 57, Article 326.",
+      "https://doi.org/10.3758/s13428-025-02833-w"
+    ),
+    paste(
+      "Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app",
+      "for contrast analysis. Journal of Open Source Software, 6(67), 3822.",
+      "https://doi.org/10.21105/joss.03822"
+    ),
+    sep = "\n\n"
+  )
+}
+
+cofad_citation_html <- function() {
+  paste0(
+    '<div class="csl-bib-body">',
+    '<div class="csl-entry">Henninger, M., Malejka, S., &amp; Titz, J. ',
+    '(2025). Contrast analysis for competing hypotheses: A tutorial using ',
+    'the R package cofad. <i>Behavior Research Methods, 57</i>, Article 326. ',
+    '<a href="https://doi.org/10.3758/s13428-025-02833-w">',
+    'https://doi.org/10.3758/s13428-025-02833-w</a></div>',
+    '<div class="csl-entry">Titz, J., &amp; Burkhardt, M. (2021). cofad: ',
+    'An R package and Shiny app for contrast analysis. ',
+    '<i>Journal of Open Source Software, 6</i>(67), 3822. ',
+    '<a href="https://doi.org/10.21105/joss.03822">',
+    'https://doi.org/10.21105/joss.03822</a></div>',
+    '</div>'
+  )
+}
+
+cofad_citation_bibtex <- function() {
+  paste(
+    paste0(
+      "@article{henninger2025cofad,\n",
+      "  author = {Henninger, Mirka and Malejka, Simone and Titz, Johannes},\n",
+      "  title = {Contrast analysis for competing hypotheses: A tutorial ",
+      "using the {R} package cofad},\n",
+      "  journal = {Behavior Research Methods},\n",
+      "  year = {2025},\n  volume = {57},\n  pages = {326},\n",
+      "  doi = {10.3758/s13428-025-02833-w}\n}"
+    ),
+    paste0(
+      "@article{titz2021cofad,\n",
+      "  author = {Titz, Johannes and Burkhardt, Markus},\n",
+      "  title = {cofad: An {R} package and {Shiny} app for contrast analysis},\n",
+      "  journal = {Journal of Open Source Software},\n",
+      "  year = {2021},\n  volume = {6},\n  number = {67},\n",
+      "  pages = {3822},\n  doi = {10.21105/joss.03822}\n}"
+    ),
+    sep = "\n\n"
+  )
+}
+
+# Backward-compatible internal helper.
+cite <- cofad_citation_html
+
+cofad_citation_panel <- function() {
+  shiny::tagList(
+    shiny::tags$h4("Cite cofad"),
+    shiny::tags$p("Please cite both the tutorial and the software paper:"),
+    shiny::HTML(cofad_citation_html()),
+    shiny::tags$div(
+      class = "cofad-citation-actions",
+      shiny::actionButton(
+        "copy_citation_plain", "Copy plain text",
+        onclick = "cofadCopyCitation('plain'); return false;"
+      ),
+      shiny::actionButton(
+        "copy_citation_html", "Copy HTML",
+        onclick = "cofadCopyCitation('html'); return false;"
+      ),
+      shiny::actionButton(
+        "copy_citation_bib", "Copy BibTeX",
+        onclick = "cofadCopyCitation('bibtex'); return false;"
+      ),
+      shiny::tags$span(id = "cofad-copy-status", role = "status")
+    ),
+    shiny::tags$textarea(
+      id = "cofad-citation-plain", style = "display:none;",
+      cofad_citation_plain()
+    ),
+    shiny::tags$textarea(
+      id = "cofad-citation-html", style = "display:none;",
+      cofad_citation_html()
+    ),
+    shiny::tags$textarea(
+      id = "cofad-citation-bibtex", style = "display:none;",
+      cofad_citation_bibtex()
+    )
+  )
 }
 
 #' Create a detailed variance-decomposition table
@@ -186,7 +279,9 @@ detailed_f_table <- function(object) {
     )
   }
   format_probability <- function(x) {
-    ifelse(is.na(x), "", format.pval(x, digits = 3, eps = 0.001))
+    vapply(x, function(value) {
+      if (is.na(value)) "" else format_report_p(value)
+    }, character(1))
   }
   s <- object$sig
   df_between <- unname(s["df_total"] - s["df_inn"])
@@ -203,11 +298,23 @@ detailed_f_table <- function(object) {
     NA_real_
   }
 
-  tab <- data.frame(
-    Source = c(
+  source_labels <- if (inherits(object, "cofad_mx")) {
+    c(
+      "Between groups in within-contrast scores (overall)",
+      "Planned between \u00d7 within contrast",
+      "Residual between groups in within-contrast scores",
+      "Within-group variation in within-contrast scores (error)",
+      "Total variation in within-contrast scores"
+    )
+  } else {
+    c(
       "Between groups (overall)", "Contrast", "Residual between groups",
       "Within groups (error)", "Total"
-    ),
+    )
+  }
+
+  tab <- data.frame(
+    Source = source_labels,
     SS = c(
       s["ss_between"], s["ss_kontrast"], ss_residual,
       s["ss_within"], s["ss_total"]
@@ -230,6 +337,10 @@ detailed_f_table <- function(object) {
       },
       NA_real_, NA_real_
     ),
+    eta2 = c(
+      s["ss_between"], s["ss_kontrast"], ss_residual,
+      NA_real_, NA_real_
+    ) / unname(s["ss_total"]),
     check.names = FALSE
   )
 
@@ -238,6 +349,7 @@ detailed_f_table <- function(object) {
   tab$MS <- format_statistic(tab$MS)
   tab$F <- format_statistic(tab$F)
   tab$p <- format_probability(tab$p)
+  tab$eta2 <- format_statistic(tab$eta2)
   rownames(tab) <- NULL
   tab
 }
@@ -264,15 +376,27 @@ detailed_effect_table <- function(object) {
       s["ss_kontrast"] / (s["ss_kontrast"] + s["ss_within"]),
       s["ss_kontrast"] / s["ss_between"]
     )
+    definitions <- if (inherits(object, "cofad_mx")) {
+      c(
+        "Planned mixed contrast / total variation in within-contrast scores",
+        paste0(
+          "Planned mixed contrast / (planned contrast + within-group score ",
+          "variation)"
+        ),
+        "Planned mixed contrast / all between-group score variation"
+      )
+    } else {
+      c(
+        "SS contrast / SS total",
+        "SS contrast / (SS contrast + SS within)",
+        "SS contrast / SS between"
+      )
+    }
     data.frame(
       Measure = c("r effect size", "r contrast", "r alerting"),
       Estimate = format_statistic(r),
       `Squared / explained proportion` = format_statistic(r_squared),
-      `Sum-of-squares definition` = c(
-        "SS contrast / SS total",
-        "SS contrast / (SS contrast + SS within)",
-        "SS contrast / SS between"
-      ),
+      `Sum-of-squares definition` = definitions,
       check.names = FALSE
     )
   } else {
@@ -288,15 +412,80 @@ detailed_effect_table <- function(object) {
   }
 }
 
+cofad_effect_order_note <- function(object) {
+  if (inherits(object, "cofad_bw") || inherits(object, "cofad_mx")) {
+    shiny::HTML(paste0(
+      "Effect-size magnitude order: |<i>r</i><sub>es</sub>| &le; ",
+      "|<i>r</i><sub>contrast</sub>| and ",
+      "|<i>r</i><sub>es</sub>| &le; |<i>r</i><sub>alerting</sub>|. ",
+      "There is no fixed order between |<i>r</i><sub>contrast</sub>| and ",
+      "|<i>r</i><sub>alerting</sub>|: |<i>r</i><sub>alerting</sub>| &ge; ",
+      "|<i>r</i><sub>contrast</sub>| when residual between-group SS is no ",
+      "larger than within-group/error SS; otherwise their order reverses. ",
+      "The sign of all three measures indicates contrast direction."
+    ))
+  } else {
+    shiny::HTML(paste0(
+      "<i>r</i><sub>contrast</sub> and <i>g</i><sub>contrast</sub> use ",
+      "different metrics, so they do not have a general magnitude ordering."
+    ))
+  }
+}
+
+#' Format the paper-ready report with mathematical effect-size notation
+#' @noRd
+cofad_report_tag <- function(report) {
+  escaped <- gsub("&", "&amp;", report, fixed = TRUE)
+  escaped <- gsub("<", "&lt;", escaped, fixed = TRUE)
+  escaped <- gsub(">", "&gt;", escaped, fixed = TRUE)
+  formatted <- gsub(
+    "r\u2091\u209b", "<i>r</i><sub>es</sub>", escaped, fixed = TRUE
+  )
+
+  shiny::HTML(paste0(
+    '<div id="cofad-report-text" class="cofad-report">',
+    formatted,
+    "</div>"
+  ))
+}
+
 #' Convert a data frame to a small Bootstrap-compatible HTML table
 #' @noRd
-cofad_html_table <- function(x) {
+cofad_html_table <- function(x, id = NULL, right_align = character()) {
+  display_name <- function(name) {
+    if (identical(name, "Squared / explained proportion")) {
+      "r\u00b2"
+    } else if (identical(name, "eta2")) {
+      shiny::HTML("<i>&eta;</i>&sup2;")
+    } else {
+      name
+    }
+  }
   shiny::tags$table(
-    class = "table table-striped table-condensed",
-    shiny::tags$thead(shiny::tags$tr(lapply(names(x), shiny::tags$th))),
+    id = id,
+    class = "table table-condensed cofad-booktabs",
+    shiny::tags$thead(shiny::tags$tr(lapply(names(x), function(name) {
+      shiny::tags$th(
+        class = if (name %in% right_align) "cofad-number" else NULL,
+        display_name(name)
+      )
+    }))),
     shiny::tags$tbody(lapply(seq_len(nrow(x)), function(i) {
-      shiny::tags$tr(lapply(x[i, , drop = TRUE], shiny::tags$td))
+      shiny::tags$tr(lapply(names(x), function(name) {
+        shiny::tags$td(
+          class = if (name %in% right_align) "cofad-number" else NULL,
+          x[[name]][[i]]
+        )
+      }))
     }))
+  )
+}
+
+cofad_copy_button <- function(target, label) {
+  shiny::tags$button(
+    type = "button", class = "btn btn-default btn-sm cofad-copy-button",
+    onclick = paste0("cofadCopyTable('", target, "'); return false;"),
+    label
   )
 }
 
@@ -304,26 +493,39 @@ cofad_html_table <- function(x) {
 #' @noRd
 plot_variance_partition <- function(object) {
   s <- object$sig
-  components <- c(
-    "Contrast" = unname(s["ss_kontrast"]),
-    "Other between-group" = unname(s["ss_between"] - s["ss_kontrast"]),
-    "Within-group" = unname(s["ss_within"])
-  )
+  component_names <- if (inherits(object, "cofad_mx")) {
+    c(
+      "Planned mixed contrast", "Other between-group score variation",
+      "Within-group score variation"
+    )
+  } else {
+    c("Contrast", "Other between-group", "Within-group")
+  }
+  components <- stats::setNames(c(
+    unname(s["ss_kontrast"]),
+    unname(s["ss_between"] - s["ss_kontrast"]),
+    unname(s["ss_within"])
+  ), component_names)
   components[abs(components) < sqrt(.Machine$double.eps)] <- 0
   proportions <- components / unname(s["ss_total"])
   colors <- c("#E69F00", "#56B4E9", "#BDBDBD")
 
-  old_par <- graphics::par(mar = c(4, 1, 3.5, 1))
+  old_par <- graphics::par(mar = c(3.3, 1.4, 1.2, 1.8))
   on.exit(graphics::par(old_par), add = TRUE)
   mids <- graphics::barplot(
     as.matrix(proportions), horiz = TRUE, axes = FALSE, border = NA,
-    col = colors, xlim = c(0, 1), ylim = c(0, 1.6), width = 0.45
+    col = colors, xlim = c(0, 1), ylim = c(0, 0.9), width = 0.38
   )
   graphics::axis(
     1, at = seq(0, 1, by = 0.2),
     labels = paste0(seq(0, 100, by = 20), "%")
   )
-  graphics::mtext("Proportion of total sum of squares", side = 1, line = 2.6)
+  axis_label <- if (inherits(object, "cofad_mx")) {
+    "Proportion of total within-contrast score SS"
+  } else {
+    "Proportion of total sum of squares"
+  }
+  graphics::mtext(axis_label, side = 1, line = 2.2, cex = 0.85)
   centers <- cumsum(proportions) - proportions / 2
   labels <- ifelse(
     proportions >= 0.04,
@@ -332,7 +534,7 @@ plot_variance_partition <- function(object) {
   graphics::text(centers, mids, labels = labels, cex = 0.9)
   graphics::legend(
     "top", legend = names(components), fill = colors, border = NA,
-    horiz = TRUE, bty = "n", inset = c(0, -0.02), xpd = TRUE, cex = 0.85
+    horiz = TRUE, bty = "n", inset = c(0, -0.02), xpd = TRUE, cex = 0.76
   )
   invisible(components)
 }
