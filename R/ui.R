@@ -110,22 +110,15 @@ myui <- function(request) {
              .cofad-copy-layout-report .cofad-report {
                flex: 1 1 520px; min-width: 0; }
              .cofad-copy-content { min-width: 0; }
-             .cofad-r-code-actions { display: flex; justify-content: flex-end;
+             .cofad-r-code-actions { display: flex; justify-content: flex-start;
                align-items: center; gap: 8px; margin: 0 0 6px; }
              .cofad-r-code-actions .cofad-copy-button { width: auto; }
              .cofad-r-code { width: 100%; max-width: 100%; max-height: 420px;
                overflow: auto;
                white-space: pre; border: 1px solid #ddd; border-radius: 4px;
                background: #fafafa; }
-             .cofad-table-layout { width: 100%; }
              .cofad-table-content { flex: 0 1 auto; min-width: 0;
                overflow-x: auto; }
-             .cofad-table-side { flex: 1 1 160px; min-width: 150px;
-               max-width: 280px; }
-             .cofad-table-side .cofad-copy-actions {
-               margin: 0 0 6px auto; }
-             .cofad-table-side .cofad-note { margin: 0; }
-             .cofad-table-side .cofad-note + .cofad-note { margin-top: 8px; }
              .cofad-copy-actions { display: flex; flex: 0 0 auto;
                flex-direction: column; align-items: stretch; gap: 4px; }
              .cofad-copy-button { margin: 0; white-space: nowrap;
@@ -161,7 +154,6 @@ myui <- function(request) {
                .cofad-copy-layout { flex-wrap: wrap; }
                .cofad-copy-actions { margin-left: auto; }
                .cofad-table-content { flex-basis: 100%; }
-               .cofad-table-side { flex-basis: 100%; max-width: none; }
              }
              .cofad-footer { color: #fff; font-size: 11px; margin-top: 24px; }"
           ))
@@ -230,7 +222,7 @@ myui <- function(request) {
                   width = 12,
                   htmlOutput("table_region"),
                   conditionalPanel(
-                    condition = "input.between_name != ''",
+                    condition = "input.between_name != '' || input.within_name != ''",
                     plotly::plotlyOutput(
                       "variance_partition", height = "300px"
                     )

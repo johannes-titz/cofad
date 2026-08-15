@@ -98,6 +98,34 @@ test_that("mixed partitions label derived score variation", {
   expect_match(names(partition$components)[[3]], "score variation")
 })
 
+test_that("within partitions show contrast and participant-error variation", {
+  data("sedlmeier_p537", package = "cofad")
+  result <- calc_contrast(
+    dv = reading_test, within = music, id = participant,
+    lambda_within = c(
+      "without music" = 1.25, "white noise" = 0.25,
+      classic = -0.75, jazz = -0.75
+    ),
+    data = sedlmeier_p537
+  )
+  partition <- variance_partition_data(result)
+  figure <- plotly_variance_partition(result)
+  built <- plotly::plotly_build(figure)
+
+  expect_equal(unname(rowSums(partition$shares)), 1, tolerance = 1e-12)
+  expect_equal(
+    partition$metrics[["eta2"]], partition$metrics[["partial_eta2"]]
+  )
+  expect_identical(
+    vapply(built$x$data, `[[`, character(1), "name"),
+    c("Contrast", "Contrast × participants/error")
+  )
+  expect_match(
+    built$x$layout$annotations[[1]]$text,
+    "<i>&eta;</i><sup>2</sup>", fixed = TRUE
+  )
+})
+
 test_that("Shiny exposes the Plotly partition output", {
   path <- test_path("rosenthal_tbl53.csv")
   upload <- list(

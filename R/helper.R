@@ -424,20 +424,12 @@ detailed_f_table <- function(object) {
   tab
 }
 
-#' Create an F table for a within-subjects contrast test
-#'
-#' A planned within-subjects contrast is tested as a t test of participants'
-#' contrast scores. The contrast mean square and its participant-by-contrast
-#' error mean square reproduce the exactly equivalent nondirectional F test.
-#'
-#' @param object A `cofad_wi` object.
-#' @return A formatted one-row data frame for display in the Shiny app.
+#' Calculate the contrast and error components of a within-subjects F test
 #' @noRd
-detailed_within_f_table <- function(object) {
+within_f_components <- function(object) {
   stopifnot(inherits(object, "cofad_wi"))
-  t_value <- unname(object$sig[[1]])
   df_error <- unname(object$sig[[3]])
-  f_value <- t_value^2
+  f_value <- unname(object$sig[[1]])^2
   score_variance <- unname(object$desc[[3]])^2
   score_scale <- if (identical(object$within_score, "L")) {
     sum(object$lambda_within^2)
@@ -445,9 +437,31 @@ detailed_within_f_table <- function(object) {
     1
   }
   ms_error <- score_variance / score_scale
-  ss_error <- ms_error * df_error
   ms_contrast <- f_value * ms_error
-  ss_total <- ms_contrast + ss_error
+  ss_error <- ms_error * df_error
+  list(
+    ss_contrast = ms_contrast,
+    ss_error = ss_error,
+    ss_total = ms_contrast + ss_error,
+    ms_contrast = ms_contrast,
+    ms_error = ms_error,
+    df_error = df_error,
+    f_value = f_value
+  )
+}
+
+#' Create an F table for a within-subjects contrast test
+#'
+#' A planned within-subjects contrast is tested as a t test of participants'
+#' contrast scores. The contrast mean square and its participant-by-contrast
+#' error mean square reproduce the exactly equivalent nondirectional F test.
+#'
+#' @param object A `cofad_wi` object.
+#' @return A formatted data frame for display in the Shiny app.
+#' @noRd
+detailed_within_f_table <- function(object) {
+  components <- within_f_components(object)
+  eta2 <- components$ss_contrast / components$ss_total
   format_statistic <- function(x, digits = 3) {
     ifelse(
       is.na(x), "",
@@ -460,16 +474,25 @@ detailed_within_f_table <- function(object) {
       "Contrast × participants (error)",
       "Total contrast-related variation"
     ),
-    SS = format_statistic(c(ms_contrast, ss_error, ss_total)),
-    df = format_statistic(c(1, df_error, df_error + 1), digits = 0),
-    MS = format_statistic(c(ms_contrast, ms_error, NA_real_)),
-    F = format_statistic(c(f_value, NA_real_, NA_real_)),
+    SS = format_statistic(c(
+      components$ss_contrast, components$ss_error, components$ss_total
+    )),
+    df = format_statistic(c(
+      1, components$df_error, components$df_error + 1
+    ), digits = 0),
+    MS = format_statistic(c(
+      components$ms_contrast, components$ms_error, NA_real_
+    )),
+    F = format_statistic(c(components$f_value, NA_real_, NA_real_)),
     p = c(
       format_report_p(stats::pf(
-        f_value, df1 = 1, df2 = df_error, lower.tail = FALSE
+        components$f_value, df1 = 1, df2 = components$df_error,
+        lower.tail = FALSE
       )),
       "", ""
     ),
+    eta2 = format_statistic(c(eta2, 1 - eta2, NA_real_)),
+    partial_eta2 = c(format_statistic(eta2), "", ""),
     check.names = FALSE
   )
   attr(tab, "header_tooltips") <- c(
@@ -489,6 +512,14 @@ detailed_within_f_table <- function(object) {
     p = paste(
       "Nondirectional p value from F(1, df error). The report above instead uses",
       "the prespecified contrast direction."
+    ),
+    eta2 = paste(
+      "Eta squared within the contrast-specific decomposition: row SS divided",
+      "by total contrast-related SS."
+    ),
+    partial_eta2 = paste(
+      "Partial eta squared: contrast SS divided by contrast SS plus its",
+      "participant-error SS. With one planned contrast, this equals eta squared."
     )
   )
   attr(tab, "cell_tooltips") <- list(
@@ -501,6 +532,18 @@ detailed_within_f_table <- function(object) {
       "MS contrast is the numerator variance estimate.",
       "MS error is the denominator variance estimate from variation among participants' contrast scores.",
       ""
+    ),
+    eta2 = c(
+      "Contrast eta squared = contrast SS / total contrast-related SS.",
+      "Participant-error share = error SS / total contrast-related SS.",
+      ""
+    ),
+    partial_eta2 = c(
+      paste(
+        "Partial eta squared = contrast SS / (contrast SS + participant-error",
+        "SS); here it is identical to contrast eta squared."
+      ),
+      "", ""
     )
   )
   tab
@@ -797,12 +840,39 @@ cofad_r_code <- function(
     paste(arguments, collapse = ",\n"),
     "\n)"
   )
-  paste(c(preamble, definitions, call, "result"), collapse = "\n\n")
+  sub(
+    "^[[:space:]]+", "",
+    paste(c(preamble, definitions, call, "result"), collapse = "\n\n")
+  )
 }
 
 #' Calculate variance shares under the three effect-size denominators
 #' @noRd
 variance_partition_data <- function(object) {
+  if (inherits(object, "cofad_wi")) {
+    within <- within_f_components(object)
+    components <- c(
+      Contrast = within$ss_contrast,
+      `Contrast × participants/error` = within$ss_error
+    )
+    shares <- matrix(
+      components / within$ss_total, nrow = 1,
+      dimnames = list(contrast_total = "Contrast-related SS", names(components))
+    )
+    numerators <- matrix(
+      components, nrow = 1,
+      dimnames = list(contrast_total = "Contrast-related SS", names(components))
+    )
+    eta2 <- unname(components[[1]] / within$ss_total)
+    return(list(
+      components = components,
+      numerators = numerators,
+      denominators = c(contrast_total = within$ss_total),
+      shares = shares,
+      metrics = c(eta2 = eta2, partial_eta2 = eta2),
+      row_labels = "Contrast-related SS"
+    ))
+  }
   s <- object$sig
   component_names <- if (inherits(object, "cofad_mx")) {
     c(
@@ -922,12 +992,17 @@ plot_variance_partition <- function(object) {
 #' @noRd
 plotly_variance_partition <- function(object) {
   partition <- variance_partition_data(object)
+  within_result <- inherits(object, "cofad_wi")
   # ColorBrewer Set2: qualitative, colorblind-friendly, and readable on white.
-  colors <- c("#66C2A5", "#FC8D62", "#8DA0CB")
+  colors <- c("#66C2A5", "#FC8D62", "#8DA0CB")[
+    seq_len(ncol(partition$shares))
+  ]
   format_ss <- function(x) trimws(formatC(x, digits = 4, format = "fg"))
-  component_labels <- c(
-    "Contrast", "Other between-group", "Within-group/error"
-  )
+  component_labels <- if (within_result) {
+    names(partition$components)
+  } else {
+    c("Contrast", "Other between-group", "Within-group/error")
+  }
 
   figure <- plotly::plot_ly()
   for (segment in seq_len(ncol(partition$shares))) {
@@ -959,15 +1034,22 @@ plotly_variance_partition <- function(object) {
     )
   }
 
-  metric_html <- c(
-    "<i>r</i><sub>es</sub><sup>2</sup>",
-    "<i>r</i><sub>alerting</sub><sup>2</sup>",
-    "<i>r</i><sub>contrast</sub><sup>2</sup>"
-  )
+  metric_html <- if (within_result) {
+    paste0(
+      "<i>&eta;</i><sup>2</sup> = <i>&eta;</i><sub>p</sub><sup>2</sup> = ",
+      formatC(partition$metrics[["eta2"]], digits = 3, format = "f")
+    )
+  } else {
+    c(
+      "<i>r</i><sub>es</sub><sup>2</sup>",
+      "<i>r</i><sub>alerting</sub><sup>2</sup>",
+      "<i>r</i><sub>contrast</sub><sup>2</sup>"
+    )
+  }
   annotations <- lapply(seq_along(partition$row_labels), function(row) {
     list(
       x = 1.015, y = partition$row_labels[[row]], xref = "x", yref = "y",
-      text = paste0(
+      text = if (within_result) metric_html[[row]] else paste0(
         metric_html[[row]], " = ",
         formatC(partition$metrics[[row]], digits = 3, format = "f")
       ),

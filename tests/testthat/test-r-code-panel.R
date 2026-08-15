@@ -24,6 +24,9 @@ test_that("within contrast has an exact nondirectional F equivalent", {
                as.numeric(table$F[[1]]), tolerance = 0.002)
   expect_equal(as.numeric(table$SS[[3]]),
                sum(as.numeric(table$SS[1:2])), tolerance = 0.002)
+  expect_equal(as.numeric(table$eta2[[1]]),
+               as.numeric(table$partial_eta2[[1]]), tolerance = 0.001)
+  expect_equal(sum(as.numeric(table$eta2[1:2])), 1, tolerance = 0.001)
   expect_equal(
     as.numeric(table$p[[1]]),
     stats::pf(unname(result$sig[[1]])^2, 1, unname(result$sig[[3]]),
@@ -33,6 +36,7 @@ test_that("within contrast has an exact nondirectional F equivalent", {
   html <- as.character(cofad_html_table(table))
   expect_match(html, "F = t squared", fixed = TRUE)
   expect_match(html, "two estimates of population variance", fixed = TRUE)
+  expect_match(html, "&eta;", fixed = TRUE)
   expect_match(html, "cofad-tooltip", fixed = TRUE)
 })
 
@@ -46,6 +50,7 @@ test_that("R code generator reproduces single and competing app models", {
     example_name = "rosenthal_tbl31"
   )
   expect_match(between_code, "library(cofad)", fixed = TRUE)
+  expect_match(between_code, "^library\\(cofad\\)")
   expect_match(between_code, 'data("rosenthal_tbl31")', fixed = TRUE)
   expect_match(between_code, "lambda_between <- c(", fixed = TRUE)
   expect_match(between_code, "result <- calc_contrast", fixed = TRUE)
@@ -75,12 +80,14 @@ test_that("R code generator reproduces single and competing app models", {
 
 test_that("R code panel exposes a plain-text copy control", {
   ui <- as.character(myui(NULL))
+  ui_source <- paste(deparse(body(myui)), collapse = "\n")
   script <- paste(
     readLines(cofad_resource("cofad-copy.js"), warn = FALSE), collapse = "\n"
   )
 
   expect_match(ui, 'id="code_region"', fixed = TRUE)
   expect_match(ui, '<h3 class="box-title">4. R code</h3>', fixed = TRUE)
+  expect_match(ui_source, "justify-content: flex-start", fixed = TRUE)
   expect_match(script, "window.cofadCopyRCode", fixed = TRUE)
   expect_match(script, "cofad-r-code-copy-text", fixed = TRUE)
 
@@ -92,5 +99,6 @@ test_that("R code panel exposes a plain-text copy control", {
       regexpr("cofad-r-code-actions", code_html, fixed = TRUE)[[1]],
       regexpr('id="cofad-r-code"', code_html, fixed = TRUE)[[1]]
     )
+    expect_match(code_html, "library(cofad)", fixed = TRUE)
   })
 })

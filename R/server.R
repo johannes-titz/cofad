@@ -755,36 +755,6 @@ myserver <- shinyServer(function(input, output, session) {
           )
         } else {
           tagList(
-            tags$h4("Effect sizes"),
-            tags$div(
-              class = "cofad-copy-layout cofad-table-layout",
-              tags$div(
-                class = "cofad-table-content",
-                cofad_html_table(
-                  detailed_effect_table(contr), id = "cofad-effect-table",
-                  right_align = "Estimate"
-                )
-              ),
-              tags$div(
-                class = "cofad-table-side",
-                tags$div(
-                  class = "cofad-copy-actions",
-                  cofad_copy_button(
-                    "cofad-effect-table", "Copy effect-size table"
-                  ),
-                  tags$span(
-                    id = "cofad-effect-table-copy-status",
-                    class = "cofad-copy-status", role = "status"
-                  )
-                ),
-                tags$p(
-                  class = "cofad-note",
-                  "A within-subjects contrast is tested through participants' ",
-                  contr$within_score,
-                  " scores."
-                )
-              )
-            ),
             tags$h4(
               "Variance decomposition of within-subjects contrast scores (F table)"
             ),
@@ -794,7 +764,9 @@ myserver <- shinyServer(function(input, output, session) {
                 class = "cofad-table-content",
                 cofad_html_table(
                   detailed_within_f_table(contr), id = "cofad-within-f-table",
-                  right_align = c("SS", "df", "MS", "F", "p")
+                  right_align = c(
+                    "SS", "df", "MS", "F", "p", "eta2", "partial_eta2"
+                  )
                 )
               ),
               tags$div(
@@ -817,8 +789,19 @@ myserver <- shinyServer(function(input, output, session) {
                 "contrast. Its numerator and error mean squares are the two",
                 "population-variance estimates compared by F. It is not a",
                 "full repeated-measures ANOVA; the",
-                "report retains the prespecified directional p value."
+                "report retains the prespecified directional p value. ",
+                "Within this contrast-specific decomposition, ordinary eta",
+                "squared and partial eta squared are identical because total",
+                "contrast-related SS is contrast SS plus its matched error SS."
+              ),
+              shiny::HTML(
+                " Thus <i>&eta;</i><sup>2</sup> = <i>&eta;</i><sub>p</sub><sup>2</sup>."
               )
+            ),
+            tags$h4("Partition of contrast-related variation"),
+            tags$p(
+              class = "cofad-note",
+              "Hover over a colored component for its SS calculation."
             )
           )
         }
@@ -828,7 +811,7 @@ myserver <- shinyServer(function(input, output, session) {
 
   output$variance_partition <- plotly::renderPlotly({
     contr <- analysis()
-    if (inherits(contr, "cofad_bw") || inherits(contr, "cofad_mx")) {
+    if (inherits(contr, c("cofad_bw", "cofad_mx", "cofad_wi"))) {
       plotly_variance_partition(contr)
     }
   })

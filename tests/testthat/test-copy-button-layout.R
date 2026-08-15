@@ -19,10 +19,8 @@ test_that("copy controls sit beside their content", {
     'class = "cofad-copy-layout cofad-copy-layout-report"', fixed = TRUE
   )
   expect_match(
-    server_source,
-    'class = "cofad-copy-layout cofad-table-layout"', fixed = TRUE
+    server_source, 'class = "cofad-table-content"', fixed = TRUE
   )
-  expect_match(server_source, 'class = "cofad-table-side"', fixed = TRUE)
   expect_match(server_source, 'class = "cofad-copy-actions"', fixed = TRUE)
 })
 
