@@ -21,6 +21,7 @@ Depends:
 Imports: 
     foreign,
     magrittr,
+    plotly,
     rhandsontable,
     shiny,
     shinydashboard,

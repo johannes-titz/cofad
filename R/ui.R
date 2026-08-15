@@ -138,9 +138,6 @@ myui <- function(request) {
              .cofad-number { text-align: right !important;
                font-variant-numeric: tabular-nums; }
              .cofad-tooltip { cursor: help; }
-             .cofad-variance-detail { min-height: 2.7em; margin-top: 0;
-               max-width: 820px; }
-             .cofad-variance-component { color: #333; }
              .cofad-report { white-space: pre-wrap; background: #fafafa;
                border: 1px solid #ddd; border-radius: 4px; padding: 10px;
                max-width: 820px; font-family: inherit; font-size: inherit;
@@ -227,14 +224,9 @@ myui <- function(request) {
                   htmlOutput("table_region"),
                   conditionalPanel(
                     condition = "input.between_name != ''",
-                    shiny::plotOutput(
-                      "variance_partition", height = "265px",
-                      hover = shiny::hoverOpts(
-                        id = "variance_hover", delay = 80,
-                        delayType = "debounce"
-                      )
-                    ),
-                    uiOutput("variance_partition_details")
+                    plotly::plotlyOutput(
+                      "variance_partition", height = "300px"
+                    )
                   )
                 )
               )

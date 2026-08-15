@@ -185,15 +185,17 @@ detailed variance decomposition with ordinary
 ![\eta^2](https://latex.codecogs.com/png.latex?%5Ceta%5E2 "\eta^2") for
 each SS component (including the descriptive within-group/error share),
 the three between-subjects effect sizes and their squared values, and an
-interactive plot comparing total, between-group, and contrast-plus-error
-denominators. Hovering over a plot segment shows its SS numerator and
-denominator. Small *p* values are shown numerically in scientific
-notation rather than as threshold statements. For mixed designs, this is
-explicitly a partition of participants’ derived within-contrast scores,
-not of the raw repeated outcome variance. The paper-ready report text, F
-table, and effect-size table have copy buttons; numeric table columns
-are right-aligned. The Help and citation panel beneath the model
-contains the package references, README, and GitHub issue tracker.
+interactive Plotly chart comparing total, between-group, and
+contrast-plus-error denominators. Its legend labels Contrast, Other
+between-group, and Within-group/error above the bars. Hovering over a
+segment shows its SS numerator and denominator. Small *p* values are
+shown numerically in scientific notation rather than as threshold
+statements. For mixed designs, this is explicitly a partition of
+participants’ derived within-contrast scores, not of the raw repeated
+outcome variance. The paper-ready report text, F table, and effect-size
+table have copy buttons; numeric table columns are right-aligned. The
+Help and citation panel beneath the model contains the package
+references, README, and GitHub issue tracker.
 
 A mixed design is ideal for trying the cofad app. You can construct a
 separate within-subjects model by setting the between-subjects factor to
@@ -839,7 +841,7 @@ validation, in-process Shiny server, and browser integration tests. The
 server tests use `shiny::testServer()`, so ordinary
 `covr::package_coverage(type = "tests")` now measures the app logic
 without starting a browser process. As of August 2026, line coverage is
-92.8% overall. Browser tests remain as a thinner end-to-end layer and
+92.9% overall. Browser tests remain as a thinner end-to-end layer and
 are skipped on CRAN and continuous integration because their timing has
 been unreliable on some runners.
 

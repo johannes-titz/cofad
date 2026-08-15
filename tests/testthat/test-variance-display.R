@@ -48,31 +48,37 @@ test_that("variance rows use the three contrast-effect denominators", {
   )
 })
 
-test_that("variance hover identifies components and their denominator", {
+test_that("variance data handle a degenerate zero-variation result", {
   result <- variance_display_result()
-  total_contrast <- cofad:::variance_partition_hover(
-    result, list(x = 0.2, y = 3)
-  )
-  between_other <- cofad:::variance_partition_hover(
-    result, list(x = 0.99, y = 2)
-  )
-
-  expect_identical(total_contrast$component, "Contrast")
-  expect_identical(total_contrast$metric, "r_es2")
-  expect_equal(
-    total_contrast$share,
-    unname(result$sig["ss_kontrast"] / result$sig["ss_total"])
-  )
-  expect_identical(between_other$component, "Other between-group")
-  expect_identical(between_other$metric, "r_alerting2")
-  expect_null(cofad:::variance_partition_hover(result, NULL))
-  expect_null(cofad:::variance_partition_hover(result, list(x = 0.2, y = 4)))
-  expect_null(cofad:::variance_partition_hover(result, list(x = 1.2, y = 3)))
-
   zero <- result
   zero$sig[c("ss_kontrast", "ss_between", "ss_within", "ss_total")] <- 0
   expect_true(all(is.na(cofad:::variance_partition_data(zero)$shares)))
-  expect_null(cofad:::variance_partition_hover(zero, list(x = 0.2, y = 3)))
+})
+
+test_that("Plotly partition puts component labels above interactive bars", {
+  result <- variance_display_result()
+  figure <- cofad:::plotly_variance_partition(result)
+  built <- plotly::plotly_build(figure)
+
+  expect_s3_class(figure, "plotly")
+  expect_identical(
+    vapply(built$x$data, `[[`, character(1), "name"),
+    c("Contrast", "Other between-group", "Within-group/error")
+  )
+  expect_identical(built$x$layout$legend$orientation, "h")
+  expect_identical(built$x$layout$legend$traceorder, "normal")
+  expect_gt(built$x$layout$legend$y, 1)
+  expect_match(built$x$data[[1]]$hovertext[[1]], "SS =", fixed = TRUE)
+  expect_match(built$x$data[[1]]$hovertext[[1]], "289 / 455", fixed = TRUE)
+  expect_match(
+    paste(vapply(built$x$layout$annotations, `[[`, character(1), "text"),
+          collapse = " "),
+    "<sub>alerting</sub>", fixed = TRUE
+  )
+  expect_equal(
+    built$x$data[[1]]$x[[1]],
+    unname(result$sig["ss_kontrast"] / result$sig["ss_total"])
+  )
 })
 
 test_that("mixed partitions label derived score variation", {
@@ -91,7 +97,7 @@ test_that("mixed partitions label derived score variation", {
   expect_match(names(partition$components)[[3]], "score variation")
 })
 
-test_that("Shiny hover details expose the exact SS calculation", {
+test_that("Shiny exposes the Plotly partition output", {
   path <- test_path("rosenthal_tbl53.csv")
   upload <- list(
     name = basename(path), datapath = path, size = file.info(path)$size,
@@ -104,12 +110,13 @@ test_that("Shiny hover details expose the exact SS calculation", {
     invisible(output$variables)
     session$setInputs(
       dv_name = "dv", between_name = "between", within_name = "within",
-      id_name = "id", variance_hover = list(x = 0.1, y = 3)
+      id_name = "id"
     )
     session$flushReact()
 
-    rendered <- output$variance_partition_details$html
-    expect_match(rendered, "SS =")
-    expect_match(rendered, "<sub>es</sub>")
+    rendered <- output$variance_partition
+    expect_type(rendered, "character")
+    expect_match(rendered, "Other between-group", fixed = TRUE)
+    expect_match(rendered, "SS =", fixed = TRUE)
   })
 })

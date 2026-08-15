@@ -594,36 +594,6 @@ variance_partition_data <- function(object) {
   )
 }
 
-#' Describe the variance component under the pointer
-#' @noRd
-variance_partition_hover <- function(object, hover) {
-  if (is.null(hover) || is.null(hover$x) || is.null(hover$y)) return(NULL)
-  if (!is.finite(hover$x) || !is.finite(hover$y) ||
-      hover$x < 0 || hover$x > 1) return(NULL)
-
-  partition <- variance_partition_data(object)
-  y_positions <- c(3, 2, 1)
-  row <- which.min(abs(y_positions - hover$y))
-  if (abs(y_positions[[row]] - hover$y) > 0.42) return(NULL)
-  cumulative <- cumsum(partition$shares[row, ])
-  candidates <- which(
-    hover$x <= cumulative + sqrt(.Machine$double.eps)
-  )
-  if (!length(candidates)) return(NULL)
-  segment <- candidates[[1]]
-  if (partition$shares[row, segment] <= 0) return(NULL)
-
-  list(
-    row = partition$row_labels[[row]],
-    component = names(partition$components)[[segment]],
-    ss = partition$numerators[row, segment],
-    denominator = partition$denominators[[row]],
-    share = partition$shares[row, segment],
-    metric = names(partition$metrics)[[row]],
-    metric_value = partition$metrics[[row]]
-  )
-}
-
 #' Plot the partition of total variation and effect-size denominators
 #' @noRd
 plot_variance_partition <- function(object) {
@@ -684,6 +654,97 @@ plot_variance_partition <- function(object) {
     horiz = TRUE, bty = "n", xpd = NA, cex = 0.72
   )
   invisible(components)
+}
+
+#' Create an interactive variance-partition figure
+#' @noRd
+plotly_variance_partition <- function(object) {
+  partition <- variance_partition_data(object)
+  colors <- c("#E69F00", "#56B4E9", "#BDBDBD")
+  format_ss <- function(x) trimws(formatC(x, digits = 4, format = "fg"))
+  component_labels <- c(
+    "Contrast", "Other between-group", "Within-group/error"
+  )
+
+  figure <- plotly::plot_ly()
+  for (segment in seq_len(ncol(partition$shares))) {
+    shares <- partition$shares[, segment]
+    labels <- ifelse(
+      is.finite(shares) & shares >= 0.055,
+      paste0(round(100 * shares, 1), "%"), ""
+    )
+    hover_labels <- paste0(
+      "<b>", component_labels[[segment]], "</b><br>",
+      partition$row_labels, "<br>",
+      "SS = ", format_ss(partition$numerators[, segment]), "<br>",
+      "Share = ", round(100 * shares, 1), "%<br>",
+      format_ss(partition$numerators[, segment]), " / ",
+      format_ss(unname(partition$denominators))
+    )
+    figure <- plotly::add_bars(
+      figure,
+      x = shares,
+      y = partition$row_labels,
+      name = component_labels[[segment]],
+      orientation = "h",
+      marker = list(color = colors[[segment]], line = list(color = "white")),
+      text = labels,
+      textposition = "inside",
+      insidetextanchor = "middle",
+      hovertext = hover_labels,
+      hovertemplate = "%{hovertext}<extra></extra>"
+    )
+  }
+
+  metric_html <- c(
+    "<i>r</i><sub>es</sub><sup>2</sup>",
+    "<i>r</i><sub>alerting</sub><sup>2</sup>",
+    "<i>r</i><sub>contrast</sub><sup>2</sup>"
+  )
+  annotations <- lapply(seq_along(partition$row_labels), function(row) {
+    list(
+      x = 1.015, y = partition$row_labels[[row]], xref = "x", yref = "y",
+      text = paste0(
+        metric_html[[row]], " = ",
+        formatC(partition$metrics[[row]], digits = 3, format = "f")
+      ),
+      showarrow = FALSE, xanchor = "left", align = "left"
+    )
+  })
+
+  figure <- plotly::layout(
+    figure,
+    barmode = "stack",
+    bargap = 0.34,
+    showlegend = TRUE,
+    legend = list(
+      orientation = "h", x = 0, y = 1.18,
+      xanchor = "left", yanchor = "bottom", traceorder = "normal",
+      font = list(size = 10.5)
+    ),
+    margin = list(l = 120, r = 90, t = 72, b = 55),
+    xaxis = list(
+      title = "Share of the row denominator",
+      range = c(0, 1.23),
+      tickvals = seq(0, 1, by = 0.2),
+      ticktext = paste0(seq(0, 100, by = 20), "%"),
+      fixedrange = TRUE
+    ),
+    yaxis = list(
+      title = "",
+      categoryorder = "array",
+      categoryarray = rev(partition$row_labels),
+      fixedrange = TRUE
+    ),
+    annotations = annotations,
+    hovermode = "closest"
+  )
+  plotly::config(
+    figure, responsive = TRUE, displaylogo = FALSE,
+    modeBarButtonsToRemove = c(
+      "select2d", "lasso2d", "zoom2d", "pan2d", "autoScale2d"
+    )
+  )
 }
 
 #' Calculate lambdas for two competing hypotheses

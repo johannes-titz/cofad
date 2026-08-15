@@ -516,46 +516,11 @@ myserver <- shinyServer(function(input, output, session) {
     ))
   })
 
-  output$variance_partition <- shiny::renderPlot({
+  output$variance_partition <- plotly::renderPlotly({
     contr <- analysis()
     if (inherits(contr, "cofad_bw") || inherits(contr, "cofad_mx")) {
-      plot_variance_partition(contr)
-    } else {
-      graphics::plot.new()
+      plotly_variance_partition(contr)
     }
-  }, res = 96)
-
-  output$variance_partition_details <- renderUI({
-    contr <- analysis()
-    if (!(inherits(contr, "cofad_bw") || inherits(contr, "cofad_mx"))) {
-      return(NULL)
-    }
-    details <- variance_partition_hover(contr, input$variance_hover)
-    if (is.null(details)) {
-      return(tags$p(
-        class = "cofad-note cofad-variance-detail",
-        "Hover over a chart segment to inspect its numerator, denominator, ",
-        "and corresponding contrast proportion."
-      ))
-    }
-    metric <- switch(
-      details$metric,
-      r_es2 = shiny::HTML("<i>r</i><sub>es</sub><sup>2</sup>"),
-      r_alerting2 = shiny::HTML("<i>r</i><sub>alerting</sub><sup>2</sup>"),
-      r_contrast2 = shiny::HTML("<i>r</i><sub>contrast</sub><sup>2</sup>")
-    )
-    tags$p(
-      class = "cofad-note cofad-variance-detail",
-      tags$span(class = "cofad-variance-component", details$component),
-      paste0(
-        ": SS = ", formatC(details$ss, digits = 4, format = "fg"),
-        "; ", round(100 * details$share, 1), "% of ", details$row,
-        " (", formatC(details$ss, digits = 4, format = "fg"), " / ",
-        formatC(details$denominator, digits = 4, format = "fg"), "). "
-      ),
-      "The contrast share for this denominator is ", metric, " = ",
-      formatC(details$metric_value, digits = 3, format = "f"), "."
-    )
   })
 
   output$citation_region <- renderUI({

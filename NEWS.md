@@ -5,8 +5,9 @@
   replacing them with a threshold, and use regular-weight Help and citation
   typography
 * compare the total, between-group, and contrast-plus-error SS denominators in
-  an interactive variance chart, with labeled squared r effect-size measures
-  and hover details for every component
+  an interactive Plotly variance chart, with the component legend above the
+  bars, labeled squared r effect-size measures, and hover details for every
+  component
 * show the package/webR build version in the app title, make every main panel
   collapsible, use a compact development commit label, start with the linear
   Rosenthal Table 3.1 example, and open Help and citation information by default
