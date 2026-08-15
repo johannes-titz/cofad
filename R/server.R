@@ -295,6 +295,8 @@ myserver <- shinyServer(function(input, output, session) {
         within_name = input$within_name,
         id_name = input$id_name
       )
+      selected_variables <- unname(selected[nzchar(selected)])
+      if (!all(selected_variables %in% names(reactive$data))) return()
       if (!identical(selected, reactive$model_spec)) {
         reactive$model_spec <- selected
       }
@@ -537,24 +539,25 @@ myserver <- shinyServer(function(input, output, session) {
   }
 
   analysis <- reactive({
-    req(reactive$data, input$dv_name)
+    req(reactive$data, reactive$model_spec)
+    model <- reactive$model_spec
     validate(need(
-      input$dv_name %in% names(reactive$data),
+      model[["dv_name"]] %in% names(reactive$data),
       "Select a dependent variable from the current data set."
     ))
     validate(
-      need(is.numeric(reactive$data[[input$dv_name]]),
+      need(is.numeric(reactive$data[[model[["dv_name"]]]]),
            "The dependent variable must be numeric."),
-      need(nzchar(input$between_name) || nzchar(input$within_name),
+      need(nzchar(model[["between_name"]]) || nzchar(model[["within_name"]]),
            "Specify at least one between- or within-subjects factor."),
       need(length(reactive$lambda_between) > 0 ||
              length(reactive$lambda_within) > 0,
            "Specify contrast weights."),
-      if (nzchar(input$within_name)) {
-        need(nzchar(input$id_name),
+      if (nzchar(model[["within_name"]])) {
+        need(nzchar(model[["id_name"]]),
              "A participant ID is required for within-subjects designs.")
       },
-      if (!nzchar(input$within_name) && nzchar(input$id_name)) {
+      if (!nzchar(model[["within_name"]]) && nzchar(model[["id_name"]])) {
         need(FALSE,
              "Select a within-subjects factor when a participant ID is used.")
       }
@@ -570,11 +573,11 @@ myserver <- shinyServer(function(input, output, session) {
     )
 
     calc_contrast(
-      dv = reactive$data[[input$dv_name]],
-      between = selected_variable(input$between_name, factor = TRUE),
+      dv = reactive$data[[model[["dv_name"]]]],
+      between = selected_variable(model[["between_name"]], factor = TRUE),
       lambda_between = lambda_between,
-      id = selected_variable(input$id_name, factor = TRUE),
-      within = selected_variable(input$within_name, factor = TRUE),
+      id = selected_variable(model[["id_name"]], factor = TRUE),
+      within = selected_variable(model[["within_name"]], factor = TRUE),
       lambda_within = lambda_within,
       data = NULL,
       within_score = if (is.null(input$within_score)) "L" else input$within_score

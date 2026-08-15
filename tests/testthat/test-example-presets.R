@@ -76,6 +76,11 @@ test_that("all source-defined example analyses run", {
 
 test_that("example selection installs its documented contrasts", {
   shiny::testServer(myserver, {
+    session$setInputs(
+      example_dataset = "rosenthal_tbl31", dv_name = "dv",
+      between_name = "between", within_name = "", id_name = ""
+    )
+    session$flushReact()
     session$setInputs(example_dataset = "maraver")
     session$flushReact()
     expect_identical(reactive$model_spec, cofad_example_spec("maraver")$roles)
@@ -88,6 +93,7 @@ test_that("example selection installs its documented contrasts", {
       cofad_example_spec("maraver")$between_rival
     )
     expect_true(reactive$compare_competing)
+    expect_match(output$table_region, "two competing contrasts", fixed = TRUE)
 
     session$setInputs(example_dataset = "rosenthal_tbl59")
     session$flushReact()
@@ -98,6 +104,7 @@ test_that("example selection installs its documented contrasts", {
       c(treatment = 1, placebo = -1)
     )
     expect_false(reactive$compare_competing)
+    expect_match(output$table_region, "t(4) = 2.449", fixed = TRUE)
 
     session$setInputs(example_dataset = "rosenthal_tbl68_mixed")
     session$flushReact()
@@ -112,5 +119,6 @@ test_that("example selection installs its documented contrasts", {
       reactive$lambda_within_rival,
       c(t1 = -3, t2 = -1, t3 = 1, t4 = 3)
     )
+    expect_match(output$table_region, "t(6) = 5.189", fixed = TRUE)
   })
 })
