@@ -286,6 +286,14 @@ within
 
 You can see that the significance test is just a $t$-test and the reported effect size is referring to a mean comparison ($g$). (The $t$-test is one-tailed, because contrast analysis has always a specific hypothesis.) When conducting the analysis by hand, we can see why:
 
+For this within-subjects contrast, $r_\mathrm{contrast}$ is the signed
+correlation-form effect derived from the same test,
+$r_\mathrm{contrast} = \operatorname{sign}(t)\sqrt{t^2/(t^2 + df_\mathrm{error})}$.
+Consequently, $r_\mathrm{contrast}^2$ equals the contrast-specific
+$\eta^2$ and partial $\eta_p^2$ shown in the app. The between-design
+$r_\mathrm{es}$ and $r_\mathrm{alerting}$ are not defined by this pure
+within-subjects contrast partition.
+
 ```{r}
 mtr <- matrix(sedlmeier_p537$reading_test, ncol = 4)
 lambdas <- c(1.25, 0.25, -0.75, -0.75)

@@ -1,5 +1,8 @@
 # cofad (development version)
 
+* correct within-only `r_contrast` to use the denominator degrees of freedom
+  of its own contrast test, and identify its squared value with the
+  contrast-specific eta-squared measures in the app
 * render every model/contrast-table column immediately and preserve its natural
   width inside a horizontally scrollable wrapper, avoiding initially blank
   lambda and N columns in narrow or newly revealed panels

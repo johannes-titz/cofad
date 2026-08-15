@@ -427,7 +427,7 @@ summary(within)
 #> 
 #> $Effects
 #>                 
-#> r-contrast 0.687
+#> r-contrast 0.894
 #> g-contrast 1.863
 within
 #> 
@@ -441,6 +441,22 @@ effect size is referring to a mean comparison
 ![t](https://latex.codecogs.com/png.latex?t "t")-test is one-tailed,
 because contrast analysis has always a specific hypothesis.) When
 conducting the analysis by hand, we can see why:
+
+For this within-subjects contrast,
+![r_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}")
+is the signed correlation-form effect derived from the same test,
+![r_\mathrm{contrast} = \operatorname{sign}(t)\sqrt{t^2/(t^2 + df_\mathrm{error})}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D%20%3D%20%5Coperatorname%7Bsign%7D%28t%29%5Csqrt%7Bt%5E2%2F%28t%5E2%20%2B%20df_%5Cmathrm%7Berror%7D%29%7D "r_\mathrm{contrast} = \operatorname{sign}(t)\sqrt{t^2/(t^2 + df_\mathrm{error})}").
+Consequently,
+![r_\mathrm{contrast}^2](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D%5E2 "r_\mathrm{contrast}^2")
+equals the contrast-specific
+![\eta^2](https://latex.codecogs.com/png.latex?%5Ceta%5E2 "\eta^2") and
+partial
+![\eta_p^2](https://latex.codecogs.com/png.latex?%5Ceta_p%5E2 "\eta_p^2")
+shown in the app. The between-design
+![r_\mathrm{es}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bes%7D "r_\mathrm{es}")
+and
+![r_\mathrm{alerting}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Balerting%7D "r_\mathrm{alerting}")
+are not defined by this pure within-subjects contrast partition.
 
 ``` r
 mtr <- matrix(sedlmeier_p537$reading_test, ncol = 4)
@@ -788,7 +804,7 @@ summary(contr_wi)
 #> 
 #> $Effects
 #>                  
-#> r-contrast -0.561
+#> r-contrast -0.818
 #> g-contrast -1.333
 contr_wi
 #> 

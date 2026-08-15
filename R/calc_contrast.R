@@ -325,7 +325,6 @@ run_within_analysis <- function(dv, within, between, lambda_within, id,
                                 within_score = "L") {
   lambda_within <- lambda_within[levels(within)]
   ni_within <- table(within)
-  n_total <- sum(ni_within)
   l_value <- participant_within_scores(
     dv, within, lambda_within, id, within_score
   )
@@ -351,12 +350,10 @@ run_within_analysis <- function(dv, within, between, lambda_within, id,
     }
     s2 <- sum((ni_l_value - 1) * s2i) / sum(ni_l_value - 1)
     k_bw <- length(ni_bw)
-    df_within <- n_total - k_bw
   } else {
     s2 <- var(l_value)
     k_bw <- 1
     df_id <- length(l_value) - 1
-    df_within <- n_total - k_bw
   }
   #df_contrast <- 1
   if (!is.null(between)) {
@@ -375,7 +372,9 @@ run_within_analysis <- function(dv, within, between, lambda_within, id,
   p_contrast <- pt(t_value, df_id, lower.tail = F)
   g_effect <- mean(l_value) / (sqrt(s2))
   sign_r_contrast <- sign(g_effect)
-  r_contrast <- sign_r_contrast * sqrt(f_contrast / (f_contrast + df_within))
+  r_contrast <- sign_r_contrast * sqrt(
+    f_contrast / (f_contrast + df_id)
+  )
   sig <- c(t_value, p_contrast, df_id)
   desc <- c(mean(l_value), sqrt(s2) / sqrt(sum(table(l_value))), sqrt(s2))
   r <- c(r_contrast, g_effect)

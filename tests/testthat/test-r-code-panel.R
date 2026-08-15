@@ -26,6 +26,10 @@ test_that("within contrast has an exact nondirectional F equivalent", {
                sum(as.numeric(table$SS[1:2])), tolerance = 0.002)
   expect_equal(as.numeric(table$eta2[[1]]),
                as.numeric(table$partial_eta2[[1]]), tolerance = 0.001)
+  expect_equal(
+    as.numeric(table$partial_eta2[[1]]),
+    unname(result$effects[[1]]^2), tolerance = 0.001
+  )
   expect_equal(sum(as.numeric(table$eta2[1:2])), 1, tolerance = 0.001)
   expect_equal(
     as.numeric(table$p[[1]]),
@@ -37,6 +41,10 @@ test_that("within contrast has an exact nondirectional F equivalent", {
   expect_match(html, "F = t squared", fixed = TRUE)
   expect_match(html, "two estimates of population variance", fixed = TRUE)
   expect_match(html, "&eta;", fixed = TRUE)
+  expect_match(
+    attr(table, "cell_tooltips")$partial_eta2[[1]],
+    "r_contrast squared", fixed = TRUE
+  )
   expect_match(html, "cofad-tooltip", fixed = TRUE)
 })
 

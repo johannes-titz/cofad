@@ -795,7 +795,14 @@ myserver <- shinyServer(function(input, output, session) {
                 "contrast-related SS is contrast SS plus its matched error SS."
               ),
               shiny::HTML(
-                " Thus <i>&eta;</i><sup>2</sup> = <i>&eta;</i><sub>p</sub><sup>2</sup>."
+                paste0(
+                  " Thus <i>&eta;</i><sup>2</sup> = ",
+                  "<i>&eta;</i><sub>p</sub><sup>2</sup> = ",
+                  "<i>r</i><sub>contrast</sub><sup>2</sup>. ",
+                  "The between-design <i>r</i><sub>es</sub> and ",
+                  "<i>r</i><sub>alerting</sub> are not defined for this ",
+                  "pure within-subjects partition."
+                )
               )
             ),
             tags$h4("Partition of contrast-related variation"),

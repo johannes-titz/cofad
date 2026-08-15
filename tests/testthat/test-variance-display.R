@@ -122,7 +122,12 @@ test_that("within partitions show contrast and participant-error variation", {
   )
   expect_match(
     built$x$layout$annotations[[1]]$text,
-    "<i>&eta;</i><sup>2</sup>", fixed = TRUE
+    "<i>η</i><sup>2</sup>", fixed = TRUE
+  )
+  expect_false(grepl("&eta;", built$x$layout$annotations[[1]]$text, fixed = TRUE))
+  expect_match(
+    built$x$layout$annotations[[1]]$text,
+    "<sub>contrast</sub><sup>2</sup>", fixed = TRUE
   )
 })
 

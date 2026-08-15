@@ -541,7 +541,8 @@ detailed_within_f_table <- function(object) {
     partial_eta2 = c(
       paste(
         "Partial eta squared = contrast SS / (contrast SS + participant-error",
-        "SS); here it is identical to contrast eta squared."
+        "SS); here it is identical to contrast eta squared and r_contrast",
+        "squared."
       ),
       "", ""
     )
@@ -1036,7 +1037,8 @@ plotly_variance_partition <- function(object) {
 
   metric_html <- if (within_result) {
     paste0(
-      "<i>&eta;</i><sup>2</sup> = <i>&eta;</i><sub>p</sub><sup>2</sup> = ",
+      "<i>η</i><sup>2</sup> = <i>η</i><sub>p</sub><sup>2</sup> = ",
+      "<i>r</i><sub>contrast</sub><sup>2</sup> = ",
       formatC(partition$metrics[["eta2"]], digits = 3, format = "f")
     )
   } else {
