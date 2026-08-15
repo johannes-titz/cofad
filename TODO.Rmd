@@ -6,10 +6,6 @@ output: github_document
 
 ## Data and numerical verification
 
-- [ ] Rebuild `rosenthal_tbl68` from Table 6.8. The packaged `between` column
-  currently alternates girl/boy within participant, whereas the source describes
-  the first four children as female and the last four as male. Add a regression
-  test for the corrected participant-to-group assignment.
 - [ ] Systematically compare every packaged example and expected statistic with
   the Rosenthal and Sedlmeier source tables. Record intentional differences such
   as rounding, corrected apparent book errors, and one- versus two-sided tests.
@@ -34,9 +30,10 @@ output: github_document
 - [ ] Add browser regression coverage for table edits, validation messages, the
   detailed F table, and the variance-partition figure once the browser test
   runner is sufficiently reliable.
-- [ ] Monitor the deployed Shinylive/webR build, measure cached startup and
-  mobile-browser behavior, and investigate reducing the current 65 MiB
-  static bundle and approximately 72-second cold start.
+- [ ] Monitor the deployed Shinylive/webR build and measure startup on several
+  desktop/mobile devices and real network connections. The August 2026 local
+  baseline was 26.9 seconds to controls and 32.9 seconds to an example model
+  table (22.4/26.8 seconds on a cached reload).
 - [ ] Remove the obsolete sortable/drag-and-drop helper code after confirming it
   is not used by downstream code.
 
@@ -66,3 +63,11 @@ output: github_document
 - [x] Add an optional Shinylive/webR build.
 - [x] Configure automatic GitHub Pages deployment for the webR app.
 - [x] Add the 2025 tutorial and JOSS software citation.
+- [x] Add APA 7 plain-text, HTML, and BibTeX copy buttons to the app, and return
+  both required references from `citation("cofad")`.
+- [x] Add categorized between, within, and mixed example data sets to the app.
+- [x] Add participant-level r scores as a pattern-fit alternative to L scores,
+  with Rosenthal regression tests and usage guidance.
+- [x] Add corrected `rosenthal_tbl68_mixed`, in which each participant belongs
+  to one between group, with a regression test; retain the historically
+  packaged `rosenthal_tbl68` unchanged for backward compatibility.
