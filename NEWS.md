@@ -1,8 +1,12 @@
 # cofad (development version)
 
-* add ordinary eta squared to the app F table, display small p values rather
-  than replacing them with a threshold, and use regular-weight Help and
-  citation typography
+* add ordinary eta squared to the app F table, including the within-group/error
+  SS share and calculation tooltips, display small p values rather than
+  replacing them with a threshold, and use regular-weight Help and citation
+  typography
+* compare the total, between-group, and contrast-plus-error SS denominators in
+  an interactive variance chart, with labeled squared r effect-size measures
+  and hover details for every component
 * show the package/webR build version in the app title, make every main panel
   collapsible, use a compact development commit label, start with the linear
   Rosenthal Table 3.1 example, and open Help and citation information by default

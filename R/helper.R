@@ -339,7 +339,7 @@ detailed_f_table <- function(object) {
     ),
     eta2 = c(
       s["ss_between"], s["ss_kontrast"], ss_residual,
-      NA_real_, NA_real_
+      s["ss_within"], NA_real_
     ) / unname(s["ss_total"]),
     check.names = FALSE
   )
@@ -351,6 +351,30 @@ detailed_f_table <- function(object) {
   tab$p <- format_probability(tab$p)
   tab$eta2 <- format_statistic(tab$eta2)
   rownames(tab) <- NULL
+  attr(tab, "header_tooltips") <- c(
+    eta2 = paste0(
+      "Ordinary eta squared: the sum of squares in this row divided by ",
+      "the total sum of squares."
+    )
+  )
+  attr(tab, "cell_tooltips") <- list(
+    eta2 = c(
+      "Between-groups eta squared = SS between / SS total.",
+      paste0(
+        "Contrast eta squared = SS contrast / SS total; this is ",
+        "equivalent to r_es squared."
+      ),
+      paste0(
+        "Residual between-groups eta squared = SS residual between / ",
+        "SS total."
+      ),
+      paste0(
+        "Within-group/error SS share = SS within / SS total. This is a ",
+        "descriptive variance share, not a tested effect."
+      ),
+      ""
+    )
+  )
   tab
 }
 
@@ -452,6 +476,18 @@ cofad_report_tag <- function(report) {
 #' Convert a data frame to a small Bootstrap-compatible HTML table
 #' @noRd
 cofad_html_table <- function(x, id = NULL, right_align = character()) {
+  header_tooltips <- attr(x, "header_tooltips")
+  cell_tooltips <- attr(x, "cell_tooltips")
+  has_tooltip <- function(tooltip) {
+    length(tooltip) == 1 && !is.na(tooltip) && nzchar(tooltip)
+  }
+  table_class <- function(name, tooltip) {
+    classes <- c(
+      if (name %in% right_align) "cofad-number",
+      if (has_tooltip(tooltip)) "cofad-tooltip"
+    )
+    if (length(classes)) paste(classes, collapse = " ") else NULL
+  }
   display_name <- function(name) {
     if (identical(name, "Squared / explained proportion")) {
       "r\u00b2"
@@ -465,15 +501,28 @@ cofad_html_table <- function(x, id = NULL, right_align = character()) {
     id = id,
     class = "table table-condensed cofad-booktabs",
     shiny::tags$thead(shiny::tags$tr(lapply(names(x), function(name) {
+      tooltip <- if (!is.null(header_tooltips) &&
+          name %in% names(header_tooltips)) {
+        unname(header_tooltips[[name]])
+      }
       shiny::tags$th(
-        class = if (name %in% right_align) "cofad-number" else NULL,
+        class = table_class(name, tooltip),
+        title = if (has_tooltip(tooltip)) tooltip else NULL,
+        tabindex = if (has_tooltip(tooltip)) "0" else NULL,
         display_name(name)
       )
     }))),
     shiny::tags$tbody(lapply(seq_len(nrow(x)), function(i) {
       shiny::tags$tr(lapply(names(x), function(name) {
+        tooltip <- if (!is.null(cell_tooltips) &&
+            name %in% names(cell_tooltips) &&
+            length(cell_tooltips[[name]]) >= i) {
+          cell_tooltips[[name]][[i]]
+        }
         shiny::tags$td(
-          class = if (name %in% right_align) "cofad-number" else NULL,
+          class = table_class(name, tooltip),
+          title = if (has_tooltip(tooltip)) tooltip else NULL,
+          tabindex = if (has_tooltip(tooltip)) "0" else NULL,
           x[[name]][[i]]
         )
       }))
@@ -489,9 +538,9 @@ cofad_copy_button <- function(target, label) {
   )
 }
 
-#' Plot the partition of total variation
+#' Calculate variance shares under the three effect-size denominators
 #' @noRd
-plot_variance_partition <- function(object) {
+variance_partition_data <- function(object) {
   s <- object$sig
   component_names <- if (inherits(object, "cofad_mx")) {
     c(
@@ -499,7 +548,7 @@ plot_variance_partition <- function(object) {
       "Within-group score variation"
     )
   } else {
-    c("Contrast", "Other between-group", "Within-group")
+    c("Contrast", "Other between-group", "Within-group/error")
   }
   components <- stats::setNames(c(
     unname(s["ss_kontrast"]),
@@ -507,34 +556,132 @@ plot_variance_partition <- function(object) {
     unname(s["ss_within"])
   ), component_names)
   components[abs(components) < sqrt(.Machine$double.eps)] <- 0
-  proportions <- components / unname(s["ss_total"])
-  colors <- c("#E69F00", "#56B4E9", "#BDBDBD")
 
-  old_par <- graphics::par(mar = c(3.3, 1.4, 1.2, 1.8))
+  denominators <- c(
+    total = unname(s["ss_total"]),
+    between = unname(s["ss_between"]),
+    contrast_error = unname(s["ss_kontrast"] + s["ss_within"])
+  )
+  numerators <- rbind(
+    total = unname(components),
+    between = c(unname(components[c(1, 2)]), 0),
+    contrast_error = c(components[[1]], 0, components[[3]])
+  )
+  shares <- numerators
+  for (i in seq_len(nrow(shares))) {
+    shares[i, ] <- if (is.finite(denominators[[i]]) &&
+        denominators[[i]] > 0) {
+      numerators[i, ] / denominators[[i]]
+    } else {
+      rep(NA_real_, ncol(shares))
+    }
+  }
+  colnames(shares) <- names(components)
+  colnames(numerators) <- names(components)
+
+  metrics <- c(
+    r_es2 = components[[1]] / denominators[["total"]],
+    r_alerting2 = components[[1]] / denominators[["between"]],
+    r_contrast2 = components[[1]] / denominators[["contrast_error"]]
+  )
+  list(
+    components = components,
+    numerators = numerators,
+    denominators = denominators,
+    shares = shares,
+    metrics = metrics,
+    row_labels = c("Total SS", "Between-group SS", "Contrast + error SS")
+  )
+}
+
+#' Describe the variance component under the pointer
+#' @noRd
+variance_partition_hover <- function(object, hover) {
+  if (is.null(hover) || is.null(hover$x) || is.null(hover$y)) return(NULL)
+  if (!is.finite(hover$x) || !is.finite(hover$y) ||
+      hover$x < 0 || hover$x > 1) return(NULL)
+
+  partition <- variance_partition_data(object)
+  y_positions <- c(3, 2, 1)
+  row <- which.min(abs(y_positions - hover$y))
+  if (abs(y_positions[[row]] - hover$y) > 0.42) return(NULL)
+  cumulative <- cumsum(partition$shares[row, ])
+  candidates <- which(
+    hover$x <= cumulative + sqrt(.Machine$double.eps)
+  )
+  if (!length(candidates)) return(NULL)
+  segment <- candidates[[1]]
+  if (partition$shares[row, segment] <= 0) return(NULL)
+
+  list(
+    row = partition$row_labels[[row]],
+    component = names(partition$components)[[segment]],
+    ss = partition$numerators[row, segment],
+    denominator = partition$denominators[[row]],
+    share = partition$shares[row, segment],
+    metric = names(partition$metrics)[[row]],
+    metric_value = partition$metrics[[row]]
+  )
+}
+
+#' Plot the partition of total variation and effect-size denominators
+#' @noRd
+plot_variance_partition <- function(object) {
+  partition <- variance_partition_data(object)
+  components <- partition$components
+  colors <- c("#E69F00", "#56B4E9", "#BDBDBD")
+  y_positions <- c(3, 2, 1)
+
+  old_par <- graphics::par(mar = c(3.3, 8.5, 1.1, 7.8), xpd = NA)
   on.exit(graphics::par(old_par), add = TRUE)
-  mids <- graphics::barplot(
-    as.matrix(proportions), horiz = TRUE, axes = FALSE, border = NA,
-    col = colors, xlim = c(0, 1), ylim = c(0, 0.9), width = 0.38
+  graphics::plot(
+    NA_real_, NA_real_, type = "n", axes = FALSE,
+    xlim = c(0, 1), ylim = c(0.5, 3.5), xlab = "", ylab = ""
   )
   graphics::axis(
     1, at = seq(0, 1, by = 0.2),
     labels = paste0(seq(0, 100, by = 20), "%")
   )
-  axis_label <- if (inherits(object, "cofad_mx")) {
-    "Proportion of total within-contrast score SS"
-  } else {
-    "Proportion of total sum of squares"
-  }
-  graphics::mtext(axis_label, side = 1, line = 2.2, cex = 0.85)
-  centers <- cumsum(proportions) - proportions / 2
-  labels <- ifelse(
-    proportions >= 0.04,
-    paste0(round(100 * proportions, 1), "%"), ""
+  graphics::axis(
+    2, at = y_positions, labels = partition$row_labels,
+    tick = FALSE, las = 1, cex.axis = 0.84
   )
-  graphics::text(centers, mids, labels = labels, cex = 0.9)
+  graphics::mtext("Share of the row denominator", side = 1, line = 2.2,
+                  cex = 0.85)
+
+  for (row in seq_len(nrow(partition$shares))) {
+    left <- 0
+    for (segment in seq_len(ncol(partition$shares))) {
+      share <- partition$shares[row, segment]
+      if (!is.finite(share) || share <= 0) next
+      graphics::rect(
+        left, y_positions[[row]] - 0.28, left + share,
+        y_positions[[row]] + 0.28, col = colors[[segment]], border = "white"
+      )
+      if (share >= 0.055) {
+        graphics::text(
+          left + share / 2, y_positions[[row]],
+          labels = paste0(round(100 * share, 1), "%"), cex = 0.78
+        )
+      }
+      left <- left + share
+    }
+  }
+
+  metric_expressions <- list(
+    bquote(r[es]^2 == .(round(partition$metrics[[1]], 3))),
+    bquote(r[alerting]^2 == .(round(partition$metrics[[2]], 3))),
+    bquote(r[contrast]^2 == .(round(partition$metrics[[3]], 3)))
+  )
+  for (row in seq_along(y_positions)) {
+    graphics::text(
+      1.025, y_positions[[row]], labels = metric_expressions[[row]],
+      adj = c(0, 0.5), cex = 0.82
+    )
+  }
   graphics::legend(
-    "top", legend = names(components), fill = colors, border = NA,
-    horiz = TRUE, bty = "n", inset = c(0, -0.02), xpd = TRUE, cex = 0.76
+    x = 0, y = 0.43, legend = names(components), fill = colors, border = NA,
+    horiz = TRUE, bty = "n", xpd = NA, cex = 0.72
   )
   invisible(components)
 }
