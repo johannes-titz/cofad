@@ -1,5 +1,8 @@
 # cofad (development version)
 
+* render every model/contrast-table column immediately and preserve its natural
+  width inside a horizontally scrollable wrapper, avoiding initially blank
+  lambda and N columns in narrow or newly revealed panels
 * copy the paper-ready report as rich HTML by default, preserving italic and
   subscripted mathematical notation while retaining a plain-text clipboard
   fallback

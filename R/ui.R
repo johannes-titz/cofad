@@ -133,7 +133,7 @@ myui <- function(request) {
                text-align: right; }
              .cofad-hot-wrap { display: inline-block; max-width: 100%;
                overflow-x: auto; vertical-align: top; }
-             .cofad-hot-wrap .rhandsontable { max-width: 100%; }
+             .cofad-hot-wrap .rhandsontable { max-width: none; }
              .cofad-hot-wrap .ht_clone_top th { text-transform: capitalize; }
              .box-header .box-title { font-size: 18px; line-height: 1.25; }
              .box-body h4 { font-size: 15px; line-height: 1.35;

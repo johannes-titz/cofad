@@ -51,6 +51,20 @@ myserver <- shinyServer(function(input, output, session) {
     reactive$data_version <- reactive$data_version + 1
     shinyjs::show("create_model")
     shinyjs::show("output_region")
+    compare_default <- isTRUE(example_spec$competing)
+    between_default <- isTRUE(reactive$use_between_contrast)
+    within_default <- isTRUE(reactive$use_within_contrast)
+    session$onFlushed(function() {
+      updateCheckboxInput(
+        session, "compare_competing", value = compare_default
+      )
+      updateCheckboxInput(
+        session, "use_between_contrast", value = between_default
+      )
+      updateCheckboxInput(
+        session, "use_within_contrast", value = within_default
+      )
+    }, once = TRUE)
   }
 
   # Example data sets ----------------------------------------------------------
@@ -254,7 +268,7 @@ myserver <- shinyServer(function(input, output, session) {
     table_width <- 190 + variable_width + 25
     hot <- rhandsontable::rhandsontable(
       model, stretchH = "none", rowHeaders = NULL, width = table_width,
-      height = 126
+      height = 126, renderAllColumns = TRUE
     )
     hot <- rhandsontable::hot_col(hot, "role", readOnly = TRUE, width = 190)
     rhandsontable::hot_col(
@@ -270,6 +284,8 @@ myserver <- shinyServer(function(input, output, session) {
     selected <- as.character(model$variable)
     selected[selected == "NONE"] <- ""
     ids <- c("dv_name", "between_name", "within_name", "id_name")
+    selected_variables <- selected[nzchar(selected)]
+    if (!all(selected_variables %in% names(reactive$data))) return()
     current <- c(
       input$dv_name, input$between_name, input$within_name, input$id_name
     )
@@ -388,20 +404,24 @@ myserver <- shinyServer(function(input, output, session) {
       lambda, within_data,
       lambda_rival = if (competing) lambda_rival else NULL
     )
-    level_width <- max(100, min(280, 30 + 8 * max(nchar(df$level))))
-    table_width <- level_width + 90 + 65 + 25 + if (competing) 90 else 0
+    level_width <- max(105, min(240, 20 + 6 * max(nchar(df$level))))
+    weight_width <- 65
+    n_width <- 45
+    table_width <- level_width + weight_width + n_width + 15 +
+      if (competing) weight_width else 0
     hot <- rhandsontable::rhandsontable(
       df, stretchH = "none", rowHeaders = NULL,
-      width = table_width, height = min(128, 32 + 24 * nrow(df))
+      width = table_width, height = min(128, 32 + 24 * nrow(df)),
+      renderAllColumns = TRUE
     )
     hot <- rhandsontable::hot_col(
       hot, "level", readOnly = TRUE, width = level_width
     )
     weight_columns <- if (competing) c("favored", "rival") else "lambda"
     for (column in weight_columns) {
-      hot <- rhandsontable::hot_col(hot, column, width = 90)
+      hot <- rhandsontable::hot_col(hot, column, width = weight_width)
     }
-    rhandsontable::hot_col(hot, "n", readOnly = TRUE, width = 65)
+    rhandsontable::hot_col(hot, "n", readOnly = TRUE, width = n_width)
   })
 
   observeEvent(input$hot_lambda_within, {
@@ -477,20 +497,24 @@ myserver <- shinyServer(function(input, output, session) {
       lambda, between_data,
       lambda_rival = if (competing) lambda_rival else NULL
     )
-    level_width <- max(100, min(280, 30 + 8 * max(nchar(df$level))))
-    table_width <- level_width + 90 + 65 + 25 + if (competing) 90 else 0
+    level_width <- max(105, min(240, 20 + 6 * max(nchar(df$level))))
+    weight_width <- 65
+    n_width <- 45
+    table_width <- level_width + weight_width + n_width + 15 +
+      if (competing) weight_width else 0
     hot <- rhandsontable::rhandsontable(
       df, stretchH = "none", rowHeaders = NULL,
-      width = table_width, height = min(128, 32 + 24 * nrow(df))
+      width = table_width, height = min(128, 32 + 24 * nrow(df)),
+      renderAllColumns = TRUE
     )
     hot <- rhandsontable::hot_col(
       hot, "level", readOnly = TRUE, width = level_width
     )
     weight_columns <- if (competing) c("favored", "rival") else "lambda"
     for (column in weight_columns) {
-      hot <- rhandsontable::hot_col(hot, column, width = 90)
+      hot <- rhandsontable::hot_col(hot, column, width = weight_width)
     }
-    rhandsontable::hot_col(hot, "n", readOnly = TRUE, width = 65)
+    rhandsontable::hot_col(hot, "n", readOnly = TRUE, width = n_width)
   })
 
   observeEvent(input$hot_lambda_between, {

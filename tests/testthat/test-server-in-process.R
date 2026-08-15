@@ -23,6 +23,7 @@ test_that("between Shiny workflow runs in-process", {
     session$flushReact()
     expect_match(output$hot_model, "Dependent variable")
     expect_match(output$hot_lambda_between, '"n":5')
+    expect_match(output$hot_lambda_between, '"renderAllColumns":true')
     expect_match(output$table_region, "Variance decomposition")
     expect_match(output$table_region, "Residual between groups")
     expect_match(output$citation_region$html, "Henninger")

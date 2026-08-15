@@ -35,6 +35,20 @@ test_that("headings inside panels are smaller than panel titles", {
   expect_match(ui_source, ".box-body h4 { font-size: 15px", fixed = TRUE)
 })
 
+test_that("Handsontable columns redraw after hidden panels become visible", {
+  ui_source <- paste(deparse(body(myui)), collapse = "\n")
+  script <- paste(
+    readLines(cofad_resource("cofad-copy.js"), warn = FALSE), collapse = "\n"
+  )
+
+  expect_match(
+    ui_source, ".cofad-hot-wrap .rhandsontable { max-width: none", fixed = TRUE
+  )
+  expect_match(script, "scheduleHotTableRender", fixed = TRUE)
+  expect_match(script, 'window.jQuery(document).on("shiny:value"', fixed = TRUE)
+  expect_match(script, "widget.hot.render()", fixed = TRUE)
+})
+
 test_that("between results use one table with its note below", {
   shiny::testServer(myserver, {
     session$setInputs(example_dataset = "rosenthal_tbl31")

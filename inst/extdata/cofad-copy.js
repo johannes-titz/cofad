@@ -360,4 +360,39 @@
       "DOCX downloaded."
     );
   };
+
+  var hotTableIds = [
+    "hot_model", "hot_lambda_between", "hot_lambda_within"
+  ];
+
+  function renderHotTables() {
+    hotTableIds.forEach(function(id) {
+      var element = document.getElementById(id);
+      var widget = element && window.HTMLWidgets ?
+        window.HTMLWidgets.getInstance(element) : null;
+      if (widget && widget.hot && element.offsetParent !== null) {
+        widget.hot.render();
+      }
+    });
+  }
+
+  function scheduleHotTableRender() {
+    [0, 100, 350].forEach(function(delay) {
+      window.setTimeout(renderHotTables, delay);
+    });
+  }
+
+  window.cofadRenderHotTables = scheduleHotTableRender;
+  if (window.jQuery) {
+    window.jQuery(document).on("shiny:value", function(event) {
+      if (hotTableIds.includes(event.name)) scheduleHotTableRender();
+    });
+    window.jQuery(document).on(
+      "change",
+      "#compare_competing, #use_between_contrast, #use_within_contrast",
+      scheduleHotTableRender
+    );
+    window.jQuery(document).on("shown.bs.collapse", scheduleHotTableRender);
+  }
+  window.addEventListener("resize", scheduleHotTableRender);
 })();
