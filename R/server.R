@@ -447,7 +447,9 @@ myserver <- shinyServer(function(input, output, session) {
                 class = "cofad-table-content",
                 cofad_html_table(
                   detailed_f_table(contr), id = "cofad-f-table",
-                  right_align = c("SS", "df", "MS", "F", "p", "eta2")
+                  right_align = c(
+                    "SS", "df", "MS", "F", "p", "eta2", "partial_eta2"
+                  )
                 )
               ),
               tags$div(
@@ -468,6 +470,11 @@ myserver <- shinyServer(function(input, output, session) {
               " is the component SS divided by total SS; for the contrast ",
               "row it equals ",
               shiny::HTML("<i>r</i><sub>es</sub><sup>2</sup>"),
+              ". ",
+              shiny::HTML("<i>&eta;</i><sub>p</sub><sup>2</sup>"),
+              " is the component SS divided by that SS plus within-group/",
+              "error SS; for the contrast row it equals ",
+              shiny::HTML("<i>r</i><sub>contrast</sub><sup>2</sup>"),
               ".",
               if (inherits(contr, "cofad_mx")) {
                 shiny::HTML(paste0(

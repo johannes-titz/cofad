@@ -1,5 +1,7 @@
 # cofad (development version)
 
+* add partial eta squared to the app F table, with calculation tooltips and a
+  dotted underline identifying every tooltipped table value
 * place app copy controls beside their report, table, or citation content,
   remove the redundant second effect-size table from between/mixed output,
   keep the F-table explanation directly below its table, clarify panel-versus-

@@ -347,6 +347,12 @@ detailed_f_table <- function(object) {
       s["ss_between"], s["ss_kontrast"], ss_residual,
       s["ss_within"], NA_real_
     ) / unname(s["ss_total"]),
+    partial_eta2 = c(
+      unname(s["ss_between"] / (s["ss_between"] + s["ss_within"])),
+      unname(s["ss_kontrast"] / (s["ss_kontrast"] + s["ss_within"])),
+      unname(ss_residual / (ss_residual + s["ss_within"])),
+      NA_real_, NA_real_
+    ),
     check.names = FALSE
   )
 
@@ -356,11 +362,16 @@ detailed_f_table <- function(object) {
   tab$F <- format_statistic(tab$F)
   tab$p <- format_probability(tab$p)
   tab$eta2 <- format_statistic(tab$eta2)
+  tab$partial_eta2 <- format_statistic(tab$partial_eta2)
   rownames(tab) <- NULL
   attr(tab, "header_tooltips") <- c(
     eta2 = paste0(
       "Ordinary eta squared: the sum of squares in this row divided by ",
       "the total sum of squares."
+    ),
+    partial_eta2 = paste0(
+      "Partial eta squared: effect SS divided by effect SS plus ",
+      "within-group/error SS."
     )
   )
   attr(tab, "cell_tooltips") <- list(
@@ -378,6 +389,23 @@ detailed_f_table <- function(object) {
         "Within-group/error SS share = SS within / SS total. This is a ",
         "descriptive variance share, not a tested effect."
       ),
+      ""
+    ),
+    partial_eta2 = c(
+      paste0(
+        "Between-groups partial eta squared = SS between / ",
+        "(SS between + SS within/error)."
+      ),
+      paste0(
+        "Contrast partial eta squared = SS contrast / ",
+        "(SS contrast + SS within/error); this is equivalent to ",
+        "r_contrast squared."
+      ),
+      paste0(
+        "Residual between-groups partial eta squared = SS residual between / ",
+        "(SS residual between + SS within/error)."
+      ),
+      "",
       ""
     )
   )
@@ -499,6 +527,8 @@ cofad_html_table <- function(x, id = NULL, right_align = character()) {
       "r\u00b2"
     } else if (identical(name, "eta2")) {
       shiny::HTML("<i>&eta;</i>&sup2;")
+    } else if (identical(name, "partial_eta2")) {
+      shiny::HTML("<i>&eta;</i><sub>p</sub>&sup2;")
     } else {
       name
     }

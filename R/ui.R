@@ -137,7 +137,9 @@ myui <- function(request) {
                border: 0 !important; background: transparent !important; }
              .cofad-number { text-align: right !important;
                font-variant-numeric: tabular-nums; }
-             .cofad-tooltip { cursor: help; }
+             .cofad-tooltip { cursor: help; text-decoration-line: underline;
+               text-decoration-style: dotted; text-decoration-thickness: 1px;
+               text-underline-offset: 3px; }
              .cofad-report { white-space: pre-wrap; background: #fafafa;
                border: 1px solid #ddd; border-radius: 4px; padding: 10px;
                max-width: 820px; font-family: inherit; font-size: inherit;
