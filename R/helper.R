@@ -722,7 +722,7 @@ plotly_variance_partition <- function(object) {
       xanchor = "left", yanchor = "bottom", traceorder = "normal",
       font = list(size = 10.5)
     ),
-    margin = list(l = 120, r = 90, t = 72, b = 55),
+    margin = list(l = 132, r = 90, t = 72, b = 55),
     xaxis = list(
       title = "Share of the row denominator",
       range = c(0, 1.23),
@@ -734,6 +734,7 @@ plotly_variance_partition <- function(object) {
       title = "",
       categoryorder = "array",
       categoryarray = rev(partition$row_labels),
+      ticksuffix = "\u00a0\u00a0",
       fixedrange = TRUE
     ),
     annotations = annotations,

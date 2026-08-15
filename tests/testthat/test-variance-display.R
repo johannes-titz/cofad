@@ -68,6 +68,7 @@ test_that("Plotly partition puts component labels above interactive bars", {
   expect_identical(built$x$layout$legend$orientation, "h")
   expect_identical(built$x$layout$legend$traceorder, "normal")
   expect_gt(built$x$layout$legend$y, 1)
+  expect_identical(built$x$layout$yaxis$ticksuffix, "\u00a0\u00a0")
   expect_match(built$x$data[[1]]$hovertext[[1]], "SS =", fixed = TRUE)
   expect_match(built$x$data[[1]]$hovertext[[1]], "289 / 455", fixed = TRUE)
   expect_match(
