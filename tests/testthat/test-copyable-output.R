@@ -127,13 +127,20 @@ test_that("effect-size notes state the guaranteed and conditional order", {
 test_that("the visible report uses math notation and copies Unicode subscripts", {
   report <- "We found r\u2091\u209b = .42 < the upper bound."
   html <- as.character(cofad_report_tag(report))
+  script <- paste(
+    readLines(cofad_resource("cofad-copy.js"), warn = FALSE),
+    collapse = "\n"
+  )
 
   expect_match(html, "<i>r</i>", fixed = TRUE)
   expect_match(html, "<sub>es</sub>", fixed = TRUE)
   expect_match(html, "&lt; the upper bound", fixed = TRUE)
+  expect_match(script, '"text/html": new Blob([html]', fixed = TRUE)
+  expect_match(script, "report.innerHTML", fixed = TRUE)
+  expect_match(script, "plainSource.value.trim()", fixed = TRUE)
   expect_match(
     paste(deparse(body(myserver)), collapse = "\n"),
-    "cofad-report-copy-text", fixed = TRUE
+    "Copy report (HTML)", fixed = TRUE
   )
 })
 

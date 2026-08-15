@@ -1,5 +1,8 @@
 # cofad (development version)
 
+* copy the paper-ready report as rich HTML by default, preserving italic and
+  subscripted mathematical notation while retaining a plain-text clipboard
+  fallback
 * preload every app example with its source-defined model roles and planned
   weights; examples with published rival hypotheses now open in competing mode,
   while nonsubstantive mixed-design grouping factors remain available for error

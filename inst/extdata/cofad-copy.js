@@ -38,11 +38,39 @@
   };
 
   window.cofadCopyReport = function() {
-    var source = document.getElementById("cofad-report-copy-text");
-    window.cofadCopyText(
-      source ? source.value.trim() : "",
-      document.getElementById("cofad-report-copy-status")
-    );
+    var report = document.getElementById("cofad-report-text");
+    var plainSource = document.getElementById("cofad-report-copy-text");
+    if (!report) return;
+    var plain = plainSource ? plainSource.value.trim() : report.innerText.trim();
+    var html = '<div style="font-family:Arial,sans-serif;white-space:pre-wrap">' +
+      report.innerHTML + "</div>";
+    var status = document.getElementById("cofad-report-copy-status");
+
+    if (navigator.clipboard && window.ClipboardItem && window.isSecureContext) {
+      var item = new window.ClipboardItem({
+        "text/html": new Blob([html], {type: "text/html"}),
+        "text/plain": new Blob([plain], {type: "text/plain"})
+      });
+      navigator.clipboard.write([item]).then(function() {
+        showStatus(status, "HTML copied.");
+      });
+      return;
+    }
+
+    var holder = document.createElement("div");
+    holder.style.position = "fixed";
+    holder.style.left = "-10000px";
+    holder.innerHTML = html;
+    document.body.appendChild(holder);
+    var selection = window.getSelection();
+    var range = document.createRange();
+    range.selectNodeContents(holder);
+    selection.removeAllRanges();
+    selection.addRange(range);
+    document.execCommand("copy");
+    selection.removeAllRanges();
+    holder.remove();
+    showStatus(status, "HTML copied.");
   };
 
   function tableValues(id) {

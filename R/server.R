@@ -637,7 +637,7 @@ myserver <- shinyServer(function(input, output, session) {
               type = "button",
               class = "btn btn-default btn-sm cofad-copy-button",
               onclick = "cofadCopyReport(); return false;",
-              "Copy report text"
+              "Copy report (HTML)"
             ),
             tags$span(
               id = "cofad-report-copy-status", class = "cofad-copy-status",
