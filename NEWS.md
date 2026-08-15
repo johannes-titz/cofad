@@ -1,5 +1,8 @@
 # cofad (development version)
 
+* place app copy controls beside their report, table, or citation content with
+  responsive wrapping, and remove the duplicate example description below the
+  selector while retaining its option tooltips
 * add ordinary eta squared to the app F table, including the within-group/error
   SS share and calculation tooltips, display small p values rather than
   replacing them with a threshold, and use regular-weight Help and citation

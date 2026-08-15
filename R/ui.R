@@ -142,8 +142,17 @@ myui <- function(request) {
                border: 1px solid #ddd; border-radius: 4px; padding: 10px;
                max-width: 820px; font-family: inherit; font-size: inherit;
                line-height: 1.45; }
-             .cofad-copy-button { margin: 0 4px 8px 0; }
-             .cofad-copy-status { color: #287a31; margin-left: 4px; }
+             .cofad-copy-layout { display: flex; align-items: flex-start;
+               gap: 8px; width: fit-content; max-width: 100%; }
+             .cofad-copy-layout-report { width: 100%; }
+             .cofad-copy-layout-report .cofad-report {
+               flex: 1 1 520px; min-width: 0; }
+             .cofad-copy-content { min-width: 0; }
+             .cofad-copy-actions { display: flex; flex: 0 0 auto;
+               flex-direction: column; align-items: flex-end; gap: 4px; }
+             .cofad-copy-button { margin: 0; white-space: nowrap; }
+             .cofad-copy-status { color: #287a31; min-height: 1.2em;
+               text-align: right; }
              .cofad-hot-wrap { display: inline-block; max-width: 100%;
                overflow-x: auto; vertical-align: top; }
              .cofad-hot-wrap .rhandsontable { max-width: 100%; }
@@ -153,8 +162,14 @@ myui <- function(request) {
              .cofad-note-warning { color: #8a5a00; font-weight: 600; }
              #help .box-title, #help h4, #help strong { font-weight: 400; }
              .csl-entry { margin: 0 0 .8em 2em; text-indent: -2em; }
-             .cofad-citation-actions .btn { margin: 2px 4px 2px 0; }
-             #cofad-copy-status { color: #287a31; margin-left: 4px; }
+             .cofad-citation-layout .cofad-copy-content {
+               flex: 1 1 360px; }
+             .cofad-citation-actions .btn { margin: 0; white-space: nowrap; }
+             #cofad-copy-status { color: #287a31; }
+             @media (max-width: 600px) {
+               .cofad-copy-layout { flex-wrap: wrap; }
+               .cofad-copy-actions { margin-left: auto; }
+             }
              .cofad-footer { color: #999; font-size: 11px; margin-top: 24px; }"
           ))
         ),
@@ -170,7 +185,6 @@ myui <- function(request) {
         h6("Supported formats: .csv and .sav (SPSS)."),
         tags$hr(),
         cofad_example_select(),
-        uiOutput("example_description"),
         tags$p(
           class = "cofad-footer",
           HTML(

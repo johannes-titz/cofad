@@ -413,15 +413,23 @@ myserver <- shinyServer(function(input, output, session) {
       div(
         class = "cofad-results",
         tags$h4("Report"),
-        tags$button(
-          type = "button", class = "btn btn-default btn-sm cofad-copy-button",
-          onclick = "cofadCopyReport(); return false;", "Copy report text"
+        tags$div(
+          class = "cofad-copy-layout cofad-copy-layout-report",
+          cofad_report_tag(report),
+          tags$div(
+            class = "cofad-copy-actions",
+            tags$button(
+              type = "button",
+              class = "btn btn-default btn-sm cofad-copy-button",
+              onclick = "cofadCopyReport(); return false;",
+              "Copy report text"
+            ),
+            tags$span(
+              id = "cofad-report-copy-status", class = "cofad-copy-status",
+              role = "status"
+            )
+          )
         ),
-        tags$span(
-          id = "cofad-report-copy-status", class = "cofad-copy-status",
-          role = "status"
-        ),
-        cofad_report_tag(report),
         tags$textarea(
           report, id = "cofad-report-copy-text", style = "display: none;",
           `aria-hidden` = "true", tabindex = "-1"
@@ -433,14 +441,20 @@ myserver <- shinyServer(function(input, output, session) {
             } else {
               "Variance decomposition (F table)"
             }),
-            cofad_copy_button("cofad-f-table", "Copy F table"),
-            tags$span(
-              id = "cofad-f-table-copy-status", class = "cofad-copy-status",
-              role = "status"
-            ),
-            cofad_html_table(
-              detailed_f_table(contr), id = "cofad-f-table",
-              right_align = c("SS", "df", "MS", "F", "p", "eta2")
+            tags$div(
+              class = "cofad-copy-layout",
+              cofad_html_table(
+                detailed_f_table(contr), id = "cofad-f-table",
+                right_align = c("SS", "df", "MS", "F", "p", "eta2")
+              ),
+              tags$div(
+                class = "cofad-copy-actions",
+                cofad_copy_button("cofad-f-table", "Copy F table"),
+                tags$span(
+                  id = "cofad-f-table-copy-status",
+                  class = "cofad-copy-status", role = "status"
+                )
+              )
             ),
             tags$p(
               class = "cofad-note",
@@ -467,14 +481,22 @@ myserver <- shinyServer(function(input, output, session) {
               }
             ),
             tags$h4("Effect sizes and explained proportions"),
-            cofad_copy_button("cofad-effect-table", "Copy effect-size table"),
-            tags$span(
-              id = "cofad-effect-table-copy-status", class = "cofad-copy-status",
-              role = "status"
-            ),
-            cofad_html_table(
-              detailed_effect_table(contr), id = "cofad-effect-table",
-              right_align = c("Estimate", "Squared / explained proportion")
+            tags$div(
+              class = "cofad-copy-layout",
+              cofad_html_table(
+                detailed_effect_table(contr), id = "cofad-effect-table",
+                right_align = c("Estimate", "Squared / explained proportion")
+              ),
+              tags$div(
+                class = "cofad-copy-actions",
+                cofad_copy_button(
+                  "cofad-effect-table", "Copy effect-size table"
+                ),
+                tags$span(
+                  id = "cofad-effect-table-copy-status",
+                  class = "cofad-copy-status", role = "status"
+                )
+              )
             ),
             tags$p(class = "cofad-note", cofad_effect_order_note(contr)),
             tags$h4(if (inherits(contr, "cofad_mx")) {
@@ -494,14 +516,22 @@ myserver <- shinyServer(function(input, output, session) {
         } else {
           tagList(
             tags$h4("Effect sizes"),
-            cofad_copy_button("cofad-effect-table", "Copy effect-size table"),
-            tags$span(
-              id = "cofad-effect-table-copy-status", class = "cofad-copy-status",
-              role = "status"
-            ),
-            cofad_html_table(
-              detailed_effect_table(contr), id = "cofad-effect-table",
-              right_align = "Estimate"
+            tags$div(
+              class = "cofad-copy-layout",
+              cofad_html_table(
+                detailed_effect_table(contr), id = "cofad-effect-table",
+                right_align = "Estimate"
+              ),
+              tags$div(
+                class = "cofad-copy-actions",
+                cofad_copy_button(
+                  "cofad-effect-table", "Copy effect-size table"
+                ),
+                tags$span(
+                  id = "cofad-effect-table-copy-status",
+                  class = "cofad-copy-status", role = "status"
+                )
+              )
             ),
             tags$p(class = "cofad-note", cofad_effect_order_note(contr)),
             tags$p(

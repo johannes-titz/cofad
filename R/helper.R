@@ -230,23 +230,29 @@ cite <- cofad_citation_html
 cofad_citation_panel <- function() {
   shiny::tagList(
     shiny::tags$h4("Cite cofad"),
-    shiny::tags$p("Please cite both the tutorial and the software paper:"),
-    shiny::HTML(cofad_citation_html()),
     shiny::tags$div(
-      class = "cofad-citation-actions",
-      shiny::actionButton(
-        "copy_citation_plain", "Copy plain text",
-        onclick = "cofadCopyCitation('plain'); return false;"
+      class = "cofad-copy-layout cofad-citation-layout",
+      shiny::tags$div(
+        class = "cofad-copy-content",
+        shiny::tags$p("Please cite both the tutorial and the software paper:"),
+        shiny::HTML(cofad_citation_html())
       ),
-      shiny::actionButton(
-        "copy_citation_html", "Copy HTML",
-        onclick = "cofadCopyCitation('html'); return false;"
-      ),
-      shiny::actionButton(
-        "copy_citation_bib", "Copy BibTeX",
-        onclick = "cofadCopyCitation('bibtex'); return false;"
-      ),
-      shiny::tags$span(id = "cofad-copy-status", role = "status")
+      shiny::tags$div(
+        class = "cofad-copy-actions cofad-citation-actions",
+        shiny::actionButton(
+          "copy_citation_plain", "Copy plain text",
+          onclick = "cofadCopyCitation('plain'); return false;"
+        ),
+        shiny::actionButton(
+          "copy_citation_html", "Copy HTML",
+          onclick = "cofadCopyCitation('html'); return false;"
+        ),
+        shiny::actionButton(
+          "copy_citation_bib", "Copy BibTeX",
+          onclick = "cofadCopyCitation('bibtex'); return false;"
+        ),
+        shiny::tags$span(id = "cofad-copy-status", role = "status")
+      )
     ),
     shiny::tags$textarea(
       id = "cofad-citation-plain", style = "display:none;",
