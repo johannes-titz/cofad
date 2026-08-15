@@ -424,11 +424,11 @@ detailed_f_table <- function(object) {
   tab
 }
 
-#' Create the one-df F equivalent of a within-subjects contrast test
+#' Create an F table for a within-subjects contrast test
 #'
 #' A planned within-subjects contrast is tested as a t test of participants'
-#' contrast scores. Squaring that statistic gives the exactly equivalent
-#' nondirectional F test with one numerator degree of freedom.
+#' contrast scores. The contrast mean square and its participant-by-contrast
+#' error mean square reproduce the exactly equivalent nondirectional F test.
 #'
 #' @param object A `cofad_wi` object.
 #' @return A formatted one-row data frame for display in the Shiny app.
@@ -438,21 +438,69 @@ detailed_within_f_table <- function(object) {
   t_value <- unname(object$sig[[1]])
   df_error <- unname(object$sig[[3]])
   f_value <- t_value^2
+  score_variance <- unname(object$desc[[3]])^2
+  score_scale <- if (identical(object$within_score, "L")) {
+    sum(object$lambda_within^2)
+  } else {
+    1
+  }
+  ms_error <- score_variance / score_scale
+  ss_error <- ms_error * df_error
+  ms_contrast <- f_value * ms_error
+  ss_total <- ms_contrast + ss_error
+  format_statistic <- function(x, digits = 3) {
+    ifelse(
+      is.na(x), "",
+      formatC(x, format = "f", digits = digits, drop0trailing = FALSE)
+    )
+  }
   tab <- data.frame(
-    Source = "Within-subjects contrast",
-    df1 = "1",
-    df2 = formatC(df_error, format = "f", digits = 0),
-    F = formatC(f_value, format = "f", digits = 3),
-    p = format_report_p(stats::pf(
-      f_value, df1 = 1, df2 = df_error, lower.tail = FALSE
-    )),
+    Source = c(
+      "Within-subjects contrast",
+      "Contrast × participants (error)",
+      "Total contrast-related variation"
+    ),
+    SS = format_statistic(c(ms_contrast, ss_error, ss_total)),
+    df = format_statistic(c(1, df_error, df_error + 1), digits = 0),
+    MS = format_statistic(c(ms_contrast, ms_error, NA_real_)),
+    F = format_statistic(c(f_value, NA_real_, NA_real_)),
+    p = c(
+      format_report_p(stats::pf(
+        f_value, df1 = 1, df2 = df_error, lower.tail = FALSE
+      )),
+      "", ""
+    ),
     check.names = FALSE
   )
   attr(tab, "header_tooltips") <- c(
-    F = "The one-df F equivalent of the reported contrast test: F = t squared.",
+    SS = if (identical(object$within_score, "L")) {
+      paste(
+        "Sum of squares for the planned contrast, expressed on the outcome",
+        "scale by accounting for the squared contrast weights."
+      )
+    } else {
+      "Sum of squares among participants' correlation scores."
+    },
+    MS = paste(
+      "The contrast and error rows are two estimates of population variance;",
+      "their ratio is F."
+    ),
+    F = "The planned-contrast variance estimate divided by its error estimate; F = t squared.",
     p = paste(
-      "Nondirectional p value from F(1, df2). The report above instead uses",
+      "Nondirectional p value from F(1, df error). The report above instead uses",
       "the prespecified contrast direction."
+    )
+  )
+  attr(tab, "cell_tooltips") <- list(
+    SS = c(
+      "Contrast SS = MS contrast because the planned contrast has one df.",
+      "Error SS = MS error multiplied by its participant df.",
+      "Total contrast-related SS = contrast SS + error SS."
+    ),
+    MS = c(
+      "MS contrast is the numerator variance estimate.",
+      "MS error is the denominator variance estimate from variation among participants' contrast scores.",
+      ""
     )
   )
   tab
@@ -678,9 +726,20 @@ cofad_r_code <- function(
     )
     paste0(name, " <- c(\n", paste(entries, collapse = ",\n"), "\n)")
   }
-  factor_argument <- function(argument, variable) {
+  variable_argument <- function(argument, variable) {
     if (!nzchar(variable)) return(character())
-    paste0("  ", argument, " = as.factor(dat[[", quote_r(variable), "]])")
+    reserved <- c(
+      "if", "else", "repeat", "while", "function", "for", "in", "next",
+      "break", "TRUE", "FALSE", "NULL", "Inf", "NaN", "NA", "NA_integer_",
+      "NA_real_", "NA_complex_", "NA_character_"
+    )
+    syntactic <- make.names(variable) == variable && !variable %in% reserved
+    display <- if (syntactic) {
+      variable
+    } else {
+      paste0("`", gsub("`", "\\`", variable, fixed = TRUE), "`")
+    }
+    paste0("  ", argument, " = ", display)
   }
   contrast_code <- function(prefix, favored, rival) {
     if (is.null(favored)) return(character())
@@ -689,7 +748,7 @@ cofad_r_code <- function(
         weight_code(paste0(prefix, "_favored"), favored),
         weight_code(paste0(prefix, "_rival"), rival),
         paste0(
-          prefix, " <- cofad::lambda_diff(\n",
+          prefix, " <- lambda_diff(\n",
           "  lambda_favored = ", prefix, "_favored,\n",
           "  lambda_rival = ", prefix, "_rival\n)"
         )
@@ -699,13 +758,21 @@ cofad_r_code <- function(
     }
   }
 
+  data_name <- if (!is.null(example_name) && nzchar(example_name)) {
+    example_name
+  } else {
+    "dat"
+  }
   preamble <- if (!is.null(example_name) && nzchar(example_name)) {
     c(
-      paste0("data(", quote_r(example_name), ", package = \"cofad\")"),
-      paste0("dat <- ", example_name)
+      "library(cofad)",
+      paste0("data(", quote_r(example_name), ")")
     )
   } else {
-    "# Replace dat with the data frame you imported."
+    c(
+      "library(cofad)",
+      "# Replace dat with the data frame you imported."
+    )
   }
   definitions <- c(
     contrast_code(
@@ -714,18 +781,19 @@ cofad_r_code <- function(
     contrast_code("lambda_within", lambda_within, lambda_within_rival)
   )
   arguments <- c(
-    paste0("  dv = dat[[", quote_r(model[["dv_name"]]), "]]"),
-    factor_argument("between", model[["between_name"]]),
+    variable_argument("dv", model[["dv_name"]]),
+    variable_argument("between", model[["between_name"]]),
     if (!is.null(lambda_between)) "  lambda_between = lambda_between",
-    factor_argument("within", model[["within_name"]]),
+    variable_argument("within", model[["within_name"]]),
     if (!is.null(lambda_within)) "  lambda_within = lambda_within",
-    factor_argument("id", model[["id_name"]]),
+    variable_argument("id", model[["id_name"]]),
     if (nzchar(model[["within_name"]])) {
       paste0("  within_score = ", quote_r(within_score))
-    }
+    },
+    paste0("  data = ", data_name)
   )
   call <- paste0(
-    "result <- cofad::calc_contrast(\n",
+    "result <- calc_contrast(\n",
     paste(arguments, collapse = ",\n"),
     "\n)"
   )

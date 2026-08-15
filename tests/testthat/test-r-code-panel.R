@@ -10,17 +10,29 @@ test_that("within contrast has an exact nondirectional F equivalent", {
   )
   table <- detailed_within_f_table(result)
 
-  expect_equal(as.numeric(table$F), unname(result$sig[[1]])^2, tolerance = 0.001)
-  expect_identical(table$df1, "1")
-  expect_identical(as.numeric(table$df2), unname(result$sig[[3]]))
+  expect_equal(as.numeric(table$F[[1]]), unname(result$sig[[1]])^2,
+               tolerance = 0.001)
+  expect_identical(table$df, c("1", "7", "8"))
+  expect_identical(
+    table$Source,
+    c(
+      "Within-subjects contrast", "Contrast × participants (error)",
+      "Total contrast-related variation"
+    )
+  )
+  expect_equal(as.numeric(table$MS[[1]]) / as.numeric(table$MS[[2]]),
+               as.numeric(table$F[[1]]), tolerance = 0.002)
+  expect_equal(as.numeric(table$SS[[3]]),
+               sum(as.numeric(table$SS[1:2])), tolerance = 0.002)
   expect_equal(
-    as.numeric(table$p),
+    as.numeric(table$p[[1]]),
     stats::pf(unname(result$sig[[1]])^2, 1, unname(result$sig[[3]]),
               lower.tail = FALSE),
     tolerance = 1e-4
   )
   html <- as.character(cofad_html_table(table))
   expect_match(html, "F = t squared", fixed = TRUE)
+  expect_match(html, "two estimates of population variance", fixed = TRUE)
   expect_match(html, "cofad-tooltip", fixed = TRUE)
 })
 
@@ -33,9 +45,14 @@ test_that("R code generator reproduces single and competing app models", {
     lambda_between = c(A = -3, B = -1, C = 1, D = 3),
     example_name = "rosenthal_tbl31"
   )
-  expect_match(between_code, 'data("rosenthal_tbl31"', fixed = TRUE)
+  expect_match(between_code, "library(cofad)", fixed = TRUE)
+  expect_match(between_code, 'data("rosenthal_tbl31")', fixed = TRUE)
   expect_match(between_code, "lambda_between <- c(", fixed = TRUE)
-  expect_match(between_code, "cofad::calc_contrast", fixed = TRUE)
+  expect_match(between_code, "result <- calc_contrast", fixed = TRUE)
+  expect_match(between_code, "dv = dv", fixed = TRUE)
+  expect_match(between_code, "between = between", fixed = TRUE)
+  expect_match(between_code, "data = rosenthal_tbl31", fixed = TRUE)
+  expect_false(grepl("cofad::", between_code, fixed = TRUE))
   expect_false(grepl("lambda_diff", between_code, fixed = TRUE))
 
   within_model <- c(
@@ -48,9 +65,11 @@ test_that("R code generator reproduces single and competing app models", {
     lambda_within_rival = c(a = -1, b = 1),
     compare_competing = TRUE, within_score = "r"
   )
-  expect_match(within_code, "cofad::lambda_diff", fixed = TRUE)
+  expect_match(within_code, "lambda_diff", fixed = TRUE)
+  expect_false(grepl("cofad::", within_code, fixed = TRUE))
   expect_match(within_code, 'within_score = "r"', fixed = TRUE)
-  expect_match(within_code, 'id = as.factor(dat[["participant"]])', fixed = TRUE)
+  expect_match(within_code, "id = participant", fixed = TRUE)
+  expect_match(within_code, "data = dat", fixed = TRUE)
   expect_match(within_code, "Replace dat", fixed = TRUE)
 })
 
@@ -64,4 +83,14 @@ test_that("R code panel exposes a plain-text copy control", {
   expect_match(ui, '<h3 class="box-title">4. R code</h3>', fixed = TRUE)
   expect_match(script, "window.cofadCopyRCode", fixed = TRUE)
   expect_match(script, "cofad-r-code-copy-text", fixed = TRUE)
+
+  shiny::testServer(myserver, {
+    session$setInputs(example_dataset = "rosenthal_tbl31")
+    session$flushReact()
+    code_html <- output$r_code_region$html
+    expect_lt(
+      regexpr("cofad-r-code-actions", code_html, fixed = TRUE)[[1]],
+      regexpr('id="cofad-r-code"', code_html, fixed = TRUE)[[1]]
+    )
+  })
 })

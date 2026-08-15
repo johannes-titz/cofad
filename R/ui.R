@@ -110,9 +110,11 @@ myui <- function(request) {
              .cofad-copy-layout-report .cofad-report {
                flex: 1 1 520px; min-width: 0; }
              .cofad-copy-content { min-width: 0; }
-             .cofad-copy-layout-code { width: 100%; }
-             .cofad-r-code { flex: 1 1 520px; min-width: 0;
-               max-width: 100%; max-height: 420px; overflow: auto;
+             .cofad-r-code-actions { display: flex; justify-content: flex-end;
+               align-items: center; gap: 8px; margin: 0 0 6px; }
+             .cofad-r-code-actions .cofad-copy-button { width: auto; }
+             .cofad-r-code { width: 100%; max-width: 100%; max-height: 420px;
+               overflow: auto;
                white-space: pre; border: 1px solid #ddd; border-radius: 4px;
                background: #fafafa; }
              .cofad-table-layout { width: 100%; }

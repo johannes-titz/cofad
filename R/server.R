@@ -785,20 +785,22 @@ myserver <- shinyServer(function(input, output, session) {
                 )
               )
             ),
-            tags$h4("F equivalent of the within-subjects contrast"),
+            tags$h4(
+              "Variance decomposition of within-subjects contrast scores (F table)"
+            ),
             tags$div(
               class = "cofad-copy-layout",
               tags$div(
                 class = "cofad-table-content",
                 cofad_html_table(
                   detailed_within_f_table(contr), id = "cofad-within-f-table",
-                  right_align = c("df1", "df2", "F", "p")
+                  right_align = c("SS", "df", "MS", "F", "p")
                 )
               ),
               tags$div(
                 class = "cofad-copy-actions",
                 cofad_copy_button(
-                  "cofad-within-f-table", "Copy F-equivalent table"
+                  "cofad-within-f-table", "Copy F table"
                 ),
                 tags$span(
                   id = "cofad-within-f-table-copy-status",
@@ -808,11 +810,13 @@ myserver <- shinyServer(function(input, output, session) {
             ),
             tags$p(
               class = "cofad-note",
-              shiny::HTML("This is the nondirectional equivalent <i>F</i>(1, "),
+              shiny::HTML("This is the nondirectional <i>F</i>(1, "),
               unname(contr$sig[[3]]),
-              shiny::HTML(") = <i>t</i><sup>2</sup> of the same planned "),
+              shiny::HTML(") = <i>t</i><sup>2</sup> form of the same planned "),
               paste(
-                "contrast. It is not a full repeated-measures ANOVA; the",
+                "contrast. Its numerator and error mean squares are the two",
+                "population-variance estimates compared by F. It is not a",
+                "full repeated-measures ANOVA; the",
                 "report retains the prespecified directional p value."
               )
             )
@@ -843,22 +847,19 @@ myserver <- shinyServer(function(input, output, session) {
     )
     tagList(
       tags$div(
-        class = "cofad-copy-layout cofad-copy-layout-code",
-        tags$pre(id = "cofad-r-code", class = "cofad-r-code", tags$code(code)),
-        tags$div(
-          class = "cofad-copy-actions",
-          tags$button(
-            type = "button",
-            class = "btn btn-default btn-sm cofad-copy-button",
-            onclick = "cofadCopyRCode(); return false;",
-            "Copy R code"
-          ),
-          tags$span(
-            id = "cofad-r-code-copy-status", class = "cofad-copy-status",
-            role = "status"
-          )
+        class = "cofad-r-code-actions",
+        tags$button(
+          type = "button",
+          class = "btn btn-default btn-sm cofad-copy-button",
+          onclick = "cofadCopyRCode(); return false;",
+          "Copy R code"
+        ),
+        tags$span(
+          id = "cofad-r-code-copy-status", class = "cofad-copy-status",
+          role = "status"
         )
       ),
+      tags$pre(id = "cofad-r-code", class = "cofad-r-code", tags$code(code)),
       tags$textarea(
         code, id = "cofad-r-code-copy-text", style = "display: none;",
         `aria-hidden` = "true", tabindex = "-1"
