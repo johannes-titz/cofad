@@ -18,12 +18,15 @@ test_that("F-table export controls offer plain, HTML, and DOCX formats", {
   )
 })
 
-test_that("copy controls use the emphasized action style", {
+test_that("copy controls use the quiet uniform action style", {
   ui_source <- paste(deparse(body(myui)), collapse = "\n")
   citation <- as.character(cofad_citation_panel())
 
-  expect_match(ui_source, "background-color: #fff3cd", fixed = TRUE)
-  expect_match(ui_source, "border: 1px solid #c48600", fixed = TRUE)
+  expect_match(ui_source, "background-color: #f5f6f7", fixed = TRUE)
+  expect_match(ui_source, "border: 1px solid #aeb4bb", fixed = TRUE)
+  expect_match(ui_source, "align-items: stretch", fixed = TRUE)
+  expect_match(ui_source, "width: 100%", fixed = TRUE)
+  expect_match(ui_source, ".cofad-footer { color: #fff", fixed = TRUE)
   expect_match(citation, "cofad-copy-button", fixed = TRUE)
 })
 

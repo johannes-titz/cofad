@@ -55,6 +55,9 @@ output: github_document
 
 ## Completed in the August 2026 audit
 
+- [x] Add opt-in favored-versus-rival contrast columns to the Shiny and webR
+  interfaces, using standardized difference weights and reversible single-
+  contrast behavior.
 - [x] Restore editable table-based model and contrast inputs.
 - [x] Automatically suggest between-, within-, ID-, and outcome-variable roles.
 - [x] Add detailed SS/QS, F, effect-size, and variance-partition output.

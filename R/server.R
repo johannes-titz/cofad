@@ -29,7 +29,9 @@ myserver <- shinyServer(function(input, output, session) {
       id_name = if (is.null(suggestion)) "" else suggestion$id_name
     )
     reactive$lambda_between <- NULL
+    reactive$lambda_between_rival <- NULL
     reactive$lambda_within <- NULL
+    reactive$lambda_within_rival <- NULL
     reactive$data_version <- reactive$data_version + 1
     shinyjs::show("create_model")
     shinyjs::show("output_region")
@@ -77,7 +79,6 @@ myserver <- shinyServer(function(input, output, session) {
   # Model input ---------------------------------------------------------------
   output$variables <- renderUI({
     req(reactive$data)
-    default_dv <- isolate(reactive$model_spec[["dv_name"]])
 
     tagList(
       tags$p(
@@ -115,11 +116,29 @@ myserver <- shinyServer(function(input, output, session) {
           "hot_model", width = "auto", height = "130px"
         )
       ),
+      checkboxInput(
+        "compare_competing",
+        label = tags$span(
+          class = "cofad-help-tooltip",
+          title = paste(
+            "Adds a rival column to each active contrast table.",
+            "cofad z-standardizes both vectors and analyzes favored minus",
+            "rival weights. The initial rival reverses the favored weights,",
+            "so enabling the option preserves the current test until you edit",
+            "it. Turning this off hides the rival columns and restores the",
+            "favored weights as ordinary single contrasts."
+          ),
+          "Compare two competing contrasts"
+        ),
+        value = FALSE
+      ),
       # These canonical inputs keep old bookmarks and automated clients working.
       tags$div(
         style = "display:none;",
-        selectInput("dv_name", "DV", choices = reactive$varnames,
-                    selected = default_dv),
+        selectInput(
+          "dv_name", "DV", choices = reactive$varnames,
+          selected = isolate(reactive$model_spec[["dv_name"]])
+        ),
         selectInput(
           "between_name", "IV between",
           choices = c("NONE" = "", reactive$varnames),
@@ -240,9 +259,11 @@ myserver <- shinyServer(function(input, output, session) {
     within_name <- reactive$model_spec[["within_name"]]
     if (is.null(within_name) || !nzchar(within_name)) {
       reactive$lambda_within <- NULL
+      reactive$lambda_within_rival <- NULL
     } else {
       within_levels <- levels(as.factor(reactive$data[, within_name]))
       reactive$lambda_within <- create_default_lambdas(within_levels)
+      reactive$lambda_within_rival <- -reactive$lambda_within
     }
   }, ignoreInit = FALSE)
 
@@ -254,21 +275,33 @@ myserver <- shinyServer(function(input, output, session) {
     ))
     within_data <- reactive$data[, within_name]
     lambda <- reactive$lambda_within
+    competing <- isTRUE(input$compare_competing)
     expected_levels <- levels(as.factor(within_data))
     if (!length(lambda) || !setequal(names(lambda), expected_levels)) {
       lambda <- create_default_lambdas(expected_levels)
     }
-    df <- prepare_table(lambda, within_data)
+    lambda_rival <- reactive$lambda_within_rival
+    if (!length(lambda_rival) ||
+        !setequal(names(lambda_rival), expected_levels)) {
+      lambda_rival <- -lambda
+    }
+    df <- prepare_table(
+      lambda, within_data,
+      lambda_rival = if (competing) lambda_rival else NULL
+    )
     level_width <- max(100, min(280, 30 + 8 * max(nchar(df$level))))
-    table_width <- level_width + 90 + 65 + 25
+    table_width <- level_width + 90 + 65 + 25 + if (competing) 90 else 0
     hot <- rhandsontable::rhandsontable(
-      df, stretchH = "none", rowHeaders = NULL, width = table_width,
-      height = min(128, 32 + 24 * nrow(df))
+      df, stretchH = "none", rowHeaders = NULL,
+      width = table_width, height = min(128, 32 + 24 * nrow(df))
     )
     hot <- rhandsontable::hot_col(
       hot, "level", readOnly = TRUE, width = level_width
     )
-    hot <- rhandsontable::hot_col(hot, "lambda", width = 90)
+    weight_columns <- if (competing) c("favored", "rival") else "lambda"
+    for (column in weight_columns) {
+      hot <- rhandsontable::hot_col(hot, column, width = 90)
+    }
     rhandsontable::hot_col(hot, "n", readOnly = TRUE, width = 65)
   })
 
@@ -276,26 +309,34 @@ myserver <- shinyServer(function(input, output, session) {
     changes <- input$hot_lambda_within$changes$changes
     req(length(changes) > 0)
     df <- rhandsontable::hot_to_r(input$hot_lambda_within)
-    lambda <- isolate(reactive$lambda_within)
-    if (!length(lambda)) {
-      lambda <- as.numeric(df[, 2])
-      names(lambda) <- df[, 1]
+    primary_column <- intersect(c("lambda", "favored"), names(df))
+    if (length(primary_column)) {
+      lambda <- as.numeric(df[[primary_column[[1]]]])
+      names(lambda) <- as.character(df$level)
+      if (!identical(lambda, isolate(reactive$lambda_within))) {
+        reactive$lambda_within <- lambda
+      }
     }
-    for (change in changes) {
-      row <- as.integer(change[[1]]) + 1L
-      level <- as.character(df[row, 1])
-      lambda[level] <- as.numeric(change[[4]])
+    if ("rival" %in% names(df)) {
+      lambda_rival <- as.numeric(df$rival)
+      names(lambda_rival) <- as.character(df$level)
+      if (!identical(
+        lambda_rival, isolate(reactive$lambda_within_rival)
+      )) {
+        reactive$lambda_within_rival <- lambda_rival
+      }
     }
-    reactive$lambda_within <- lambda
   })
 
   observeEvent(list(reactive$model_spec[["between_name"]], reactive$data_version), {
     between_name <- reactive$model_spec[["between_name"]]
     if (is.null(between_name) || !nzchar(between_name)) {
       reactive$lambda_between <- NULL
+      reactive$lambda_between_rival <- NULL
     } else {
       between_levels <- levels(as.factor(reactive$data[, between_name]))
       reactive$lambda_between <- create_default_lambdas(between_levels)
+      reactive$lambda_between_rival <- -reactive$lambda_between
     }
   }, ignoreInit = FALSE)
 
@@ -307,21 +348,33 @@ myserver <- shinyServer(function(input, output, session) {
     ))
     between_data <- reactive$data[, between_name]
     lambda <- reactive$lambda_between
+    competing <- isTRUE(input$compare_competing)
     expected_levels <- levels(as.factor(between_data))
     if (!length(lambda) || !setequal(names(lambda), expected_levels)) {
       lambda <- create_default_lambdas(expected_levels)
     }
-    df <- prepare_table(lambda, between_data)
+    lambda_rival <- reactive$lambda_between_rival
+    if (!length(lambda_rival) ||
+        !setequal(names(lambda_rival), expected_levels)) {
+      lambda_rival <- -lambda
+    }
+    df <- prepare_table(
+      lambda, between_data,
+      lambda_rival = if (competing) lambda_rival else NULL
+    )
     level_width <- max(100, min(280, 30 + 8 * max(nchar(df$level))))
-    table_width <- level_width + 90 + 65 + 25
+    table_width <- level_width + 90 + 65 + 25 + if (competing) 90 else 0
     hot <- rhandsontable::rhandsontable(
-      df, stretchH = "none", rowHeaders = NULL, width = table_width,
-      height = min(128, 32 + 24 * nrow(df))
+      df, stretchH = "none", rowHeaders = NULL,
+      width = table_width, height = min(128, 32 + 24 * nrow(df))
     )
     hot <- rhandsontable::hot_col(
       hot, "level", readOnly = TRUE, width = level_width
     )
-    hot <- rhandsontable::hot_col(hot, "lambda", width = 90)
+    weight_columns <- if (competing) c("favored", "rival") else "lambda"
+    for (column in weight_columns) {
+      hot <- rhandsontable::hot_col(hot, column, width = 90)
+    }
     rhandsontable::hot_col(hot, "n", readOnly = TRUE, width = 65)
   })
 
@@ -329,17 +382,23 @@ myserver <- shinyServer(function(input, output, session) {
     changes <- input$hot_lambda_between$changes$changes
     req(length(changes) > 0)
     df <- rhandsontable::hot_to_r(input$hot_lambda_between)
-    lambda <- isolate(reactive$lambda_between)
-    if (!length(lambda)) {
-      lambda <- as.numeric(df[, 2])
-      names(lambda) <- df[, 1]
+    primary_column <- intersect(c("lambda", "favored"), names(df))
+    if (length(primary_column)) {
+      lambda <- as.numeric(df[[primary_column[[1]]]])
+      names(lambda) <- as.character(df$level)
+      if (!identical(lambda, isolate(reactive$lambda_between))) {
+        reactive$lambda_between <- lambda
+      }
     }
-    for (change in changes) {
-      row <- as.integer(change[[1]]) + 1L
-      level <- as.character(df[row, 1])
-      lambda[level] <- as.numeric(change[[4]])
+    if ("rival" %in% names(df)) {
+      lambda_rival <- as.numeric(df$rival)
+      names(lambda_rival) <- as.character(df$level)
+      if (!identical(
+        lambda_rival, isolate(reactive$lambda_between_rival)
+      )) {
+        reactive$lambda_between_rival <- lambda_rival
+      }
     }
-    reactive$lambda_between <- lambda
   })
 
   selected_variable <- function(name, factor = FALSE) {
@@ -348,8 +407,28 @@ myserver <- shinyServer(function(input, output, session) {
     if (factor) as.factor(value) else value
   }
 
+  active_lambda <- function(lambda_favored, lambda_rival, factor_label) {
+    if (!isTRUE(input$compare_competing) || is.null(lambda_favored)) {
+      return(lambda_favored)
+    }
+    difference <- tryCatch(
+      cofad_competing_lambda(lambda_favored, lambda_rival),
+      error = function(error) error
+    )
+    if (inherits(difference, "error")) {
+      validate(need(
+        FALSE, paste0(factor_label, ": ", conditionMessage(difference))
+      ))
+    }
+    difference
+  }
+
   analysis <- reactive({
     req(reactive$data, input$dv_name)
+    validate(need(
+      input$dv_name %in% names(reactive$data),
+      "Select a dependent variable from the current data set."
+    ))
     validate(
       need(is.numeric(reactive$data[, input$dv_name]),
            "The dependent variable must be numeric."),
@@ -368,13 +447,22 @@ myserver <- shinyServer(function(input, output, session) {
       }
     )
 
+    lambda_between <- active_lambda(
+      reactive$lambda_between, reactive$lambda_between_rival,
+      "Between-subjects competing contrasts"
+    )
+    lambda_within <- active_lambda(
+      reactive$lambda_within, reactive$lambda_within_rival,
+      "Within-subjects competing contrasts"
+    )
+
     calc_contrast(
       dv = reactive$data[, input$dv_name],
       between = selected_variable(input$between_name, factor = TRUE),
-      lambda_between = reactive$lambda_between,
+      lambda_between = lambda_between,
       id = selected_variable(input$id_name, factor = TRUE),
       within = selected_variable(input$within_name, factor = TRUE),
-      lambda_within = reactive$lambda_within,
+      lambda_within = lambda_within,
       data = NULL,
       within_score = if (is.null(input$within_score)) "L" else input$within_score
     )
@@ -383,7 +471,8 @@ myserver <- shinyServer(function(input, output, session) {
   output$table_region <- renderText({
     contr <- analysis()
 
-    if (length(reactive$lambda_between) &&
+    if (!isTRUE(input$compare_competing) &&
+        length(reactive$lambda_between) &&
         sum(reactive$lambda_between) != 0) {
       showNotification(
         "The between-subjects weights do not sum to zero; cofad centers them ",
@@ -394,7 +483,8 @@ myserver <- shinyServer(function(input, output, session) {
     } else {
       removeNotification(id = "lambda_btw")
     }
-    if (length(reactive$lambda_within) &&
+    if (!isTRUE(input$compare_competing) &&
+        length(reactive$lambda_within) &&
         sum(reactive$lambda_within) != 0) {
       showNotification(
         "The within-subjects weights do not sum to zero; cofad centers them ",
@@ -407,6 +497,15 @@ myserver <- shinyServer(function(input, output, session) {
     }
 
     report <- trimws(paste(utils::capture.output(print(contr)), collapse = "\n"))
+    if (isTRUE(input$compare_competing)) {
+      report <- paste(
+        paste(
+          "We compared two competing contrasts by z-standardizing the",
+          "favored and rival weights and analyzing favored minus rival."
+        ),
+        report
+      )
+    }
     between_result <- inherits(contr, "cofad_bw") || inherits(contr, "cofad_mx")
 
     as.character(tagList(

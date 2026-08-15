@@ -160,6 +160,14 @@ in the model table, then enter the contrast weights in the corresponding lambda
 tables. The detector is conservative: it does not infer scientific intent from
 correlations and may leave ambiguous roles empty.
 
+To compare two competing contrasts, select **Compare two competing
+contrasts**. Each active weight table then shows **Favored** and **Rival**
+columns. Cofad standardizes both vectors before analyzing Favored minus Rival,
+as `lambda_diff()` does. Initially, Rival reverses Favored, preserving the
+current test until you edit the rival hypothesis. Clearing the checkbox removes
+the Rival columns and immediately restores the Favored weights as ordinary
+single contrasts.
+
 As an example go to `https://cofad.titz.science/example` which will load a data set from @rosenthal2000 (Table 5.3). The cognitive ability of nine children belonging to different age groups (between) was measured four times (within).
 
 There are two hypotheses:
@@ -169,7 +177,7 @@ There are two hypotheses:
 2. cognitive ability linearly increases over age groups (between)
 ($\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1$)
 
-Select the variables in the compact model table and edit the default contrast weights in the lambda tables. The app reports the contrast, a detailed variance decomposition with ordinary $\eta^2$ for each SS component (including the descriptive within-group/error share), the three between-subjects effect sizes and their squared values, and an interactive Plotly chart comparing total, between-group, and contrast-plus-error denominators. Its legend labels Contrast, Other between-group, and Within-group/error above the bars. Hovering over a segment shows its SS numerator and denominator. Small *p* values are shown numerically in scientific notation rather than as threshold statements. For mixed designs, this is explicitly a partition of participants' derived within-contrast scores, not of the raw repeated outcome variance. The paper-ready report text, F table, and effect-size table have copy buttons; numeric table columns are right-aligned. The Help and citation panel beneath the model contains the package references, README, and GitHub issue tracker.
+Select the variables in the compact model table and edit the default contrast weights in the lambda tables. The app reports the contrast, a detailed variance decomposition with ordinary $\eta^2$ for each SS component (including the descriptive within-group/error share) and partial eta squared for tested components, plus an interactive Plotly chart comparing total, between-group, and contrast-plus-error denominators. Its legend labels Contrast, Other between-group, and Within-group/error above the bars. Hovering over a segment shows its SS numerator and denominator. Small *p* values are shown numerically in scientific notation rather than as threshold statements. For mixed designs, this is explicitly a partition of participants' derived within-contrast scores, not of the raw repeated outcome variance. The paper-ready report is copyable, while the F table can be exported as aligned plain text, rich HTML, or DOCX; numeric table columns are right-aligned. The Help and citation panel beneath the model contains the package references, README, and GitHub issue tracker.
 
 A mixed design is ideal for trying the cofad app. You can construct a separate within-subjects model by setting the between-subjects factor to `NONE`. Likewise, set the within-subjects factor and participant ID to `NONE` to obtain a between-subjects model.
 

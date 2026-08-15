@@ -120,19 +120,21 @@ myui <- function(request) {
              .cofad-table-side .cofad-note { margin: 0; }
              .cofad-table-side .cofad-note + .cofad-note { margin-top: 8px; }
              .cofad-copy-actions { display: flex; flex: 0 0 auto;
-               flex-direction: column; align-items: flex-end; gap: 4px; }
+               flex-direction: column; align-items: stretch; gap: 4px; }
              .cofad-copy-button { margin: 0; white-space: nowrap;
-               color: #5a3d00 !important; background-color: #fff3cd !important;
-               border: 1px solid #c48600 !important;
-               box-shadow: 0 1px 2px rgba(0, 0, 0, .12); }
+               width: 100%; color: #454b52 !important;
+               background-color: #f5f6f7 !important;
+               border: 1px solid #aeb4bb !important;
+               box-shadow: 0 1px 1px rgba(0, 0, 0, .08); }
              .cofad-copy-button:hover, .cofad-copy-button:focus {
-               color: #3d2900 !important; background-color: #ffe69c !important;
-               border-color: #9a6700 !important; }
+               color: #25292d !important; background-color: #e9ecef !important;
+               border-color: #7f878f !important; }
              .cofad-copy-status { color: #287a31; min-height: 1.2em;
                text-align: right; }
              .cofad-hot-wrap { display: inline-block; max-width: 100%;
                overflow-x: auto; vertical-align: top; }
              .cofad-hot-wrap .rhandsontable { max-width: 100%; }
+             .cofad-hot-wrap .ht_clone_top th { text-transform: capitalize; }
              .box-header .box-title { font-size: 18px; line-height: 1.25; }
              .box-body h4 { font-size: 15px; line-height: 1.35;
                margin-top: 14px; margin-bottom: 6px; }
@@ -141,6 +143,7 @@ myui <- function(request) {
              #create_model hr { margin-top: 10px; margin-bottom: 10px; }
              .cofad-note { color: #666; font-size: 90%; }
              .cofad-note-warning { color: #8a5a00; font-weight: 600; }
+             .cofad-help-tooltip { cursor: help; border-bottom: 1px dotted #777; }
              #help .box-title, #help h4, #help strong { font-weight: 400; }
              .csl-entry { margin: 0 0 .8em 2em; text-indent: -2em; }
              .cofad-citation-layout .cofad-copy-content {
@@ -153,7 +156,7 @@ myui <- function(request) {
                .cofad-table-content { flex-basis: 100%; }
                .cofad-table-side { flex-basis: 100%; max-width: none; }
              }
-             .cofad-footer { color: #999; font-size: 11px; margin-top: 24px; }"
+             .cofad-footer { color: #fff; font-size: 11px; margin-top: 24px; }"
           ))
         ),
         h4("1. Load data"),

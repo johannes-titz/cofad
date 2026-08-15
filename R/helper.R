@@ -123,11 +123,20 @@ create_table <- function(levels) {
 #'
 #' Used in Shiny to prepare a UI for setting lambda values.
 #'
-#' @param levels levels to create default lambdas for
+#' @param lambda named primary contrast weights
+#' @param var factor used to count observations per level
+#' @param lambda_rival optional named rival contrast weights
 #' @return data frame with levels, lambda values and n per group
 #' @noRd
-prepare_table <- function(lambda, var) {
-  df <- data.frame("level" = names(lambda), lambda = lambda)
+prepare_table <- function(lambda, var, lambda_rival = NULL) {
+  if (is.null(lambda_rival)) {
+    df <- data.frame("level" = names(lambda), lambda = lambda)
+  } else {
+    lambda_rival <- lambda_rival[names(lambda)]
+    df <- data.frame(
+      "level" = names(lambda), favored = lambda, rival = lambda_rival
+    )
+  }
   df$level <- as.character(df$level)
   frequencies <- table(as.character(var), useNA = "no")
   df$n <- as.integer(frequencies[df$level])
@@ -905,6 +914,36 @@ lambda_diff <- function(lambda_favored = NULL,
   lambda_diff <- as.numeric(zscale(lambda_favored) - zscale(lambda_rival))
   names(lambda_diff) <- names(lambda_favored)
   return(lambda_diff)
+}
+
+#' Validate and combine two competing contrast vectors for the app
+#' @noRd
+cofad_competing_lambda <- function(lambda_favored, lambda_rival) {
+  if (!is.numeric(lambda_favored) || !is.numeric(lambda_rival) ||
+      !length(lambda_favored) || length(lambda_favored) != length(lambda_rival)) {
+    stop("Favored and rival contrasts must be numeric vectors of equal length.")
+  }
+  if (is.null(names(lambda_favored)) || is.null(names(lambda_rival)) ||
+      !setequal(names(lambda_favored), names(lambda_rival))) {
+    stop("Favored and rival contrasts must use the same level names.")
+  }
+  lambda_rival <- lambda_rival[names(lambda_favored)]
+  if (anyNA(lambda_favored) || anyNA(lambda_rival) ||
+      any(!is.finite(lambda_favored)) || any(!is.finite(lambda_rival))) {
+    stop("Favored and rival contrasts must contain finite values.")
+  }
+  favored_sd <- stats::sd(lambda_favored)
+  rival_sd <- stats::sd(lambda_rival)
+  if (!is.finite(favored_sd) || !is.finite(rival_sd) ||
+      favored_sd == 0 || rival_sd == 0) {
+    stop("Each competing contrast must contain at least two different values.")
+  }
+  relationship <- stats::cor(lambda_favored, lambda_rival)
+  if (!is.finite(relationship) ||
+      abs(relationship - 1) <= sqrt(.Machine$double.eps)) {
+    stop("Favored and rival contrasts cannot be perfectly identical in shape.")
+  }
+  lambda_diff(lambda_favored, lambda_rival)
 }
 
 

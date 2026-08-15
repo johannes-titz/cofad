@@ -1,8 +1,13 @@
 # cofad (development version)
 
+* add an opt-in Shiny control for comparing favored and rival contrasts;
+  enabling it adds rival weight columns and analyzes standardized differences
+  (favored minus rival), while disabling it restores the ordinary single
+  contrast
 * add fixed-width plain-text, rich-HTML, and dependency-free DOCX export for
-  the app F table, strengthen copy-button styling, and use the colorblind-
-  friendly ColorBrewer Set2 palette for the interactive variance chart
+  the app F table, use uniform light-gray copy controls, show the sidebar
+  copyright in white, and use the colorblind-friendly ColorBrewer Set2 palette
+  for the interactive variance chart
 * add partial eta squared to the app F table, with calculation tooltips and a
   dotted underline identifying every tooltipped table value
 * place app copy controls beside their report, table, or citation content,
