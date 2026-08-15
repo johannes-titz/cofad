@@ -7,6 +7,7 @@ test_that("result tables support compact layout, numeric alignment, and copying"
   expect_match(html, 'id="cofad-f-table"', fixed = TRUE)
   expect_match(html, "cofad-booktabs", fixed = TRUE)
   expect_match(html, '<th class="cofad-number">SS</th>', fixed = TRUE)
+  expect_match(html, '<th class="cofad-number"><i>F</i></th>', fixed = TRUE)
   expect_match(html, '<td class="cofad-number">1.250</td>', fixed = TRUE)
 
   effect_html <- as.character(cofad_html_table(data.frame(
@@ -31,6 +32,8 @@ test_that("the F table reports eta squared and precise small p values", {
   expect_match(table$p[[2]], "e-", fixed = TRUE)
   expect_false(grepl("<", table$p[[2]], fixed = TRUE))
   html <- as.character(cofad_html_table(table))
+  expect_match(html, "<i>F</i>", fixed = TRUE)
+  expect_match(html, "<i>p</i>", fixed = TRUE)
   expect_match(html, "&eta;", fixed = TRUE)
   expect_match(html, "&sup2;", fixed = TRUE)
 })

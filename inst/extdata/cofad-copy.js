@@ -265,12 +265,15 @@
     return rows.map(function(row, rowIndex) {
       var cells = Array.from(row.cells).map(function(cell, column) {
         var bold = rowIndex === 0 ? "<w:b/>" : "";
+        var italic = rowIndex === 0 && ["F", "p"].includes(
+          cell.innerText.trim()
+        ) ? "<w:i/>" : "";
         var shading = rowIndex === 0 ? '<w:shd w:fill="E7E6E6"/>' : "";
         var alignment = numeric[column] ? '<w:jc w:val="right"/>' : "";
         var width = column === 0 ? 3600 : 1500;
         return '<w:tc><w:tcPr><w:tcW w:w="' + width +
           '" w:type="dxa"/>' + shading + "</w:tcPr><w:p><w:pPr>" +
-          alignment + "</w:pPr><w:r><w:rPr>" + bold +
+          alignment + "</w:pPr><w:r><w:rPr>" + bold + italic +
           '<w:sz w:val="18"/></w:rPr><w:t xml:space="preserve">' +
           xmlEscape(cell.innerText.trim()) + "</w:t></w:r></w:p></w:tc>";
       }).join("");

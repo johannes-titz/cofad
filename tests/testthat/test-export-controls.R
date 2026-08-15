@@ -11,6 +11,8 @@ test_that("F-table export controls offer plain, HTML, and DOCX formats", {
   expect_match(buttons, "cofadDownloadTableDocx", fixed = TRUE)
   expect_match(script, "fixedWidthTable", fixed = TRUE)
   expect_match(script, "word/document.xml", fixed = TRUE)
+  expect_match(script, '["F", "p"].includes', fixed = TRUE)
+  expect_match(script, "<w:i/>", fixed = TRUE)
   expect_match(
     script,
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

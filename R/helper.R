@@ -541,6 +541,8 @@ cofad_html_table <- function(x, id = NULL, right_align = character()) {
       shiny::HTML("<i>&eta;</i>&sup2;")
     } else if (identical(name, "partial_eta2")) {
       shiny::HTML("<i>&eta;</i><sub>p</sub>&sup2;")
+    } else if (name %in% c("F", "p")) {
+      shiny::HTML(paste0("<i>", name, "</i>"))
     } else {
       name
     }

@@ -4,6 +4,8 @@
   weights; examples with published rival hypotheses now open in competing mode,
   while nonsubstantive mixed-design grouping factors remain available for error
   pooling without receiving invented contrasts
+* italicize the statistical symbols *F* and *p* in the app F table and its DOCX
+  export
 * add an opt-in Shiny control for comparing favored and rival contrasts;
   enabling it adds rival weight columns and analyzes standardized differences
   (favored minus rival), while disabling it restores the ordinary single
