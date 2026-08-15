@@ -18,7 +18,21 @@ test_that("copy controls sit beside their content", {
     server_source,
     'class = "cofad-copy-layout cofad-copy-layout-report"', fixed = TRUE
   )
+  expect_match(
+    server_source,
+    'class = "cofad-copy-layout cofad-table-layout"', fixed = TRUE
+  )
+  expect_match(server_source, 'class = "cofad-table-side"', fixed = TRUE)
   expect_match(server_source, 'class = "cofad-copy-actions"', fixed = TRUE)
+})
+
+test_that("headings inside panels are smaller than panel titles", {
+  ui_source <- paste(deparse(body(myui)), collapse = "\n")
+
+  expect_match(
+    ui_source, ".box-header .box-title { font-size: 18px", fixed = TRUE
+  )
+  expect_match(ui_source, ".box-body h4 { font-size: 15px", fixed = TRUE)
 })
 
 test_that("example details appear only as option tooltips", {
