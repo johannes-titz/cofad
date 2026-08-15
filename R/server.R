@@ -33,10 +33,21 @@ myserver <- shinyServer(function(input, output, session) {
     reactive$data_version <- reactive$data_version + 1
     shinyjs::show("create_model")
     shinyjs::show("output_region")
-    shinyjs::hide("help")
   }
 
   # Example data sets ----------------------------------------------------------
+  output$example_description <- renderUI({
+    req(input$example_dataset)
+    tags$p(class = "cofad-note", cofad_example_description(input$example_dataset))
+  })
+
+  observeEvent(input$example_dataset, {
+    req(nzchar(input$example_dataset))
+    example_data <- load_cofad_example(input$example_dataset)
+    validate(need(!is.null(example_data), "Example data set not found."))
+    set_data(example_data)
+  }, ignoreInit = FALSE)
+
   observe({
     query <- parseQueryString(session$clientData$url_search)
     example <- query[["example"]]
@@ -48,6 +59,7 @@ myserver <- shinyServer(function(input, output, session) {
       ))
       example_data <- load_cofad_example(example)
       validate(need(!is.null(example_data), "Example data set not found."))
+      updateSelectInput(session, "example_dataset", selected = example)
       set_data(example_data)
     }
   })
@@ -57,6 +69,7 @@ myserver <- shinyServer(function(input, output, session) {
       req(input$datafile)
       data <- load_data(input$datafile)
       validate(need(is.data.frame(data), "The file did not contain tabular data."))
+      updateSelectInput(session, "example_dataset", selected = "")
       set_data(data)
     })
   })
@@ -96,7 +109,12 @@ myserver <- shinyServer(function(input, output, session) {
           )
         )
       },
-      rhandsontable::rHandsontableOutput("hot_model", height = 150),
+      tags$div(
+        class = "cofad-hot-wrap",
+        rhandsontable::rHandsontableOutput(
+          "hot_model", width = "auto", height = "130px"
+        )
+      ),
       # These canonical inputs keep old bookmarks and automated clients working.
       tags$div(
         style = "display:none;",
@@ -118,10 +136,39 @@ myserver <- shinyServer(function(input, output, session) {
         )
       ),
       tags$hr(),
-      tags$h4("Between-subjects contrast weights"),
-      rhandsontable::rHandsontableOutput("hot_lambda_between", height = 180),
-      tags$h4("Within-subjects contrast weights"),
-      rhandsontable::rHandsontableOutput("hot_lambda_within", height = 180)
+      conditionalPanel(
+        condition = "input.between_name != ''",
+        tags$h4("Between-subjects contrast weights"),
+        tags$div(
+          class = "cofad-hot-wrap",
+          rhandsontable::rHandsontableOutput(
+            "hot_lambda_between", width = "auto", height = "130px"
+          )
+        )
+      ),
+      conditionalPanel(
+        condition = "input.within_name != ''",
+        tags$h4("Within-subjects contrast weights"),
+        tags$div(
+          class = "cofad-hot-wrap",
+          rhandsontable::rHandsontableOutput(
+            "hot_lambda_within", width = "auto", height = "130px"
+          )
+        ),
+        radioButtons(
+          "within_score", "Participant-level within score",
+          choices = c(
+            "L score (retains magnitude)" = "L",
+            "r score (pattern fit)" = "r"
+          ),
+          selected = "L", inline = TRUE
+        ),
+        tags$p(
+          class = "cofad-note",
+          "Choose L when response magnitude matters; choose r when agreement ",
+          "with the predicted pattern matters. Decide before inspecting results."
+        )
+      )
     )
   })
 
@@ -135,14 +182,19 @@ myserver <- shinyServer(function(input, output, session) {
       variable = selected,
       check.names = FALSE
     )
-    hot <- rhandsontable::rhandsontable(
-      model, stretchH = "all", rowHeaders = NULL
+    variable_width <- max(
+      120, min(235, 30 + 8 * max(nchar(c("NONE", reactive$varnames))))
     )
-    hot <- rhandsontable::hot_col(hot, "role", readOnly = TRUE)
+    table_width <- 190 + variable_width + 25
+    hot <- rhandsontable::rhandsontable(
+      model, stretchH = "none", rowHeaders = NULL, width = table_width,
+      height = 126
+    )
+    hot <- rhandsontable::hot_col(hot, "role", readOnly = TRUE, width = 190)
     rhandsontable::hot_col(
       hot, "variable", type = "dropdown",
       source = c("NONE", reactive$varnames), strict = TRUE,
-      allowInvalid = FALSE
+      allowInvalid = FALSE, width = variable_width
     )
   })
 
@@ -184,68 +236,109 @@ myserver <- shinyServer(function(input, output, session) {
     ignoreInit = TRUE
   )
 
-  within_var <- reactive({
-    req(input$within_name)
-    as.factor(reactive$data[, input$within_name])
-  })
-
-  observeEvent(list(input$within_name, reactive$data_version), {
-    if (is.null(input$within_name) || !nzchar(input$within_name)) {
+  observeEvent(list(reactive$model_spec[["within_name"]], reactive$data_version), {
+    within_name <- reactive$model_spec[["within_name"]]
+    if (is.null(within_name) || !nzchar(within_name)) {
       reactive$lambda_within <- NULL
     } else {
-      within_levels <- levels(within_var())
+      within_levels <- levels(as.factor(reactive$data[, within_name]))
       reactive$lambda_within <- create_default_lambdas(within_levels)
     }
   }, ignoreInit = FALSE)
 
   output$hot_lambda_within <- rhandsontable::renderRHandsontable({
+    within_name <- reactive$model_spec[["within_name"]]
     validate(need(
-      input$within_name,
+      within_name,
       "Select a within-subjects factor in the model table first."
     ))
-    df <- prepare_table(
-      reactive$lambda_within, reactive$data[, input$within_name]
-    )
+    within_data <- reactive$data[, within_name]
+    lambda <- reactive$lambda_within
+    expected_levels <- levels(as.factor(within_data))
+    if (!length(lambda) || !setequal(names(lambda), expected_levels)) {
+      lambda <- create_default_lambdas(expected_levels)
+    }
+    df <- prepare_table(lambda, within_data)
+    level_width <- max(100, min(280, 30 + 8 * max(nchar(df$level))))
+    table_width <- level_width + 90 + 65 + 25
     hot <- rhandsontable::rhandsontable(
-      df, stretchH = "all", rowHeaders = NULL
+      df, stretchH = "none", rowHeaders = NULL, width = table_width,
+      height = min(128, 32 + 24 * nrow(df))
     )
-    rhandsontable::hot_col(hot, c("level", "n"), readOnly = TRUE)
+    hot <- rhandsontable::hot_col(
+      hot, "level", readOnly = TRUE, width = level_width
+    )
+    hot <- rhandsontable::hot_col(hot, "lambda", width = 90)
+    rhandsontable::hot_col(hot, "n", readOnly = TRUE, width = 65)
   })
 
   observeEvent(input$hot_lambda_within, {
+    changes <- input$hot_lambda_within$changes$changes
+    req(length(changes) > 0)
     df <- rhandsontable::hot_to_r(input$hot_lambda_within)
-    lambda <- as.numeric(df[, 2])
-    names(lambda) <- df[, 1]
+    lambda <- isolate(reactive$lambda_within)
+    if (!length(lambda)) {
+      lambda <- as.numeric(df[, 2])
+      names(lambda) <- df[, 1]
+    }
+    for (change in changes) {
+      row <- as.integer(change[[1]]) + 1L
+      level <- as.character(df[row, 1])
+      lambda[level] <- as.numeric(change[[4]])
+    }
     reactive$lambda_within <- lambda
   })
 
-  observeEvent(list(input$between_name, reactive$data_version), {
-    if (is.null(input$between_name) || !nzchar(input$between_name)) {
+  observeEvent(list(reactive$model_spec[["between_name"]], reactive$data_version), {
+    between_name <- reactive$model_spec[["between_name"]]
+    if (is.null(between_name) || !nzchar(between_name)) {
       reactive$lambda_between <- NULL
     } else {
-      between_levels <- levels(as.factor(reactive$data[, input$between_name]))
+      between_levels <- levels(as.factor(reactive$data[, between_name]))
       reactive$lambda_between <- create_default_lambdas(between_levels)
     }
   }, ignoreInit = FALSE)
 
   output$hot_lambda_between <- rhandsontable::renderRHandsontable({
+    between_name <- reactive$model_spec[["between_name"]]
     validate(need(
-      input$between_name,
+      between_name,
       "Select a between-subjects factor in the model table first."
     ))
-    df <- prepare_table(
-      reactive$lambda_between, reactive$data[, input$between_name]
-    )
+    between_data <- reactive$data[, between_name]
+    lambda <- reactive$lambda_between
+    expected_levels <- levels(as.factor(between_data))
+    if (!length(lambda) || !setequal(names(lambda), expected_levels)) {
+      lambda <- create_default_lambdas(expected_levels)
+    }
+    df <- prepare_table(lambda, between_data)
+    level_width <- max(100, min(280, 30 + 8 * max(nchar(df$level))))
+    table_width <- level_width + 90 + 65 + 25
     hot <- rhandsontable::rhandsontable(
-      df, stretchH = "all", rowHeaders = NULL
+      df, stretchH = "none", rowHeaders = NULL, width = table_width,
+      height = min(128, 32 + 24 * nrow(df))
     )
-    rhandsontable::hot_col(hot, c("level", "n"), readOnly = TRUE)
+    hot <- rhandsontable::hot_col(
+      hot, "level", readOnly = TRUE, width = level_width
+    )
+    hot <- rhandsontable::hot_col(hot, "lambda", width = 90)
+    rhandsontable::hot_col(hot, "n", readOnly = TRUE, width = 65)
   })
 
   observeEvent(input$hot_lambda_between, {
+    changes <- input$hot_lambda_between$changes$changes
+    req(length(changes) > 0)
     df <- rhandsontable::hot_to_r(input$hot_lambda_between)
-    lambda <- as.numeric(df[, 2])
-    names(lambda) <- df[, 1]
+    lambda <- isolate(reactive$lambda_between)
+    if (!length(lambda)) {
+      lambda <- as.numeric(df[, 2])
+      names(lambda) <- df[, 1]
+    }
+    for (change in changes) {
+      row <- as.integer(change[[1]]) + 1L
+      level <- as.character(df[row, 1])
+      lambda[level] <- as.numeric(change[[4]])
+    }
     reactive$lambda_between <- lambda
   })
 
@@ -282,7 +375,8 @@ myserver <- shinyServer(function(input, output, session) {
       id = selected_variable(input$id_name, factor = TRUE),
       within = selected_variable(input$within_name, factor = TRUE),
       lambda_within = reactive$lambda_within,
-      data = NULL
+      data = NULL,
+      within_score = if (is.null(input$within_score)) "L" else input$within_score
     )
   })
 
@@ -312,42 +406,100 @@ myserver <- shinyServer(function(input, output, session) {
       removeNotification(id = "lambda_wi")
     }
 
-    report <- paste(utils::capture.output(print(contr)), collapse = "\n")
+    report <- trimws(paste(utils::capture.output(print(contr)), collapse = "\n"))
     between_result <- inherits(contr, "cofad_bw") || inherits(contr, "cofad_mx")
 
     as.character(tagList(
       div(
         class = "cofad-results",
         tags$h4("Report"),
-        tags$pre(report, class = "cofad-report"),
+        tags$button(
+          type = "button", class = "btn btn-default btn-sm cofad-copy-button",
+          onclick = "cofadCopyReport(); return false;", "Copy report text"
+        ),
+        tags$span(
+          id = "cofad-report-copy-status", class = "cofad-copy-status",
+          role = "status"
+        ),
+        cofad_report_tag(report),
+        tags$textarea(
+          report, id = "cofad-report-copy-text", style = "display: none;",
+          `aria-hidden` = "true", tabindex = "-1"
+        ),
         if (between_result) {
           tagList(
-            tags$h4("Variance decomposition (F table)"),
-            cofad_html_table(detailed_f_table(contr)),
+            tags$h4(if (inherits(contr, "cofad_mx")) {
+              "Variance decomposition of within-contrast scores (F table)"
+            } else {
+              "Variance decomposition (F table)"
+            }),
+            cofad_copy_button("cofad-f-table", "Copy F table"),
+            tags$span(
+              id = "cofad-f-table-copy-status", class = "cofad-copy-status",
+              role = "status"
+            ),
+            cofad_html_table(
+              detailed_f_table(contr), id = "cofad-f-table",
+              right_align = c("SS", "df", "MS", "F", "p", "eta2")
+            ),
             tags$p(
               class = "cofad-note",
               "The contrast is a one-degree-of-freedom component of the ",
               "overall between-group variation. F-table p values are ",
-              "non-directional.",
+              "non-directional. ",
+              shiny::HTML("<i>&eta;</i><sup>2</sup>"),
+              " is the component SS divided by total SS; for the contrast ",
+              "row it equals ",
+              shiny::HTML("<i>r</i><sub>es</sub><sup>2</sup>"),
+              ".",
               if (inherits(contr, "cofad_mx")) {
-                paste0(
+                shiny::HTML(paste0(
                   " For mixed designs, this decomposition concerns the ",
-                  "participants' within-contrast L values."
-                )
+                  "participants' within-contrast ", contr$within_score,
+                  if (identical(contr$within_score, "L")) " values" else " scores",
+                  ", not the raw repeated outcome variance. Thus ",
+                  "<i>r</i><sub>alerting</sub><sup>2</sup> ",
+                  "is the share of between-group score variation matching ",
+                  "the planned contrast, whereas ",
+                  "<i>r</i><sub>es</sub><sup>2</sup> is its share ",
+                  "of total score variation."
+                ))
               }
             ),
             tags$h4("Effect sizes and explained proportions"),
-            cofad_html_table(detailed_effect_table(contr)),
-            tags$h4("Partition of total variation")
+            cofad_copy_button("cofad-effect-table", "Copy effect-size table"),
+            tags$span(
+              id = "cofad-effect-table-copy-status", class = "cofad-copy-status",
+              role = "status"
+            ),
+            cofad_html_table(
+              detailed_effect_table(contr), id = "cofad-effect-table",
+              right_align = c("Estimate", "Squared / explained proportion")
+            ),
+            tags$p(class = "cofad-note", cofad_effect_order_note(contr)),
+            tags$h4(if (inherits(contr, "cofad_mx")) {
+              "Partition of total variation in within-contrast scores"
+            } else {
+              "Partition of total variation"
+            })
           )
         } else {
           tagList(
             tags$h4("Effect sizes"),
-            cofad_html_table(detailed_effect_table(contr)),
+            cofad_copy_button("cofad-effect-table", "Copy effect-size table"),
+            tags$span(
+              id = "cofad-effect-table-copy-status", class = "cofad-copy-status",
+              role = "status"
+            ),
+            cofad_html_table(
+              detailed_effect_table(contr), id = "cofad-effect-table",
+              right_align = "Estimate"
+            ),
+            tags$p(class = "cofad-note", cofad_effect_order_note(contr)),
             tags$p(
               class = "cofad-note",
               "A within-subjects contrast is tested through participants' ",
-              "L values, so the between-subjects F-table partition does not ",
+              contr$within_score, " scores, so the between-subjects F-table partition does not ",
               "apply."
             )
           )
@@ -366,6 +518,6 @@ myserver <- shinyServer(function(input, output, session) {
   }, res = 96)
 
   output$citation_region <- renderUI({
-    tagList(tags$hr(), HTML(cite()))
+    tagList(tags$hr(), cofad_citation_panel())
   })
 })

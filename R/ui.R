@@ -1,23 +1,159 @@
 #' @importFrom shinydashboard dashboardPage dashboardHeader dashboardSidebar dashboardBody box
 #' @importFrom shinyjs useShinyjs hidden
 #' @noRd
+cofad_version_value <- function() {
+  version <- getOption("cofad.version")
+  if (is.null(version)) {
+    version <- tryCatch(
+      as.character(utils::packageVersion("cofad")),
+      error = function(e) "development"
+    )
+  }
+  version
+}
+
+cofad_commit_value <- function() {
+  commit <- getOption("cofad.commit")
+  if (!is.null(commit) && nzchar(commit)) return(substr(commit, 1, 8))
+
+  description <- tryCatch(
+    utils::packageDescription("cofad"), error = function(e) NULL
+  )
+  remote_commit <- if (is.null(description)) NULL else description[["RemoteSha"]]
+  if (!is.null(remote_commit) && nzchar(remote_commit)) {
+    return(substr(remote_commit, 1, 8))
+  }
+
+  git_commit <- suppressWarnings(tryCatch(
+    system2(
+      "git", c("rev-parse", "--short=8", "HEAD"),
+      stdout = TRUE, stderr = FALSE
+    ),
+    error = function(e) ""
+  ))
+  if (!length(git_commit)) return("")
+  git_commit <- trimws(git_commit[[1]])
+  if (nzchar(git_commit)) git_commit else ""
+}
+
+cofad_is_dev_version <- function(version = cofad_version_value()) {
+  identical(version, "development") || grepl("[.]9000$", version)
+}
+
+cofad_version_label <- function(
+    version = cofad_version_value(), commit = cofad_commit_value()) {
+  label <- paste0("cofad v", version)
+  if (cofad_is_dev_version(version)) {
+    build <- if (nzchar(commit)) paste("dev", commit) else "dev"
+    label <- paste0(label, " (", build, ")")
+  } else if (isTRUE(getOption("cofad.webR"))) {
+    build <- if (nzchar(commit)) paste("webR", commit) else "webR"
+    label <- paste0(label, " (", build, ")")
+  }
+  label
+}
+
+cofad_version_title <- function() {
+  version <- cofad_version_value()
+  commit <- cofad_commit_value()
+  label <- cofad_version_label(version, commit)
+  is_dev <- cofad_is_dev_version(version)
+  if (!is_dev && !isTRUE(getOption("cofad.webR"))) return(label)
+
+  build <- if (is_dev) {
+    if (nzchar(commit)) paste("dev", commit) else "dev"
+  } else {
+    paste(c(paste0("v", version), "webR", commit[nzchar(commit)]), collapse = " ")
+  }
+  tags$span(
+    style = "white-space: nowrap;", title = label,
+    tags$span(style = "font-size: 20px;", "cofad"),
+    tags$span(style = "font-size: 11px; margin-left: 6px;", build)
+  )
+}
+
 myui <- function(request) {
   shinyUI(
     shinydashboard::dashboardPage(
       title = "cofad: Contrast analysis",
       skin = "yellow",
-      shinydashboard::dashboardHeader(title = "cofad"),
+      shinydashboard::dashboardHeader(title = cofad_version_title()),
       shinydashboard::dashboardSidebar(
         tags$head(
+          tags$script(HTML(
+            "window.cofadCopyText = function(text, status) {
+               var copied = function() {
+                 if (status) {
+                   status.textContent = ' Copied.';
+                   window.setTimeout(function() { status.textContent = ''; }, 1800);
+                 }
+               };
+               if (navigator.clipboard && window.isSecureContext) {
+                 navigator.clipboard.writeText(text).then(copied);
+               } else {
+                 var area = document.createElement('textarea');
+                 area.value = text;
+                 area.style.position = 'fixed'; area.style.opacity = '0';
+                 document.body.appendChild(area); area.select();
+                 document.execCommand('copy'); area.remove(); copied();
+               }
+             };
+             window.cofadCopyCitation = function(format) {
+               var source = document.getElementById('cofad-citation-' + format);
+               var status = document.getElementById('cofad-copy-status');
+               if (!source) return;
+               cofadCopyText(source.value, status);
+             };
+             window.cofadCopyReport = function() {
+               var source = document.getElementById('cofad-report-copy-text');
+               cofadCopyText(source ? source.value.trim() : '',
+                 document.getElementById('cofad-report-copy-status'));
+             };
+             window.cofadCopyTable = function(id) {
+               var table = document.getElementById(id);
+               if (!table) return;
+               var rows = Array.from(table.rows).map(function(row) {
+                 return Array.from(row.cells).map(function(cell) {
+                   return cell.innerText.trim();
+                 }).join('\\t');
+               }).join('\\n');
+               cofadCopyText(rows,
+                 document.getElementById(id + '-copy-status'));
+             };"
+          )),
           tags$style(HTML(
             ".sidebar { padding-left: 8px; padding-right: 8px; }
-             .cofad-results table { width: 100%; }
+             .cofad-results table { width: auto; max-width: 100%; }
              .cofad-results th { background: #f5f5f5; }
              .cofad-results td, .cofad-results th { padding: 5px 8px; }
+             .cofad-results .cofad-booktabs {
+               border-collapse: collapse; border-top: 2px solid #333;
+               border-bottom: 2px solid #333; margin-bottom: 12px;
+               background: transparent; }
+             .cofad-results .cofad-booktabs thead th {
+               border: 0 !important; border-bottom: 1px solid #333 !important;
+               background: transparent !important; }
+             .cofad-results .cofad-booktabs tbody td {
+               border: 0 !important; background: transparent !important; }
+             .cofad-number { text-align: right !important;
+               font-variant-numeric: tabular-nums; }
              .cofad-report { white-space: pre-wrap; background: #fafafa;
-               border: 1px solid #ddd; border-radius: 4px; padding: 10px; }
+               border: 1px solid #ddd; border-radius: 4px; padding: 10px;
+               max-width: 820px; font-family: inherit; font-size: inherit;
+               line-height: 1.45; }
+             .cofad-copy-button { margin: 0 4px 8px 0; }
+             .cofad-copy-status { color: #287a31; margin-left: 4px; }
+             .cofad-hot-wrap { display: inline-block; max-width: 100%;
+               overflow-x: auto; vertical-align: top; }
+             .cofad-hot-wrap .rhandsontable { max-width: 100%; }
+             #create_model h4 { margin-top: 8px; margin-bottom: 5px; }
+             #create_model hr { margin-top: 10px; margin-bottom: 10px; }
              .cofad-note { color: #666; font-size: 90%; }
              .cofad-note-warning { color: #8a5a00; font-weight: 600; }
+             #help .box-title, #help h4, #help strong { font-weight: 400; }
+             .csl-entry { margin: 0 0 .8em 2em; text-indent: -2em; }
+             .cofad-citation-actions .btn { margin: 2px 4px 2px 0; }
+             #cofad-copy-status { color: #287a31; margin-left: 4px; }
              .cofad-footer { color: #999; font-size: 11px; margin-top: 24px; }"
           ))
         ),
@@ -31,48 +167,67 @@ myui <- function(request) {
           )
         ),
         h6("Supported formats: .csv and .sav (SPSS)."),
+        tags$hr(),
+        cofad_example_select(),
+        uiOutput("example_description"),
         tags$p(
           class = "cofad-footer",
-          HTML("cofad &copy; 2021&ndash;2026, LGPL-3.0-or-later")
+          HTML(
+            "&copy; 2021&ndash;2026 Johannes Titz et al., LGPL-3.0-or-later"
+          )
         )
       ),
       shinydashboard::dashboardBody(
+        shinyjs::useShinyjs(),
         fluidRow(
-          shinyjs::useShinyjs(),
-          div(
-            id = "help",
-            shinydashboard::box(
-              title = "Help",
-              status = "primary",
-              width = 12,
-              HTML(paste(
-                readLines(cofad_resource("intro.html")),
-                collapse = ""
-              ))
-            )
-          ),
-          shinyjs::hidden(
+          column(
+            width = 5,
+            shinyjs::hidden(
+              div(
+                id = "create_model",
+                shinydashboard::box(
+                  title = "2. Specify the model and contrasts",
+                  status = "primary",
+                  collapsible = TRUE,
+                  width = 12,
+                  uiOutput("variables")
+                )
+              )
+            ),
             div(
-              id = "create_model",
+              id = "help",
               shinydashboard::box(
-                title = "2. Specify the model and contrasts",
+                title = "Help and citation",
                 status = "primary",
                 collapsible = TRUE,
-                width = 5,
-                uiOutput("variables")
+                collapsed = FALSE,
+                width = 12,
+                HTML(paste(
+                  readLines(cofad_resource("intro.html")), collapse = ""
+                )),
+                tags$hr(),
+                cofad_citation_panel()
               )
             )
           ),
-          shinyjs::hidden(
-            div(
-              id = "output_region",
-              shinydashboard::box(
-                title = "3. Results",
-                status = "primary",
-                width = 7,
-                htmlOutput("table_region"),
-                shiny::plotOutput("variance_partition", height = "250px"),
-                uiOutput("citation_region")
+          column(
+            width = 7,
+            shinyjs::hidden(
+              div(
+                id = "output_region",
+                shinydashboard::box(
+                  title = "3. Results",
+                  status = "primary",
+                  collapsible = TRUE,
+                  width = 12,
+                  htmlOutput("table_region"),
+                  conditionalPanel(
+                    condition = "input.between_name != ''",
+                    shiny::plotOutput(
+                      "variance_partition", height = "180px"
+                    )
+                  )
+                )
               )
             )
           )
