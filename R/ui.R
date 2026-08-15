@@ -80,47 +80,7 @@ myui <- function(request) {
       shinydashboard::dashboardHeader(title = cofad_version_title()),
       shinydashboard::dashboardSidebar(
         tags$head(
-          tags$script(HTML(
-            "window.cofadCopyText = function(text, status) {
-               var copied = function() {
-                 if (status) {
-                   status.textContent = ' Copied.';
-                   window.setTimeout(function() { status.textContent = ''; }, 1800);
-                 }
-               };
-               if (navigator.clipboard && window.isSecureContext) {
-                 navigator.clipboard.writeText(text).then(copied);
-               } else {
-                 var area = document.createElement('textarea');
-                 area.value = text;
-                 area.style.position = 'fixed'; area.style.opacity = '0';
-                 document.body.appendChild(area); area.select();
-                 document.execCommand('copy'); area.remove(); copied();
-               }
-             };
-             window.cofadCopyCitation = function(format) {
-               var source = document.getElementById('cofad-citation-' + format);
-               var status = document.getElementById('cofad-copy-status');
-               if (!source) return;
-               cofadCopyText(source.value, status);
-             };
-             window.cofadCopyReport = function() {
-               var source = document.getElementById('cofad-report-copy-text');
-               cofadCopyText(source ? source.value.trim() : '',
-                 document.getElementById('cofad-report-copy-status'));
-             };
-             window.cofadCopyTable = function(id) {
-               var table = document.getElementById(id);
-               if (!table) return;
-               var rows = Array.from(table.rows).map(function(row) {
-                 return Array.from(row.cells).map(function(cell) {
-                   return cell.innerText.trim();
-                 }).join('\\t');
-               }).join('\\n');
-               cofadCopyText(rows,
-                 document.getElementById(id + '-copy-status'));
-             };"
-          )),
+          shiny::includeScript(cofad_resource("cofad-copy.js")),
           tags$style(HTML(
             ".sidebar { padding-left: 8px; padding-right: 8px; }
              .cofad-results table { width: auto; max-width: 100%; }
@@ -161,7 +121,13 @@ myui <- function(request) {
              .cofad-table-side .cofad-note + .cofad-note { margin-top: 8px; }
              .cofad-copy-actions { display: flex; flex: 0 0 auto;
                flex-direction: column; align-items: flex-end; gap: 4px; }
-             .cofad-copy-button { margin: 0; white-space: nowrap; }
+             .cofad-copy-button { margin: 0; white-space: nowrap;
+               color: #5a3d00 !important; background-color: #fff3cd !important;
+               border: 1px solid #c48600 !important;
+               box-shadow: 0 1px 2px rgba(0, 0, 0, .12); }
+             .cofad-copy-button:hover, .cofad-copy-button:focus {
+               color: #3d2900 !important; background-color: #ffe69c !important;
+               border-color: #9a6700 !important; }
              .cofad-copy-status { color: #287a31; min-height: 1.2em;
                text-align: right; }
              .cofad-hot-wrap { display: inline-block; max-width: 100%;

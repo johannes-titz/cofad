@@ -61,7 +61,10 @@ invisible(file.copy(
   file.path(stage_dir, "data"), overwrite = TRUE
 ))
 invisible(file.copy(
-  file.path(root, "inst", "extdata", c("intro.html", "citation.txt")),
+  file.path(
+    root, "inst", "extdata",
+    c("intro.html", "citation.txt", "cofad-copy.js")
+  ),
   file.path(stage_dir, "extdata"), overwrite = TRUE
 ))
 

@@ -454,7 +454,7 @@ myserver <- shinyServer(function(input, output, session) {
               ),
               tags$div(
                 class = "cofad-copy-actions",
-                cofad_copy_button("cofad-f-table", "Copy F table"),
+                cofad_f_table_export_buttons(),
                 tags$span(
                   id = "cofad-f-table-copy-status",
                   class = "cofad-copy-status", role = "status"

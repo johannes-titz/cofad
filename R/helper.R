@@ -241,14 +241,17 @@ cofad_citation_panel <- function() {
         class = "cofad-copy-actions cofad-citation-actions",
         shiny::actionButton(
           "copy_citation_plain", "Copy plain text",
+          class = "cofad-copy-button",
           onclick = "cofadCopyCitation('plain'); return false;"
         ),
         shiny::actionButton(
           "copy_citation_html", "Copy HTML",
+          class = "cofad-copy-button",
           onclick = "cofadCopyCitation('html'); return false;"
         ),
         shiny::actionButton(
           "copy_citation_bib", "Copy BibTeX",
+          class = "cofad-copy-button",
           onclick = "cofadCopyCitation('bibtex'); return false;"
         ),
         shiny::tags$span(id = "cofad-copy-status", role = "status")
@@ -574,6 +577,36 @@ cofad_copy_button <- function(target, label) {
   )
 }
 
+cofad_f_table_export_buttons <- function(target = "cofad-f-table") {
+  shiny::tagList(
+    shiny::tags$button(
+      type = "button", class = "btn btn-default btn-sm cofad-copy-button",
+      title = "Copy a fixed-width table for use with a monospaced font.",
+      onclick = paste0(
+        "cofadCopyTablePlain('", target, "'); return false;"
+      ),
+      "Copy plain text"
+    ),
+    shiny::tags$button(
+      type = "button", class = "btn btn-default btn-sm cofad-copy-button",
+      title = "Copy a formatted HTML table for rich-text applications.",
+      onclick = paste0(
+        "cofadCopyTableHtml('", target, "'); return false;"
+      ),
+      "Copy HTML"
+    ),
+    shiny::tags$button(
+      type = "button", class = "btn btn-default btn-sm cofad-copy-button",
+      title = "Download the formatted table as a Microsoft Word document.",
+      onclick = paste0(
+        "cofadDownloadTableDocx('", target,
+        "', 'cofad-f-table.docx'); return false;"
+      ),
+      "Download DOCX"
+    )
+  )
+}
+
 #' Calculate variance shares under the three effect-size denominators
 #' @noRd
 variance_partition_data <- function(object) {
@@ -696,7 +729,8 @@ plot_variance_partition <- function(object) {
 #' @noRd
 plotly_variance_partition <- function(object) {
   partition <- variance_partition_data(object)
-  colors <- c("#E69F00", "#56B4E9", "#BDBDBD")
+  # ColorBrewer Set2: qualitative, colorblind-friendly, and readable on white.
+  colors <- c("#66C2A5", "#FC8D62", "#8DA0CB")
   format_ss <- function(x) trimws(formatC(x, digits = 4, format = "fg"))
   component_labels <- c(
     "Contrast", "Other between-group", "Within-group/error"

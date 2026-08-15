@@ -1,5 +1,8 @@
 # cofad (development version)
 
+* add fixed-width plain-text, rich-HTML, and dependency-free DOCX export for
+  the app F table, strengthen copy-button styling, and use the colorblind-
+  friendly ColorBrewer Set2 palette for the interactive variance chart
 * add partial eta squared to the app F table, with calculation tooltips and a
   dotted underline identifying every tooltipped table value
 * place app copy controls beside their report, table, or citation content,
