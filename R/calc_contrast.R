@@ -18,6 +18,10 @@
 #' @param data optional argument for the \code{data.frame}
 #' containing \code{dv} and groups.
 #' @param ID deprecated, use id instead
+#' @param within_score participant-level score for a within-subjects contrast:
+#'   `"L"` (the default) retains response magnitude, whereas `"r"` measures
+#'   agreement between each participant's response pattern and the contrast
+#'   weights.
 #' @details For multi-factorial designs, the lambda weights of
 #' the factors must be connected.
 #'
@@ -85,7 +89,9 @@ calc_contrast <- function(dv,
                           lambda_within = NULL,
                           ID = NULL,
                           id = NULL,
-                          data = NULL) {
+                          data = NULL,
+                          within_score = c("L", "r")) {
+  within_score <- match.arg(within_score)
   if (!is.null(data) & is.data.frame(data)) {
     arguments <- as.list(match.call())
     if (is.character(arguments$dv)) dv <- data[, arguments$dv] else dv <- eval(arguments$dv, data)
@@ -203,17 +209,29 @@ calc_contrast <- function(dv,
   }
 
   if (case == "Analysis within cases") {
-    return(run_within_analysis(dv, within, between, lambda_within, id))
+    return(run_within_analysis(
+      dv, within, between, lambda_within, id, within_score
+    ))
   }
 
   if (case == "mixed-Analysis: between and within factors") {
     lambda_within <- lambda_within[levels(within)]
     lambda_between <- lambda_between[levels(between)]
-    prodsum <- lambda_within[within] * dv
-    data_new <- aggregate(prodsum, by = list(id, between), FUN = "sum")
-    obj <- run_between_analysis(dv = data_new$x,
-                                between = data_new$Group.2,
+    participant_scores <- participant_within_scores(
+      dv, within, lambda_within, id, within_score
+    )
+    participant_group <- vapply(
+      levels(id),
+      function(subject) as.character(unique(between[id == subject])),
+      character(1)
+    )
+    participant_group <- factor(participant_group, levels = levels(between))
+    obj <- run_between_analysis(dv = unname(participant_scores),
+                                between = participant_group,
                                 lambda_between = lambda_between)
+    obj$participant_scores <- participant_scores
+    obj$within_score <- within_score
+    obj$lambda_within <- lambda_within
     class(obj) <- "cofad_mx"
     obj
   }
@@ -303,17 +321,15 @@ run_between_analysis <- function(dv, between, lambda_between) {
 #'
 #' @inheritParams calc_contrast
 #' @noRd
-run_within_analysis <- function(dv, within, between, lambda_within, id) {
+run_within_analysis <- function(dv, within, between, lambda_within, id,
+                                within_score = "L") {
   lambda_within <- lambda_within[levels(within)]
   ni_within <- table(within)
   n_total <- sum(ni_within)
-  l_value <- NULL
-  for (i in seq(table(id))) {
-    var_i <- dv[which(id == levels(id)[i])]
-    l_value[i] <- sum(
-      var_i[order(within[which(id == levels(id)[i])])] * lambda_within
-    )
-  }
+  l_value <- participant_within_scores(
+    dv, within, lambda_within, id, within_score
+  )
+  participant_scores <- l_value
   if (!is.null(between)) {
     ni_bw <- table(between)
     bw_wide <- matrix(NA, ncol = 2, nrow = length(levels(id)))
@@ -365,22 +381,50 @@ run_within_analysis <- function(dv, within, between, lambda_within, id) {
   r <- c(r_contrast, g_effect)
   out_l <- list(sig, desc, lambda_within, r)
   names(out_l) <- c("sig", "desc", "lambda_within", "effects")
+  out_l$participant_scores <- participant_scores
+  out_l$within_score <- within_score
   class(out_l) <- c("cofad_wi")
   structure(out_l)
   return(out_l)
 }
 
+participant_within_scores <- function(dv, within, lambda_within, id,
+                                      within_score = c("L", "r")) {
+  within_score <- match.arg(within_score)
+  lambda_within <- lambda_within[levels(within)]
+  if (within_score == "r" && stats::sd(lambda_within) == 0) {
+    stop("r scores require contrast weights with non-zero variance.")
+  }
+  if (within_score == "r" && length(lambda_within) == 2) {
+    warning(
+      "With two within-subjects levels, participant r scores are only -1 or 1 ",
+      "when defined and discard response magnitude; consider L scores.",
+      call. = FALSE
+    )
+  }
+
+  scores <- vapply(levels(id), function(subject) {
+    rows <- which(id == subject)
+    values <- dv[rows][match(levels(within), as.character(within[rows]))]
+    if (within_score == "L") {
+      return(sum(values * lambda_within))
+    }
+    stats::cor(values, unname(lambda_within))
+  }, numeric(1))
+
+  if (anyNA(scores)) {
+    bad_ids <- paste(names(scores)[is.na(scores)], collapse = ", ")
+    stop(
+      "r scores are undefined for participants with a constant response ",
+      "profile (ID: ", bad_ids, "). Inspect these profiles or choose ",
+      "within_score = \"L\"."
+    )
+  }
+  scores
+}
+
 run_within_analysis_r <- function(dv, within, lambda_within, id) {
-  within_num <- as.numeric(factor(within, levels = names(lambda_within),
-                                  labels = lambda_within))
-  r <- as.numeric(by(data.frame(dv, within_num),
-                     id,
-                     function(x) cor(x[,1], x[,2])))
-  n <- as.numeric(by(dv, id, length))
-  # https://stats.stackexchange.com/questions/73621/standard-error-from-correlation-coefficient
-  se <- sqrt((1-r^2)/(n-2))
-  # use rma from metafor to calculcate average effect
-  # we could also use permutation instead!
+  participant_within_scores(dv, within, lambda_within, id, "r")
 }
 
 #' Validates that lambda is correct

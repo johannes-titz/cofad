@@ -57,6 +57,7 @@ summary.cofad_bw <- function(object, ...) {
 #' @export
 summary.cofad_wi <- function(object, ci = .95, ...) {
   x <- object
+  score_name <- if (identical(x$within_score, "r")) "r" else "L"
   l_mean <- x[[2]][[1]]
   l_se <- x[[2]][2]
   l_df <- x[[1]][3]
@@ -72,7 +73,7 @@ summary.cofad_wi <- function(object, ci = .95, ...) {
   p_label <- paste0("p(t\u2265", round(x$sig[[1]], 3), ")\u2460")
   rownames(l_eff) <- c("r-contrast", "g-contrast")
   colnames(l_eff) <- ""
-  colnames(l_vals) <- c("mean of L", "SE", "df", "t", p_label,
+  colnames(l_vals) <- c(paste("mean of", score_name), "SE", "df", "t", p_label,
                         paste0(ci*100, "%", c("CI-lower", "CI-upper")))
   rownames(l_vals) <- ""
   out <- list(x$lambda_within, l_vals, l_eff)

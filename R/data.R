@@ -34,6 +34,24 @@
 #' @usage data(rosenthal_tbl53)
 "rosenthal_tbl53"
 
+#' Response-profile data by Rosenthal et al. (2000)
+#'
+#' Table 5.4 contrasts two fictitious children's four-condition profiles. It
+#' illustrates that participant L scores retain response magnitude whereas
+#' participant r scores measure agreement with the shape of the contrast.
+#'
+#' @format a data frame with 8 rows and 3 columns
+#' \describe{
+#'   \item{id}{participant identifier (A or B)}
+#'   \item{dv}{dependent variable}
+#'   \item{within}{four-level within-subjects factor}
+#' }
+#' @source Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
+#'   Effect Sizes in Behavioral Research: A Correlational Approach. Cambridge
+#'   University Press.
+#' @usage data(rosenthal_tbl54)
+"rosenthal_tbl54"
+
 #' Data set by Rosenthal and Rosnow (2000)
 #'
 #' Table 3.1 in Rosenthal and Rosnow (2000) on p. 38.
@@ -97,7 +115,7 @@
 #' Fictitious example of children ability, Table 6.8 in Rosenthal and Rosnow
 #' (2000)
 #'
-#' @format a data frame with 8 rows and 4 columns
+#' @format a data frame with 32 rows and 4 columns
 #' \describe{
 #'   \item{id}{unique identifier of participant}
 #'   \item{dv}{dependent variable}
@@ -111,6 +129,25 @@
 #'
 #' @usage data(rosenthal_tbl68)
 "rosenthal_tbl68"
+
+#' Corrected mixed-design Table 6.8 data by Rosenthal et al. (2000)
+#'
+#' This version assigns the first four children to the girl group and the last
+#' four to the boy group, as described in the source. The legacy
+#' `rosenthal_tbl68` object is retained unchanged for backward compatibility.
+#'
+#' @format a data frame with 32 rows and 4 columns
+#' \describe{
+#'   \item{id}{unique participant identifier}
+#'   \item{dv}{dependent variable}
+#'   \item{within}{four-level within-subjects factor}
+#'   \item{between}{between-subjects group (girl or boy)}
+#' }
+#' @source Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). Contrasts and
+#'   Effect Sizes in Behavioral Research: A Correlational Approach. Cambridge
+#'   University Press.
+#' @usage data(rosenthal_tbl68_mixed)
+"rosenthal_tbl68_mixed"
 
 #' Data set by Rosenthal and Rosnow (2000)
 #'

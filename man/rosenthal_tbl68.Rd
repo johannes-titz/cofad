@@ -5,7 +5,7 @@
 \alias{rosenthal_tbl68}
 \title{Data set by Rosenthal and Rosnow (2000)}
 \format{
-a data frame with 8 rows and 4 columns
+a data frame with 32 rows and 4 columns
 \describe{
   \item{id}{unique identifier of participant}
   \item{dv}{dependent variable}

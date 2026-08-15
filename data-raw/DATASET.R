@@ -53,6 +53,13 @@ rosenthal_tbl53 <- data.frame(
   within = as.factor(rep(1:4, c(9, 9, 9, 9)))
 )
 
+# Table 5.4: two response profiles used to compare participant L and r scores
+rosenthal_tbl54 <- data.frame(
+  dv = c(1, 8, 2, 9, 1, 2, 3, 4),
+  within = as.factor(rep(1:4, 2)),
+  id = as.factor(rep(c("A", "B"), each = 4))
+)
+
 # Table 5.9. from Rosenthal, Chapter 5
 rosenthal_tbl59 <- data.frame(
   id = as.factor(rep(1:6, 2)),
@@ -89,6 +96,13 @@ rosenthal_tbl68 <- data.frame(
   between = as.factor(c("girl", "boy"))
 )
 
+# Correct participant-to-group assignment from Table 6.8. The legacy object
+# above is retained because changing it would break existing analyses.
+rosenthal_tbl68_mixed <- rosenthal_tbl68
+rosenthal_tbl68_mixed$between <- factor(
+  rep(c("girl", "boy"), each = 16), levels = c("girl", "boy")
+)
+
 write.csv(rosenthal_tbl31, "data-raw/rosenthal_tbl31.csv", row.names = F)
 write.csv(sedlmeier_p537, "data-raw/sedlmeier_p537.csv", row.names = F)
 write.csv(rosenthal_tbl59, "data-raw/rosenthal_tbl59.csv", row.names = F)
@@ -96,8 +110,10 @@ write.csv(rosenthal_p141, "data-raw/rosenthal_p141.csv", row.names = F)
 write.csv(furr_p4, "data-raw/furr_p4.csv", row.names = F)
 write.csv(sedlmeier_p525, "data-raw/sedlmeier_p525.csv", row.names = F)
 write.csv(rosenthal_tbl53, "data-raw/rosenthal_tbl53.csv", row.names = F)
+write.csv(rosenthal_tbl54, "data-raw/rosenthal_tbl54.csv", row.names = F)
 write.csv(rosenthal_chap5_q2, "data-raw/rosenthal_chap5_q2.csv", row.names = F)
 write.csv(rosenthal_tbl68, "data-raw/rosenthal_tbl68.csv", row.names = F)
+write.csv(rosenthal_tbl68_mixed, "data-raw/rosenthal_tbl68_mixed.csv", row.names = F)
 
 usethis::use_data(rosenthal_tbl31, overwrite = T)
 usethis::use_data(sedlmeier_p537, overwrite = T)
@@ -106,8 +122,10 @@ usethis::use_data(rosenthal_p141, overwrite = T)
 usethis::use_data(furr_p4, overwrite = T)
 usethis::use_data(sedlmeier_p525, overwrite = T)
 usethis::use_data(rosenthal_tbl53, overwrite = T)
+usethis::use_data(rosenthal_tbl54, overwrite = T)
 usethis::use_data(rosenthal_chap5_q2, overwrite = T)
 usethis::use_data(rosenthal_tbl68, overwrite = T)
+usethis::use_data(rosenthal_tbl68_mixed, overwrite = T)
 
 # new data, Mirka and Simone
 #working_memory <- read.csv("data-raw/Akan_etal_2018_Exp2B.csv")

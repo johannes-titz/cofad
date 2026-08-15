@@ -12,7 +12,8 @@ calc_contrast(
   lambda_within = NULL,
   ID = NULL,
   id = NULL,
-  data = NULL
+  data = NULL,
+  within_score = c("L", "r")
 )
 }
 \arguments{
@@ -41,6 +42,11 @@ for within- and mixed contrast analysis.}
 
 \item{data}{optional argument for the \code{data.frame}
 containing \code{dv} and groups.}
+
+\item{within_score}{participant-level score for a within-subjects contrast:
+`"L"` (the default) retains response magnitude, whereas `"r"` measures
+agreement between each participant's response pattern and the contrast
+weights.}
 }
 \value{
 an object of type cofad_bw or cofad_wi or cofad_mx, including
