@@ -52,32 +52,51 @@ Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for competing h
 
 Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for contrast analysis. *Journal of Open Source Software, 6*(67), 3822. https://doi.org/10.21105/joss.03822
 
-For LaTeX users, a BibTeX entry is provided below:
+R returns both entries (and their BibTeX forms) with `citation("cofad")`. The
+app also has buttons for copying both references as APA 7 plain text, HTML, or
+BibTeX. On GitHub, use the native copy button in the upper-right corner of any
+of the following code blocks.
 
+### Plain text
+
+```text
+Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for competing hypotheses: A tutorial using the R package cofad. Behavior Research Methods, 57, Article 326. https://doi.org/10.3758/s13428-025-02833-w
+
+Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for contrast analysis. Journal of Open Source Software, 6(67), 3822. https://doi.org/10.21105/joss.03822
 ```
-@article{henninger2025,
-  doi = {10.3758/s13428-025-02833-w},
-  url = {https://doi.org/10.3758/s13428-025-02833-w},
+
+### HTML
+
+```html
+<div class="csl-bib-body">
+  <div class="csl-entry">Henninger, M., Malejka, S., &amp; Titz, J. (2025). Contrast analysis for competing hypotheses: A tutorial using the R package cofad. <i>Behavior Research Methods, 57</i>, Article 326. <a href="https://doi.org/10.3758/s13428-025-02833-w">https://doi.org/10.3758/s13428-025-02833-w</a></div>
+  <div class="csl-entry">Titz, J., &amp; Burkhardt, M. (2021). cofad: An R package and Shiny app for contrast analysis. <i>Journal of Open Source Software, 6</i>(67), 3822. <a href="https://doi.org/10.21105/joss.03822">https://doi.org/10.21105/joss.03822</a></div>
+</div>
+```
+
+### BibTeX
+
+```bibtex
+@article{henninger2025cofad,
+  author = {Henninger, Mirka and Malejka, Simone and Titz, Johannes},
+  title = {Contrast analysis for competing hypotheses: A tutorial using the {R} package cofad},
+  journal = {Behavior Research Methods},
   year = {2025},
   volume = {57},
   pages = {326},
-  author = {Mirka Henninger and Simone Malejka and Johannes Titz},
-  title = {Contrast analysis for competing hypotheses: A tutorial using the
-           R package cofad},
-  journal = {Behavior Research Methods}
+  doi = {10.3758/s13428-025-02833-w}
 }
 
-@article{titz2021, 
-  doi = {10.21105/joss.03822}, 
-  url = {https://doi.org/10.21105/joss.03822}, 
-  year = {2021}, 
-  publisher = {The Open Journal}, 
-  volume = {6}, 
-  number = {67}, 
-  pages = {3822}, 
-  author = {Johannes Titz and Markus Burkhardt}, 
-  title = {cofad: An R package and shiny app for contrast analysis}, 
-  journal = {Journal of Open Source Software} }
+@article{titz2021cofad,
+  author = {Titz, Johannes and Burkhardt, Markus},
+  title = {cofad: An {R} package and {Shiny} app for contrast analysis},
+  journal = {Journal of Open Source Software},
+  year = {2021},
+  volume = {6},
+  number = {67},
+  pages = {3822},
+  doi = {10.21105/joss.03822}
+}
 ```
 
 ## Introduction
@@ -100,7 +119,7 @@ In this vignette, we assume you have a basic understanding of contrast analysis 
 
 Cofad has two components: the R package and a Shiny app that offers a graphical user interface.
 
-If you just want to use the cofad-app, you do not need to install it. Just go to https://cofad.titz.science and use it there. An example data file is loaded when you add /example after the url.
+If you just want to use the cofad app, you do not need to install it. Go to https://cofad.titz.science and use the categorized example chooser or upload your own data.
 
 If you prefer the command line interface or want to use the cofad-app locally, install it from CRAN:
 
@@ -133,7 +152,13 @@ Before you start, your data must be in long format (also referred to as narrow o
 
 ### Graphical user interface
 
-Load a `.csv` or `.sav` (SPSS) file. Cofad suggests the dependent variable and any between-subjects factor, within-subjects factor, and participant ID from the data's replication and nesting structure. Check these editable suggestions in the model table, then enter the contrast weights in the corresponding lambda tables. The detector is conservative: it does not infer scientific intent from correlations and may leave ambiguous roles empty.
+Load a `.csv` or `.sav` (SPSS) file, or select a packaged example grouped as
+between, within, or mixed. Cofad suggests the dependent variable
+and any between-subjects factor, within-subjects factor, and participant ID from
+the data's replication and nesting structure. Check these editable suggestions
+in the model table, then enter the contrast weights in the corresponding lambda
+tables. The detector is conservative: it does not infer scientific intent from
+correlations and may leave ambiguous roles empty.
 
 As an example go to `https://cofad.titz.science/example` which will load a data set from @rosenthal2000 (Table 5.3). The cognitive ability of nine children belonging to different age groups (between) was measured four times (within).
 
@@ -144,7 +169,7 @@ There are two hypotheses:
 2. cognitive ability linearly increases over age groups (between)
 ($\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1$)
 
-Select the variables in the model table and edit the default contrast weights in the lambda tables. The app reports the contrast, a detailed variance decomposition, the three between-subjects effect sizes and their squared values, and a plot that partitions total variation:
+Select the variables in the compact model table and edit the default contrast weights in the lambda tables. The app reports the contrast, a detailed variance decomposition with ordinary $\eta^2$ for each tested component, the three between-subjects effect sizes and their squared values, and a plot that partitions total variation. Small *p* values are shown numerically in scientific notation rather than as threshold statements. For mixed designs, this is explicitly a partition of participants' derived within-contrast scores, not of the raw repeated outcome variance. The paper-ready report text, F table, and effect-size table have copy buttons; numeric table columns are right-aligned. The Help and citation panel beneath the model contains the package references, README, and GitHub issue tracker.
 
 A mixed design is ideal for trying the cofad app. You can construct a separate within-subjects model by setting the between-subjects factor to `NONE`. Likewise, set the within-subjects factor and participant ID to `NONE` to obtain a between-subjects model.
 
@@ -262,6 +287,38 @@ t.test(lc1, alternative = "greater")
 
 Only the linear combination of the dependent variable and the contrast weights for each participant is needed. With these values a normal $t$-test against 0 is conducted. While you can do this manually, using cofad is quicker and it also gives you more information, such as the different effect sizes.
 
+### Choosing participant L or r scores
+
+For a within contrast, `within_score = "L"` (the default) calculates each
+participant's weighted sum. It retains the absolute magnitude of the response,
+so choose L when the size of a predicted increase or decrease is substantively
+meaningful. `within_score = "r"` instead correlates each participant's response
+profile with the contrast weights. It measures pattern agreement and is
+unchanged by adding a constant or multiplying a profile by a positive constant.
+Choose r when adherence to the predicted shape matters more than amplitude,
+especially when there are several repeated conditions.
+
+The choice should follow the research question and be made before comparing the
+results. With only two repeated levels, a defined r score can only be -1 or 1
+and discards magnitude; L is usually more informative. An r score is undefined
+for a participant whose responses are all equal, and cofad reports those IDs.
+
+Rosenthal et al.'s Table 5.4 makes the distinction concrete. Child A has the
+larger weighted sum but Child B follows the linear pattern perfectly:
+
+```{r}
+data("rosenthal_tbl54")
+weights <- c("1" = -3, "2" = -1, "3" = 1, "4" = 3)
+
+calc_contrast(dv, within = within, lambda_within = weights, id = id,
+              data = rosenthal_tbl54, within_score = "L")$participant_scores
+calc_contrast(dv, within = within, lambda_within = weights, id = id,
+              data = rosenthal_tbl54, within_score = "r")$participant_scores
+```
+
+The app exposes the same choice as **Participant-level within score**, with
+labels that distinguish magnitude (L) from pattern fit (r).
+
 ## Mixed Designs
 
 A mixed design combines between and within factors. In this case cofad first calculates the linear combination (*L*-Values) for the within factor. This new variable serves as the dependent variable for a between contrast analysis. We will again look at the example presented in @rosenthal2000 (see the section graphical user interface). The cognitive ability of nine children belonging to different age groups (between) was measured four times (within).
@@ -295,6 +352,21 @@ The results look like a contrast analysis for between-subject designs. The summa
 
 ```{r}
 summary(contr_mx)
+```
+
+To test pattern fit rather than response magnitude, use the same model with
+`within_score = "r"`. The returned `participant_scores` retain the unrounded
+correlations. Rosenthal et al. printed these values to two decimals before their
+worked calculation, so calculations from the raw data differ slightly from the
+book's rounded F value.
+
+```{r}
+contr_mx_r <- calc_contrast(
+  dv = dv, between = between, lambda_between = lambda_between,
+  within = within, lambda_within = lambda_within, id = id,
+  data = rosenthal_tbl53, within_score = "r"
+)
+contr_mx_r$participant_scores
 ```
 
 ## Comparing two hypotheses
@@ -408,13 +480,13 @@ Note that this will only work for between-subjects designs.
 
 ## Testing
 
-The test suite includes unit, regression, example, summary-method, validation, in-process Shiny server, and browser integration tests. The server tests use `shiny::testServer()`, so ordinary `covr::package_coverage(type = "tests")` now measures the app logic without starting another R process. As of August 2026, line coverage is 88.9% overall and 85.8% for `server.R`. Browser tests remain as a thinner end-to-end layer and are skipped on CRAN and continuous integration because their timing has been unreliable on some runners.
+The test suite includes unit, regression, example, summary-method, validation, in-process Shiny server, and browser integration tests. The server tests use `shiny::testServer()`, so ordinary `covr::package_coverage(type = "tests")` now measures the app logic without starting a browser process. As of August 2026, line coverage is 92.0% overall and 89.8% for `server.R`. Browser tests remain as a thinner end-to-end layer and are skipped on CRAN and continuous integration because their timing has been unreliable on some runners.
 
 ## Browser-only webR version
 
 A static Shinylive build can run cofad entirely in the browser through webR, without a Shiny server. It is published to <https://johannes-titz.github.io/cofad/> by the `deploy-shinylive` GitHub Actions workflow on every push to the main branch. GitHub Pages must be configured to use **GitHub Actions** as its source in the repository settings.
 
-For a local build, run `source("tools/build-shinylive.R")` from the repository root; the generated `docs/` directory can be served by any static web host. The current static artifact is approximately 65 MiB. In an earlier uncached browser measurement, the interface took approximately 72 seconds to become ready; subsequent cached starts should be faster, but the server-backed app remains preferable when low startup latency matters.
+For a local build, run `source("tools/build-shinylive.R")` from the repository root; the generated `docs/` directory can be served by any static web host. The current static artifact is approximately 65 MiB. In a local Chromium benchmark on August 15, 2026, a fresh isolated browser context showed the controls after 26.9 seconds and a selected example's model table after 32.9 seconds. A cached reload took 22.4 and 26.8 seconds, respectively. These are single-machine localhost measurements, not network guarantees, but they show that webR initialization rather than app-data transfer dominates startup. Cofad has no additional webR package archive bundle and its packaged examples total only about 64 KiB, so Mimosa-style partial package loading is unlikely to improve startup materially. The server-backed app remains preferable when the lowest latency matters.
 
 ## Issues and Support
 
