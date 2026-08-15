@@ -442,7 +442,7 @@ myserver <- shinyServer(function(input, output, session) {
               "Variance decomposition (F table)"
             }),
             tags$div(
-              class = "cofad-copy-layout cofad-table-layout",
+              class = "cofad-copy-layout",
               tags$div(
                 class = "cofad-table-content",
                 cofad_html_table(
@@ -451,71 +451,41 @@ myserver <- shinyServer(function(input, output, session) {
                 )
               ),
               tags$div(
-                class = "cofad-table-side",
-                tags$div(
-                  class = "cofad-copy-actions",
-                  cofad_copy_button("cofad-f-table", "Copy F table"),
-                  tags$span(
-                    id = "cofad-f-table-copy-status",
-                    class = "cofad-copy-status", role = "status"
-                  )
-                ),
-                tags$p(
-                  class = "cofad-note",
-                  "The contrast is a one-degree-of-freedom component of the ",
-                  "overall between-group variation. F-table p values are ",
-                  "non-directional. ",
-                  shiny::HTML("<i>&eta;</i><sup>2</sup>"),
-                  " is the component SS divided by total SS; for the contrast ",
-                  "row it equals ",
-                  shiny::HTML("<i>r</i><sub>es</sub><sup>2</sup>"),
-                  ".",
-                  if (inherits(contr, "cofad_mx")) {
-                    shiny::HTML(paste0(
-                      " For mixed designs, this decomposition concerns the ",
-                      "participants' within-contrast ", contr$within_score,
-                      if (identical(contr$within_score, "L")) {
-                        " values"
-                      } else {
-                        " scores"
-                      },
-                      ", not the raw repeated outcome variance. Thus ",
-                      "<i>r</i><sub>alerting</sub><sup>2</sup> ",
-                      "is the share of between-group score variation matching ",
-                      "the planned contrast, whereas ",
-                      "<i>r</i><sub>es</sub><sup>2</sup> is its share ",
-                      "of total score variation."
-                    ))
-                  }
+                class = "cofad-copy-actions",
+                cofad_copy_button("cofad-f-table", "Copy F table"),
+                tags$span(
+                  id = "cofad-f-table-copy-status",
+                  class = "cofad-copy-status", role = "status"
                 )
               )
             ),
-            tags$h4("Effect sizes and explained proportions"),
-            tags$div(
-              class = "cofad-copy-layout cofad-table-layout",
-              tags$div(
-                class = "cofad-table-content",
-                cofad_html_table(
-                  detailed_effect_table(contr), id = "cofad-effect-table",
-                  right_align = c(
-                    "Estimate", "Squared / explained proportion"
-                  )
-                )
-              ),
-              tags$div(
-                class = "cofad-table-side",
-                tags$div(
-                  class = "cofad-copy-actions",
-                  cofad_copy_button(
-                    "cofad-effect-table", "Copy effect-size table"
-                  ),
-                  tags$span(
-                    id = "cofad-effect-table-copy-status",
-                    class = "cofad-copy-status", role = "status"
-                  )
-                ),
-                tags$p(class = "cofad-note", cofad_effect_order_note(contr))
-              )
+            tags$p(
+              class = "cofad-note",
+              "The contrast is a one-degree-of-freedom component of the ",
+              "overall between-group variation. F-table p values are ",
+              "non-directional. ",
+              shiny::HTML("<i>&eta;</i><sup>2</sup>"),
+              " is the component SS divided by total SS; for the contrast ",
+              "row it equals ",
+              shiny::HTML("<i>r</i><sub>es</sub><sup>2</sup>"),
+              ".",
+              if (inherits(contr, "cofad_mx")) {
+                shiny::HTML(paste0(
+                  " For mixed designs, this decomposition concerns the ",
+                  "participants' within-contrast ", contr$within_score,
+                  if (identical(contr$within_score, "L")) {
+                    " values"
+                  } else {
+                    " scores"
+                  },
+                  ", not the raw repeated outcome variance. Thus ",
+                  "<i>r</i><sub>alerting</sub><sup>2</sup> ",
+                  "is the share of between-group score variation matching ",
+                  "the planned contrast, whereas ",
+                  "<i>r</i><sub>es</sub><sup>2</sup> is its share ",
+                  "of total score variation."
+                ))
+              }
             ),
             tags$h4(if (inherits(contr, "cofad_mx")) {
               paste(

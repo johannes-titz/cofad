@@ -1,7 +1,8 @@
 # cofad (development version)
 
 * place app copy controls beside their report, table, or citation content,
-  move table explanations into compact side columns, clarify panel-versus-
+  remove the redundant second effect-size table from between/mixed output,
+  keep the F-table explanation directly below its table, clarify panel-versus-
   section heading sizes, and remove the duplicate example description below
   the selector while retaining its option tooltips
 * add ordinary eta squared to the app F table, including the within-group/error

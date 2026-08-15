@@ -35,6 +35,30 @@ test_that("headings inside panels are smaller than panel titles", {
   expect_match(ui_source, ".box-body h4 { font-size: 15px", fixed = TRUE)
 })
 
+test_that("between results use one table with its note below", {
+  shiny::testServer(myserver, {
+    session$setInputs(example_dataset = "rosenthal_tbl31")
+    session$flushReact()
+    invisible(output$variables)
+    session$setInputs(
+      dv_name = "dv", between_name = "between",
+      within_name = "", id_name = ""
+    )
+    session$flushReact()
+
+    result_html <- output$table_region
+    expect_match(result_html, 'id="cofad-f-table"', fixed = TRUE)
+    expect_match(
+      result_html,
+      "The contrast is a one-degree-of-freedom component", fixed = TRUE
+    )
+    expect_false(grepl('id="cofad-effect-table"', result_html, fixed = TRUE))
+    expect_false(grepl(
+      "Effect sizes and explained proportions", result_html, fixed = TRUE
+    ))
+  })
+})
+
 test_that("example details appear only as option tooltips", {
   ui <- as.character(myui(NULL))
   selector <- as.character(cofad_example_select())
