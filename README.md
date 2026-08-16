@@ -20,6 +20,7 @@ status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/
 - [Citation](#citation)
 - [Introduction](#introduction)
 - [Installation](#installation)
+  - [Docker](#docker)
 - [Using cofad](#using-cofad)
   - [Graphical user interface](#graphical-user-interface)
   - [Between-subjects designs](#between-subjects-designs)
@@ -196,6 +197,21 @@ You can also run the app:
 ``` r
 cofad::run_app()
 ```
+
+### Docker
+
+To run the server-backed app in a container, build the included
+`Dockerfile` from the repository root and publish its port:
+
+``` bash
+docker build -t cofad .
+docker run --rm -p 3838:3838 cofad
+```
+
+Then open <http://localhost:3838>. The image uses R 4.6.1, runs the app
+as a non-root user, and includes a container health check. To use
+another available Rocker Shiny version, override the build argument, for
+example `docker build --build-arg R_VERSION=4.5.3 -t cofad .`.
 
 <!-- If you have any problems installing cofad, check that your R version is up to date (currently R version 4.6.1 (2026-06-24)). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/. -->
 

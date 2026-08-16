@@ -31,3 +31,5 @@
 ^CRAN-SUBMISSION$
 ^docs$
 ^_shinylive_app$
+^Dockerfile$
+^\.dockerignore$
