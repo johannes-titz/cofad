@@ -6,6 +6,14 @@ modify_hot_table <- function(row, col, value, table) {
   )
 }
 
+wait_for_hot_level <- function(app, table, level) {
+  app$wait_for_js(paste0(
+    "(function() { var widget = HTMLWidgets.getInstance(", table,
+    "); return widget && widget.hot && widget.hot.getDataAtCell(0, 0) === '",
+    level, "'; })()"
+  ))
+}
+
 test_that("gui between works", {
   skip_on_cran()
   skip_on_ci()
@@ -13,6 +21,7 @@ test_that("gui between works", {
   app <- AppDriver$new(start, name = "between")
   app$upload_file(datafile = "sedlmeier_p525.csv") # change path
   app$set_inputs("between_name" = "between")
+  wait_for_hot_level(app, "hot_lambda_between", "JT")
 
   app$run_js(modify_hot_table(1, 2, 60, "hot_lambda_between"))
   app$wait_for_idle()
@@ -34,6 +43,7 @@ test_that("gui within works", {
   app$upload_file(datafile = "sedlmeier_p537.csv") # change path
 
   app$set_inputs("within_name" = "music", "id_name" = "participant")
+  wait_for_hot_level(app, "hot_lambda_within", "classic")
   app$run_js(modify_hot_table(1, 2, -0.75, "hot_lambda_within"))
   app$wait_for_idle()
   app$run_js(modify_hot_table(2, 2, -0.75, "hot_lambda_within"))
@@ -55,6 +65,7 @@ test_that("gui mixed works", {
   app$upload_file(datafile = "rosenthal_tbl53.csv")
   app$set_inputs("within_name" = "within", "id_name" = "id",
                  "between_name" = "between")
+  wait_for_hot_level(app, "hot_lambda_between", "age10")
   app$run_js(modify_hot_table(1, 2, 0, "hot_lambda_between"))
   app$wait_for_idle()
   app$run_js(modify_hot_table(2, 2, 1, "hot_lambda_between"))

@@ -1,5 +1,9 @@
 # cofad (development version)
 
+* remove redundant between/within contrast activation checkboxes; pure designs
+  now follow the roles selected in the model table, while mixed designs offer an
+  explicit choice between a between × within contrast and a within contrast
+  averaged across groups
 * correct within-only `r_contrast` to use the denominator degrees of freedom
   of its own contrast test, and identify its squared value with the
   contrast-specific eta-squared measures in the app

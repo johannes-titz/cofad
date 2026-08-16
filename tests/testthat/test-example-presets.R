@@ -97,19 +97,23 @@ test_that("example selection installs its documented contrasts", {
 
     session$setInputs(example_dataset = "rosenthal_tbl59")
     session$flushReact()
-    expect_false(reactive$use_between_contrast)
-    expect_null(reactive$lambda_between)
+    expect_identical(reactive$mixed_effect, "within")
+    expect_equal(
+      reactive$lambda_between,
+      c(placebo = -0.5, psychotherapy = 0.5)
+    )
     expect_equal(
       reactive$lambda_within,
       c(treatment = 1, placebo = -1)
     )
     expect_false(reactive$compare_competing)
+    expect_s3_class(analysis(), "cofad_wi")
     expect_match(output$table_region, "t(4) = 2.449", fixed = TRUE)
 
     session$setInputs(example_dataset = "rosenthal_tbl68_mixed")
     session$flushReact()
-    expect_false(reactive$use_between_contrast)
-    expect_true(reactive$use_within_contrast)
+    expect_identical(reactive$mixed_effect, "within")
+    expect_equal(reactive$lambda_between, c(girl = -0.5, boy = 0.5))
     expect_true(reactive$compare_competing)
     expect_equal(
       reactive$lambda_within,
@@ -119,6 +123,7 @@ test_that("example selection installs its documented contrasts", {
       reactive$lambda_within_rival,
       c(t1 = -3, t2 = -1, t3 = 1, t4 = 3)
     )
+    expect_s3_class(analysis(), "cofad_wi")
     expect_match(output$table_region, "t(6) = 5.189", fixed = TRUE)
   })
 })

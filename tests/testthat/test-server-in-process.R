@@ -22,6 +22,8 @@ test_that("between Shiny workflow runs in-process", {
     )
     session$flushReact()
     expect_match(output$hot_model, "Dependent variable")
+    expect_false(grepl("use_between_contrast", output$variables$html,
+                       fixed = TRUE))
     expect_match(output$hot_lambda_between, '"n":5')
     expect_match(output$hot_lambda_between, '"renderAllColumns":true')
     expect_match(output$table_region, "Variance decomposition")
@@ -42,6 +44,8 @@ test_that("within Shiny workflow runs in-process", {
     )
     session$flushReact()
     expect_identical(reactive$design_suggestion$design, "within")
+    expect_false(grepl("use_within_contrast", output$variables$html,
+                       fixed = TRUE))
     expect_match(output$hot_lambda_within, "without music")
     expect_match(output$table_region, "within-subjects contrast")
     expect_match(output$table_region, "Variance decomposition")
@@ -72,7 +76,29 @@ test_that("mixed Shiny workflow runs in-process", {
     )
     session$flushReact()
     expect_identical(reactive$design_suggestion$design, "mixed")
+    expect_identical(reactive$mixed_effect, "interaction")
+    expect_match(output$variables$html, "Mixed-design contrast to test",
+                 fixed = TRUE)
+    expect_match(output$variables$html, "Between × within contrast",
+                 fixed = TRUE)
+    expect_false(grepl("use_between_contrast", output$variables$html,
+                       fixed = TRUE))
+    expect_false(grepl("use_within_contrast", output$variables$html,
+                       fixed = TRUE))
+    expect_s3_class(analysis(), "cofad_mx")
     expect_match(output$table_region, "within-contrast L values")
     expect_match(output$table_region, "Partition of total variation")
+
+    session$setInputs(mixed_effect = "within")
+    session$flushReact()
+    expect_s3_class(analysis(), "cofad_wi")
+    expect_false(grepl("lambda_between = lambda_between",
+                       output$r_code_region$html, fixed = TRUE))
+
+    session$setInputs(mixed_effect = "interaction")
+    session$flushReact()
+    expect_s3_class(analysis(), "cofad_mx")
+    expect_match(output$r_code_region$html,
+                 "lambda_between = lambda_between", fixed = TRUE)
   })
 })

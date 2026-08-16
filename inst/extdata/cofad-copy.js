@@ -399,7 +399,7 @@
     });
     window.jQuery(document).on(
       "change",
-      "#compare_competing, #use_between_contrast, #use_within_contrast",
+      "#compare_competing",
       scheduleHotTableRender
     );
     window.jQuery(document).on("shown.bs.collapse", scheduleHotTableRender);

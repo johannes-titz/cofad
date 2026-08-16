@@ -270,6 +270,13 @@ Favored, preserving the current test until you edit the rival
 hypothesis. Clearing the checkbox removes the Rival columns and
 immediately restores the Favored weights as ordinary single contrasts.
 
+Between- and within-subjects contrast tables are activated automatically
+from the roles selected in the model table. For a mixed design, choose
+whether to test the **Between × within contrast** or the **Within
+contrast averaged across groups**. New mixed designs default to the
+former, as in Rosenthal et al.’s Table 5.3; packaged examples retain the
+analysis used by their source.
+
 The default example comes from Rosenthal et al. (2000) (Table 5.3). The
 cognitive ability of nine children belonging to different age groups
 (between) was measured four times (within).

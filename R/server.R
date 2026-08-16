@@ -35,15 +35,13 @@ myserver <- shinyServer(function(input, output, session) {
         id_name = if (is.null(suggestion)) "" else suggestion$id_name
       )
     }
-    reactive$use_between_contrast <- if (is.null(example_spec)) {
-      nzchar(reactive$model_spec[["between_name"]])
-    } else {
-      !is.null(example_spec$between)
-    }
-    reactive$use_within_contrast <- if (is.null(example_spec)) {
+    is_mixed <- nzchar(reactive$model_spec[["between_name"]]) &&
       nzchar(reactive$model_spec[["within_name"]])
+    reactive$mixed_effect <- if (is_mixed && !is.null(example_spec) &&
+        is.null(example_spec$between)) {
+      "within"
     } else {
-      !is.null(example_spec$within)
+      "interaction"
     }
     reactive$compare_competing <- isTRUE(example_spec$competing)
     reactive$lambda_between <- NULL
@@ -55,17 +53,13 @@ myserver <- shinyServer(function(input, output, session) {
     shinyjs::show("output_region")
     shinyjs::show("code_region")
     compare_default <- isTRUE(example_spec$competing)
-    between_default <- isTRUE(reactive$use_between_contrast)
-    within_default <- isTRUE(reactive$use_within_contrast)
+    mixed_effect_default <- reactive$mixed_effect
     session$onFlushed(function() {
       updateCheckboxInput(
         session, "compare_competing", value = compare_default
       )
-      updateCheckboxInput(
-        session, "use_between_contrast", value = between_default
-      )
-      updateCheckboxInput(
-        session, "use_within_contrast", value = within_default
+      updateRadioButtons(
+        session, "mixed_effect", selected = mixed_effect_default
       )
     }, once = TRUE)
   }
@@ -213,44 +207,44 @@ myserver <- shinyServer(function(input, output, session) {
       ),
       tags$hr(),
       conditionalPanel(
-        condition = "input.between_name != ''",
+        condition = "input.between_name != '' && input.within_name != ''",
+        radioButtons(
+          "mixed_effect", "Mixed-design contrast to test",
+          choices = c(
+            "Between \u00d7 within contrast" = "interaction",
+            "Within contrast averaged across groups" = "within"
+          ),
+          selected = isolate(reactive$mixed_effect), inline = TRUE
+        ),
+        tags$p(
+          class = "cofad-note",
+          "Choose between \u00d7 within when the within-subject pattern is ",
+          "predicted to differ across groups. Choose the averaged within ",
+          "contrast when the within-subject pattern is the target across all ",
+          "groups; the between factor is then used for grouping and error ",
+          "pooling."
+        )
+      ),
+      conditionalPanel(
+        condition = paste(
+          "input.between_name != '' && (input.within_name == '' ||",
+          "input.mixed_effect == 'interaction')"
+        ),
         tags$h4("Between-subjects contrast weights"),
-        checkboxInput(
-          "use_between_contrast", "Specify a between-subjects contrast",
-          value = isTRUE(reactive$use_between_contrast)
-        ),
-        conditionalPanel(
-          condition = "input.between_name != '' && input.use_between_contrast",
-          tags$div(
-            class = "cofad-hot-wrap",
-            rhandsontable::rHandsontableOutput(
-              "hot_lambda_between", width = "auto", height = "130px"
-            )
-          )
-        ),
-        conditionalPanel(
-          condition = "input.between_name != '' && !input.use_between_contrast",
-          tags$p(
-            class = "cofad-note",
-            "This factor is retained for grouping and error pooling, but the ",
-            "source analysis does not assign it planned contrast weights."
+        tags$div(
+          class = "cofad-hot-wrap",
+          rhandsontable::rHandsontableOutput(
+            "hot_lambda_between", width = "auto", height = "130px"
           )
         )
       ),
       conditionalPanel(
         condition = "input.within_name != ''",
         tags$h4("Within-subjects contrast weights"),
-        checkboxInput(
-          "use_within_contrast", "Specify a within-subjects contrast",
-          value = isTRUE(reactive$use_within_contrast)
-        ),
-        conditionalPanel(
-          condition = "input.within_name != '' && input.use_within_contrast",
-          tags$div(
-            class = "cofad-hot-wrap",
-            rhandsontable::rHandsontableOutput(
-              "hot_lambda_within", width = "auto", height = "130px"
-            )
+        tags$div(
+          class = "cofad-hot-wrap",
+          rhandsontable::rHandsontableOutput(
+            "hot_lambda_within", width = "auto", height = "130px"
           )
         ),
         radioButtons(
@@ -342,33 +336,9 @@ myserver <- shinyServer(function(input, output, session) {
     reactive$compare_competing <- isTRUE(input$compare_competing)
   }, ignoreInit = TRUE)
 
-  observeEvent(input$use_within_contrast, {
-    reactive$use_within_contrast <- isTRUE(input$use_within_contrast)
-    if (!isTRUE(input$use_within_contrast)) {
-      reactive$lambda_within <- NULL
-      reactive$lambda_within_rival <- NULL
-    } else if (is.null(reactive$lambda_within)) {
-      within_name <- reactive$model_spec[["within_name"]]
-      if (nzchar(within_name)) {
-        levels <- levels(as.factor(reactive$data[[within_name]]))
-        reactive$lambda_within <- create_default_lambdas(levels)
-        reactive$lambda_within_rival <- -reactive$lambda_within
-      }
-    }
-  }, ignoreInit = TRUE)
-
-  observeEvent(input$use_between_contrast, {
-    reactive$use_between_contrast <- isTRUE(input$use_between_contrast)
-    if (!isTRUE(input$use_between_contrast)) {
-      reactive$lambda_between <- NULL
-      reactive$lambda_between_rival <- NULL
-    } else if (is.null(reactive$lambda_between)) {
-      between_name <- reactive$model_spec[["between_name"]]
-      if (nzchar(between_name)) {
-        levels <- levels(as.factor(reactive$data[[between_name]]))
-        reactive$lambda_between <- create_default_lambdas(levels)
-        reactive$lambda_between_rival <- -reactive$lambda_between
-      }
+  observeEvent(input$mixed_effect, {
+    if (input$mixed_effect %in% c("interaction", "within")) {
+      reactive$mixed_effect <- input$mixed_effect
     }
   }, ignoreInit = TRUE)
 
@@ -382,18 +352,14 @@ myserver <- shinyServer(function(input, output, session) {
       spec <- isolate(reactive$example_spec)
       preset <- !is.null(spec) &&
         identical(within_name, unname(spec$roles[["within_name"]]))
-      if (preset) {
-        reactive$use_within_contrast <- !is.null(spec$within)
+      if (preset && !is.null(spec$within)) {
         reactive$lambda_within <- spec$within
         reactive$lambda_within_rival <- if (!is.null(spec$within_rival)) {
           spec$within_rival
-        } else if (!is.null(spec$within)) {
-          -spec$within
         } else {
-          NULL
+          -spec$within
         }
       } else {
-        reactive$use_within_contrast <- TRUE
         reactive$lambda_within <- create_default_lambdas(within_levels)
         reactive$lambda_within_rival <- -reactive$lambda_within
       }
@@ -475,18 +441,14 @@ myserver <- shinyServer(function(input, output, session) {
       spec <- isolate(reactive$example_spec)
       preset <- !is.null(spec) &&
         identical(between_name, unname(spec$roles[["between_name"]]))
-      if (preset) {
-        reactive$use_between_contrast <- !is.null(spec$between)
+      if (preset && !is.null(spec$between)) {
         reactive$lambda_between <- spec$between
         reactive$lambda_between_rival <- if (!is.null(spec$between_rival)) {
           spec$between_rival
-        } else if (!is.null(spec$between)) {
-          -spec$between
         } else {
-          NULL
+          -spec$between
         }
       } else {
-        reactive$use_between_contrast <- TRUE
         reactive$lambda_between <- create_default_lambdas(between_levels)
         reactive$lambda_between_rival <- -reactive$lambda_between
       }
@@ -605,10 +567,18 @@ myserver <- shinyServer(function(input, output, session) {
       }
     )
 
-    lambda_between <- active_lambda(
-      reactive$lambda_between, reactive$lambda_between_rival,
-      "Between-subjects competing contrasts"
-    )
+    is_mixed <- nzchar(model[["between_name"]]) &&
+      nzchar(model[["within_name"]])
+    use_between_contrast <- !is_mixed ||
+      !identical(reactive$mixed_effect, "within")
+    lambda_between <- if (use_between_contrast) {
+      active_lambda(
+        reactive$lambda_between, reactive$lambda_between_rival,
+        "Between-subjects competing contrasts"
+      )
+    } else {
+      NULL
+    }
     lambda_within <- active_lambda(
       reactive$lambda_within, reactive$lambda_within_rival,
       "Within-subjects competing contrasts"
@@ -629,7 +599,8 @@ myserver <- shinyServer(function(input, output, session) {
   output$table_region <- renderText({
     contr <- analysis()
 
-    if (!isTRUE(reactive$compare_competing) &&
+    uses_between_contrast <- !inherits(contr, "cofad_wi")
+    if (uses_between_contrast && !isTRUE(reactive$compare_competing) &&
         length(reactive$lambda_between) &&
         sum(reactive$lambda_between) != 0) {
       showNotification(
@@ -837,10 +808,22 @@ myserver <- shinyServer(function(input, output, session) {
 
   output$r_code_region <- renderUI({
     req(reactive$data, reactive$model_spec)
+    is_mixed <- nzchar(reactive$model_spec[["between_name"]]) &&
+      nzchar(reactive$model_spec[["within_name"]])
+    use_between_contrast <- !is_mixed ||
+      !identical(reactive$mixed_effect, "within")
     code <- cofad_r_code(
       model = reactive$model_spec,
-      lambda_between = reactive$lambda_between,
-      lambda_between_rival = reactive$lambda_between_rival,
+      lambda_between = if (use_between_contrast) {
+        reactive$lambda_between
+      } else {
+        NULL
+      },
+      lambda_between_rival = if (use_between_contrast) {
+        reactive$lambda_between_rival
+      } else {
+        NULL
+      },
       lambda_within = reactive$lambda_within,
       lambda_within_rival = reactive$lambda_within_rival,
       compare_competing = isTRUE(reactive$compare_competing),

@@ -100,7 +100,14 @@ test_that("mixed tables describe variation in derived within-contrast scores", {
 test_that("model UI hides contrast tables for absent factors", {
   server_source <- paste(deparse(body(myserver)), collapse = "\n")
 
-  expect_match(server_source, 'condition = "input.between_name != \'\'"', fixed = TRUE)
+  expect_match(
+    server_source,
+    '"input.between_name != \'\' && (input.within_name == \'\' ||"',
+    fixed = TRUE
+  )
+  expect_match(
+    server_source, '"input.mixed_effect == \'interaction\')"', fixed = TRUE
+  )
   expect_match(server_source, 'condition = "input.within_name != \'\'"', fixed = TRUE)
 })
 

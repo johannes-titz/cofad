@@ -71,8 +71,9 @@ cofad_default_example <- function() {
 #'
 #' The examples should open with the hypotheses used in their books or papers,
 #' rather than with weights inferred from the alphabetical order of factor
-#' levels. A NULL contrast for a present factor means that the factor is used
-#' only for grouping or pooling the error term in the source analysis.
+#' levels. A NULL contrast for a present between factor selects a within contrast
+#' averaged across groups; the between factor is retained for grouping and error
+#' pooling.
 #'
 #' @param name example data-set key
 #' @return A list containing model roles and source-defined contrast weights.

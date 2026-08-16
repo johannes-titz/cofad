@@ -12,9 +12,9 @@ output: github_document
 - [ ] Revisit the estimand for every mixed-design example against Rosenthal and
   Sedlmeier. Distinguish a within contrast averaged across groups from a planned
   between × within contrast, and document whether the source reports either or
-  both. Until this audit is complete, keep both selected factors active as the
-  default for new mixed-design analyses while retaining the currently verified
-  source-specific example presets.
+  both. Until this audit is complete, use between × within as the default for new
+  mixed-design analyses and retain the current source-specific selections for
+  packaged examples.
 - [ ] Add source/provenance scripts for packaged data that cannot currently be
   regenerated directly from `data-raw/`.
 
@@ -31,10 +31,9 @@ output: github_document
 
 ## Shiny and webR
 
-- [ ] After auditing the mixed-design examples, reconsider the contrast-activation
-  controls: pure between/within designs should not need redundant checkboxes,
-  and mixed designs may be clearer with an explicit effect-to-test selector (or
-  output for both the overall within contrast and the between × within contrast).
+- [ ] After auditing the mixed-design examples, decide whether the app should
+  report both the overall within contrast and the between × within contrast at
+  once, rather than making the user select one of them.
 - [ ] Manually acceptance-test editing the model and contrast tables after
   repeated file uploads, especially when two files have identical column names.
 - [ ] Add browser regression coverage for table edits, validation messages, the
