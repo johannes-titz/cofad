@@ -23,9 +23,10 @@ status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/
 - [Using cofad](#using-cofad)
   - [Graphical user interface](#graphical-user-interface)
   - [Between-subjects designs](#between-subjects-designs)
-- [Within-subjects designs](#within-subjects-designs)
-  - [Using participant L or r scores](#using-participant-l-or-r-scores)
-- [Mixed designs](#mixed-designs)
+  - [Within-subjects designs](#within-subjects-designs)
+    - [Using participant L or r
+      scores](#using-participant-l-or-r-scores)
+  - [Mixed designs](#mixed-designs)
 - [Comparing two hypotheses](#comparing-two-hypotheses)
 - [Aggregated data](#aggregated-data)
 - [Testing](#testing)
@@ -210,21 +211,40 @@ short description in the Wikipedia article:
 ### Graphical user interface
 
 Load a `.csv` or `.sav` (SPSS) file, or select a packaged example
-grouped as between, within, or mixed. Cofad suggests the dependent
-variable and any between-subjects factor, within-subjects factor, and
-participant ID from the data’s replication and nesting structure. Check
-these editable suggestions in the model table, then enter the contrast
-weights in the corresponding lambda tables. The detector is
-conservative: it does not infer scientific intent from correlations and
-may leave ambiguous roles empty.
+grouped as between, within, or mixed. At startup, both the server-backed
+and browser-only webR interfaces load Rosenthal et al.’s Table 5.3
+mixed-design example with its linear between- and within-subjects
+contrasts.
 
-[![The cofad Shiny app showing its editable model, F table, variance
-partition, and reproducible R
-code](man/figures/cofad-app.png)](https://cofad.titz.science)
+For uploaded data, cofad automatically examines replication and nesting
+to suggest the dependent variable, between-subjects factor,
+within-subjects factor, and participant ID. Every suggestion remains
+editable in the model table. The detector is deliberately conservative:
+it cannot infer the scientific meaning of variables or the intended
+hypothesis from correlations alone. Packaged examples therefore use the
+roles and planned weights documented in their books or papers, while
+still displaying the structural-detection result.
 
-The screenshot shows the current app with the linear between-subjects
-example. Click it to open the server-backed app; a browser-only webR
-version is also available at <https://johannes-titz.github.io/cofad/>.
+[![Automatic design detection in the cofad app, showing the loaded
+default mixed example and editable model
+table](man/figures/cofad-auto-detection.png)](https://cofad.titz.science)
+
+If detection is inconclusive or cannot run, the app does not force a
+structure. It retains a suggested dependent variable where possible,
+leaves uncertain roles as `NONE`, and asks you to choose the design
+manually in the same table. This fallback is available for between-,
+within-, and mixed-subjects designs.
+
+<figure>
+<img src="man/figures/cofad-manual-design.png"
+alt="Manual design selection after an inconclusive automatic detection" />
+<figcaption aria-hidden="true">Manual design selection after an
+inconclusive automatic detection</figcaption>
+</figure>
+
+Click the first screenshot to open the server-backed app. The
+browser-only webR version is available at
+<https://johannes-titz.github.io/cofad/>.
 
 To compare two competing contrasts, select **Compare two competing
 contrasts**. Each active weight table then shows **Favored** and
@@ -234,10 +254,9 @@ Favored, preserving the current test until you edit the rival
 hypothesis. Clearing the checkbox removes the Rival columns and
 immediately restores the Favored weights as ordinary single contrasts.
 
-As an example go to `https://cofad.titz.science/example` which will load
-a data set from Rosenthal et al. (2000) (Table 5.3). The cognitive
-ability of nine children belonging to different age groups (between) was
-measured four times (within).
+The default example comes from Rosenthal et al. (2000) (Table 5.3). The
+cognitive ability of nine children belonging to different age groups
+(between) was measured four times (within).
 
 There are two hypotheses:
 
@@ -269,10 +288,11 @@ separate within-subjects model by setting the between-subjects factor to
 `NONE`. Likewise, set the within-subjects factor and participant ID to
 `NONE` to obtain a between-subjects model.
 
-You can also inspect the same suggestion from R with
+You can inspect the automatic suggestion from R with
 `detect_design(your_data)`. It reports structural diagnostics and a
-confidence score, but its result should always be verified against the
-study design.
+confidence score, but its result should always be checked against the
+documented study design. In the app, manual role selection remains
+available regardless of the confidence score.
 
 The graphical user interface will suffice for most users, but some will
 prefer to use the scripting capabilities of R. In the next sections we
@@ -443,7 +463,7 @@ cor(furr_p4$empathy, lambdas)
 
 Let us now run an analysis for within-subjects designs.
 
-## Within-Subjects Designs
+### Within-Subjects Designs
 
 For within designs the calculations are quite different, but cofad takes
 care of the details. We just have to use the within parameters *within*
@@ -540,7 +560,7 @@ weights for each participant is needed. With these values a normal
 conducted. While you can do this manually, using cofad is quicker and it
 also gives you more information, such as the different effect sizes.
 
-### Using participant L or r scores
+#### Using participant L or r scores
 
 For a within contrast, `within_score = "L"` (the default) calculates
 each participant’s weighted sum. It retains the absolute magnitude of
@@ -615,7 +635,7 @@ summary(within_r)
 The app exposes the same choice as **Participant-level within score**,
 with labels that distinguish magnitude (L) from pattern fit (r).
 
-## Mixed Designs
+### Mixed Designs
 
 A mixed design combines between- and within-subjects factors. Cofad
 first calculates one participant-level score for the within contrast: a
@@ -962,7 +982,7 @@ GitHub Actions runs both R CMD check and an in-process coverage workflow
 on every push and pull request. The server tests use
 `shiny::testServer()`, so `covr::package_coverage(type = "tests")`
 measures app logic without starting a browser process. As of August
-2026, line coverage is 93.27% overall. Browser tests remain a thinner
+2026, line coverage is 93.33% overall. Browser tests remain a thinner
 end-to-end layer and are skipped on CRAN and continuous integration
 because their timing has been unreliable on some runners.
 
@@ -982,12 +1002,8 @@ a local Chromium benchmark on August 15, 2026, a fresh isolated browser
 context showed the controls after 26.9 seconds and a selected example’s
 model table after 32.9 seconds. A cached reload took 22.4 and 26.8
 seconds, respectively. These are single-machine localhost measurements,
-not network guarantees, but they show that webR initialization rather
-than app-data transfer dominates startup. Cofad has no additional webR
-package archive bundle and its packaged examples total only about 64
-KiB, so Mimosa-style partial package loading is unlikely to improve
-startup materially. The server-backed app remains preferable when the
-lowest latency matters.
+not network guarantees. The server-backed app remains preferable when
+the lowest latency matters.
 
 ## Issues and Support
 

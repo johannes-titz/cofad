@@ -70,6 +70,17 @@ myserver <- shinyServer(function(input, output, session) {
     }, once = TRUE)
   }
 
+  load_example <- function(example) {
+    if (identical(isolate(reactive$example_name), example) &&
+        !is.null(isolate(reactive$data))) {
+      return(invisible(FALSE))
+    }
+    example_data <- load_cofad_example(example)
+    validate(need(!is.null(example_data), "Example data set not found."))
+    set_data(example_data, cofad_example_spec(example), example)
+    invisible(TRUE)
+  }
+
   # Example data sets ----------------------------------------------------------
   output$example_description <- renderUI({
     req(input$example_dataset)
@@ -78,12 +89,7 @@ myserver <- shinyServer(function(input, output, session) {
 
   observeEvent(input$example_dataset, {
     req(nzchar(input$example_dataset))
-    example_data <- load_cofad_example(input$example_dataset)
-    validate(need(!is.null(example_data), "Example data set not found."))
-    set_data(
-      example_data, cofad_example_spec(input$example_dataset),
-      input$example_dataset
-    )
+    load_example(input$example_dataset)
   }, ignoreInit = FALSE)
 
   observe({
@@ -95,12 +101,18 @@ myserver <- shinyServer(function(input, output, session) {
         length(example) == 1 && grepl("^[A-Za-z][A-Za-z0-9_.]*$", example),
         "Invalid example data set name."
       ))
-      example_data <- load_cofad_example(example)
-      validate(need(!is.null(example_data), "Example data set not found."))
       updateSelectInput(session, "example_dataset", selected = example)
-      set_data(example_data, cofad_example_spec(example), example)
+      load_example(example)
     }
   })
+
+  session$onFlushed(function() {
+    if (is.null(isolate(reactive$data))) {
+      example <- cofad_default_example()
+      updateSelectInput(session, "example_dataset", selected = example)
+      load_example(example)
+    }
+  }, once = TRUE)
 
   observeEvent(input$datafile, {
     withProgress(message = "Loading data", value = 0, {

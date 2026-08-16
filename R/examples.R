@@ -64,7 +64,7 @@ cofad_example_choices <- function() {
 }
 
 cofad_default_example <- function() {
-  "rosenthal_tbl31"
+  "rosenthal_tbl53"
 }
 
 #' Source-defined model roles and planned contrasts for app examples

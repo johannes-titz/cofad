@@ -21,7 +21,7 @@ test_that("app examples are grouped by design and can all be loaded", {
                fixed = TRUE)
   expect_match(
     selector,
-    'value="rosenthal_tbl31" title="Four independent groups with a linear contrast (illustrative; not real data)." selected="selected"',
+    'value="rosenthal_tbl53" title="Age group by four repeated measures; includes Rosenthal&#39;s L and r examples (illustrative; not real data)." selected="selected"',
     fixed = TRUE
   )
   expect_true(all(info$data_type %in% c(
@@ -55,5 +55,17 @@ test_that("the app loads a selected example in-process", {
     expect_equal(nrow(reactive$data), 8)
     expect_identical(reactive$design_suggestion$design, "within")
     expect_match(output$example_description$html, "L and r")
+  })
+})
+
+test_that("the default mixed example is analyzed at startup", {
+  shiny::testServer(myserver, {
+    session$flushReact()
+    expect_identical(reactive$example_name, "rosenthal_tbl53")
+    expect_identical(reactive$design_suggestion$design, "mixed")
+    expect_identical(
+      reactive$model_spec,
+      cofad_example_spec("rosenthal_tbl53")$roles
+    )
   })
 })
