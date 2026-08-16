@@ -496,23 +496,6 @@ detailed_within_f_table <- function(object) {
     check.names = FALSE
   )
   attr(tab, "header_tooltips") <- c(
-    SS = if (identical(object$within_score, "L")) {
-      paste(
-        "Sum of squares for the planned contrast, expressed on the outcome",
-        "scale by accounting for the squared contrast weights."
-      )
-    } else {
-      "Sum of squares among participants' correlation scores."
-    },
-    MS = paste(
-      "The contrast and error rows are two estimates of population variance;",
-      "their ratio is F."
-    ),
-    F = "The planned-contrast variance estimate divided by its error estimate; F = t squared.",
-    p = paste(
-      "Nondirectional p value from F(1, df error). The report above instead uses",
-      "the prespecified contrast direction."
-    ),
     eta2 = paste(
       "Eta squared within the contrast-specific decomposition: row SS divided",
       "by total contrast-related SS."
@@ -523,16 +506,6 @@ detailed_within_f_table <- function(object) {
     )
   )
   attr(tab, "cell_tooltips") <- list(
-    SS = c(
-      "Contrast SS = MS contrast because the planned contrast has one df.",
-      "Error SS = MS error multiplied by its participant df.",
-      "Total contrast-related SS = contrast SS + error SS."
-    ),
-    MS = c(
-      "MS contrast is the numerator variance estimate.",
-      "MS error is the denominator variance estimate from variation among participants' contrast scores.",
-      ""
-    ),
     eta2 = c(
       "Contrast eta squared = contrast SS / total contrast-related SS.",
       "Participant-error share = error SS / total contrast-related SS.",

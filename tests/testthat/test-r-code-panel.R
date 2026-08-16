@@ -38,14 +38,20 @@ test_that("within contrast has an exact nondirectional F equivalent", {
     tolerance = 1e-4
   )
   html <- as.character(cofad_html_table(table))
-  expect_match(html, "F = t squared", fixed = TRUE)
-  expect_match(html, "two estimates of population variance", fixed = TRUE)
   expect_match(html, "&eta;", fixed = TRUE)
   expect_match(
     attr(table, "cell_tooltips")$partial_eta2[[1]],
     "r_contrast squared", fixed = TRUE
   )
   expect_match(html, "cofad-tooltip", fixed = TRUE)
+  expect_identical(
+    names(attr(table, "header_tooltips")), c("eta2", "partial_eta2")
+  )
+  expect_identical(
+    names(attr(table, "cell_tooltips")), c("eta2", "partial_eta2")
+  )
+  expect_match(html, "<th>SS</th>", fixed = TRUE)
+  expect_match(html, "<th><i>F</i></th>", fixed = TRUE)
 })
 
 test_that("R code generator reproduces single and competing app models", {
