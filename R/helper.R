@@ -471,7 +471,7 @@ detailed_within_f_table <- function(object) {
   tab <- data.frame(
     Source = c(
       "Within-subjects contrast",
-      "Contrast × participants (error)",
+      "Contrast \u00d7 participants (error)",
       "Total contrast-related variation"
     ),
     SS = format_statistic(c(
@@ -825,9 +825,9 @@ cofad_r_code <- function(
 variance_partition_data <- function(object) {
   if (inherits(object, "cofad_wi")) {
     within <- within_f_components(object)
-    components <- c(
-      Contrast = within$ss_contrast,
-      `Contrast × participants/error` = within$ss_error
+    components <- stats::setNames(
+      c(within$ss_contrast, within$ss_error),
+      c("Contrast", "Contrast \u00d7 participants/error")
     )
     shares <- matrix(
       components / within$ss_total, nrow = 1,
@@ -1010,7 +1010,7 @@ plotly_variance_partition <- function(object) {
 
   metric_html <- if (within_result) {
     paste0(
-      "<i>η</i><sup>2</sup> = <i>η</i><sub>p</sub><sup>2</sup> = ",
+      "<i>\u03b7</i><sup>2</sup> = <i>\u03b7</i><sub>p</sub><sup>2</sup> = ",
       "<i>r</i><sub>contrast</sub><sup>2</sup> = ",
       formatC(partition$metrics[["eta2"]], digits = 3, format = "f")
     )
