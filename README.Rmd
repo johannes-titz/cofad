@@ -38,11 +38,33 @@ options(width = 80)
 # <img src='logo/cover.png' align='right' height='100px'/>
 
 [![R-CMD-check](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml)
+[![test coverage](https://github.com/johannes-titz/cofad/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/johannes-titz/cofad/actions/workflows/test-coverage.yaml)
+[![codecov](https://codecov.io/gh/johannes-titz/cofad/graph/badge.svg)](https://app.codecov.io/gh/johannes-titz/cofad)
 [![webR app](https://github.com/johannes-titz/cofad/actions/workflows/deploy-shinylive.yaml/badge.svg)](https://johannes-titz.github.io/cofad/)
 [![CRAN status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/package=cofad)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.03822/status.svg)](https://doi.org/10.21105/joss.03822)
 
 <!-- [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116) -->
+
+## Contents
+
+- [Citation](#citation)
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Using cofad](#using-cofad)
+  - [Graphical user interface](#graphical-user-interface)
+  - [Between-subjects designs](#between-subjects-designs)
+- [Within-subjects designs](#within-subjects-designs)
+  - [Using participant L or r scores](#using-participant-l-or-r-scores)
+- [Mixed designs](#mixed-designs)
+- [Comparing two hypotheses](#comparing-two-hypotheses)
+- [Aggregated data](#aggregated-data)
+- [Testing](#testing)
+- [Browser-only webR version](#browser-only-webr-version)
+- [Issues and support](#issues-and-support)
+- [Contributing](#contributing)
+- [Acknowledgments](#acknowledgments)
+- [References](#references)
 
 ## Citation
 
@@ -53,11 +75,12 @@ Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for competing h
 Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for contrast analysis. *Journal of Open Source Software, 6*(67), 3822. https://doi.org/10.21105/joss.03822
 
 R returns both entries (and their BibTeX forms) with `citation("cofad")`. The
-app also has buttons for copying both references as APA 7 plain text, HTML, or
-BibTeX. On GitHub, use the native copy button in the upper-right corner of any
-of the following code blocks.
+app provides dedicated APA 7 plain-text, HTML, and BibTeX copy buttons. GitHub
+does not allow clipboard scripts inside a README, so the compact controls below
+open a code block with GitHub's native copy button.
 
-### Plain text
+<details>
+<summary>Copy plain text</summary>
 
 ```text
 Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for competing hypotheses: A tutorial using the R package cofad. Behavior Research Methods, 57, Article 326. https://doi.org/10.3758/s13428-025-02833-w
@@ -65,7 +88,10 @@ Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for competing h
 Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for contrast analysis. Journal of Open Source Software, 6(67), 3822. https://doi.org/10.21105/joss.03822
 ```
 
-### HTML
+</details>
+
+<details>
+<summary>Copy HTML</summary>
 
 ```html
 <div class="csl-bib-body">
@@ -74,7 +100,10 @@ Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for contrast
 </div>
 ```
 
-### BibTeX
+</details>
+
+<details>
+<summary>Copy BibTeX</summary>
 
 ```bibtex
 @article{henninger2025cofad,
@@ -99,13 +128,19 @@ Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for contrast
 }
 ```
 
+</details>
+
 ## Introduction
 
 Cofad is an R package for conducting COntrast analysis in FActorial Designs, such as ANOVAs. If contrast analysis were to win an award, it might be for the most underestimated and underused statistical technique. This is unfortunate, because contrast analysis is at least as informative as ANOVA---and often more so. Rather than testing an unspecific omnibus hypothesis like “there are differences somewhere”, contrast analysis allows you to test a precise, numerically specified hypothesis. It also shifts the focus from mere significance testing to the evaluation of effects.
 
 This focus on effects is reflected in two key ways:
 
-1. Contrast analysis offers three distinct effect size measures: $r_\mathrm{effectsize}$, $r_\mathrm{contrast}$, and $r_\mathrm{alerting}$.
+1. Between-subjects and mixed analyses offer three distinct effect-size
+measures: $r_\mathrm{es}$, $r_\mathrm{contrast}$, and
+$r_\mathrm{alerting}$. A pure within-subjects analysis instead reports
+$r_\mathrm{contrast}$ and $g_\mathrm{contrast}$ because the other two
+denominators require a between-group partition.
 
 2. These effect sizes describe different aspects of how closely the observed data align with the specified contrast.
 
@@ -159,6 +194,13 @@ the data's replication and nesting structure. Check these editable suggestions
 in the model table, then enter the contrast weights in the corresponding lambda
 tables. The detector is conservative: it does not infer scientific intent from
 correlations and may leave ambiguous roles empty.
+
+[![The cofad Shiny app showing its editable model, F table, variance partition,
+and reproducible R code](man/figures/cofad-app.png)](https://cofad.titz.science)
+
+The screenshot shows the current app with the linear between-subjects example.
+Click it to open the server-backed app; a browser-only webR version is also
+available at <https://johannes-titz.github.io/cofad/>.
 
 To compare two competing contrasts, select **Compare two competing
 contrasts**. Each active weight table then shows **Favored** and **Rival**
@@ -303,7 +345,7 @@ t.test(lc1, alternative = "greater")
 
 Only the linear combination of the dependent variable and the contrast weights for each participant is needed. With these values a normal $t$-test against 0 is conducted. While you can do this manually, using cofad is quicker and it also gives you more information, such as the different effect sizes.
 
-### Choosing participant L or r scores
+### Using participant L or r scores
 
 For a within contrast, `within_score = "L"` (the default) calculates each
 participant's weighted sum. It retains the absolute magnitude of the response,
@@ -332,12 +374,38 @@ calc_contrast(dv, within = within, lambda_within = weights, id = id,
               data = rosenthal_tbl54, within_score = "r")$participant_scores
 ```
 
+For a complete within-subjects analysis based on participant correlations,
+change only `within_score`:
+
+```{r}
+within_r <- calc_contrast(
+  dv = reading_test,
+  within = music,
+  lambda_within = c(
+    "without music" = 1.25,
+    "white noise" = 0.25,
+    "classic" = -0.75,
+    "jazz" = -0.75
+  ),
+  id = participant,
+  data = sedlmeier_p537,
+  within_score = "r"
+)
+summary(within_r)
+```
+
 The app exposes the same choice as **Participant-level within score**, with
 labels that distinguish magnitude (L) from pattern fit (r).
 
 ## Mixed Designs
 
-A mixed design combines between and within factors. In this case cofad first calculates the linear combination (*L*-Values) for the within factor. This new variable serves as the dependent variable for a between contrast analysis. We will again look at the example presented in @rosenthal2000 (see the section graphical user interface). The cognitive ability of nine children belonging to different age groups (between) was measured four times (within).
+A mixed design combines between- and within-subjects factors. Cofad first
+calculates one participant-level score for the within contrast: a weighted sum
+(*L*) by default or a profile correlation (*r*) when `within_score = "r"`.
+That score becomes the dependent variable for the between-subjects contrast.
+We will again look at the example presented in @rosenthal2000 (see the
+graphical-user-interface section). The cognitive ability of nine children
+belonging to different age groups (between) was measured four times (within).
 
 There are two hypotheses:
 
@@ -364,7 +432,9 @@ contr_mx <- calc_contrast(dv = dv,
 contr_mx
 ```
 
-The results look like a contrast analysis for between-subject designs. The summary gives some more details: The effect sizes, within group means and standard errors of the *L*-values.
+The results look like a between-subjects contrast analysis. The summary adds
+the effect sizes and the between-group means and standard errors of the selected
+participant-level score.
 
 ```{r}
 summary(contr_mx)
@@ -496,7 +566,14 @@ Note that this will only work for between-subjects designs.
 
 ## Testing
 
-The test suite includes unit, regression, example, summary-method, validation, in-process Shiny server, and browser integration tests. The server tests use `shiny::testServer()`, so ordinary `covr::package_coverage(type = "tests")` now measures the app logic without starting a browser process. As of August 2026, line coverage is 92.9% overall. Browser tests remain as a thinner end-to-end layer and are skipped on CRAN and continuous integration because their timing has been unreliable on some runners.
+The test suite includes unit, regression, example, summary-method, validation,
+in-process Shiny server, and browser integration tests. GitHub Actions runs both
+R CMD check and an in-process coverage workflow on every push and pull request.
+The server tests use `shiny::testServer()`, so
+`covr::package_coverage(type = "tests")` measures app logic without starting a
+browser process. As of August 2026, line coverage is 93.27% overall. Browser
+tests remain a thinner end-to-end layer and are skipped on CRAN and continuous
+integration because their timing has been unreliable on some runners.
 
 ## Browser-only webR version
 

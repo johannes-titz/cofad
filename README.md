@@ -4,6 +4,9 @@ Cofad User Guide
 # <img src='logo/cover.png' align='right' height='100px'/>
 
 [![R-CMD-check](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml)
+[![test
+coverage](https://github.com/johannes-titz/cofad/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/johannes-titz/cofad/actions/workflows/test-coverage.yaml)
+[![codecov](https://codecov.io/gh/johannes-titz/cofad/graph/badge.svg)](https://app.codecov.io/gh/johannes-titz/cofad)
 [![webR
 app](https://github.com/johannes-titz/cofad/actions/workflows/deploy-shinylive.yaml/badge.svg)](https://johannes-titz.github.io/cofad/)
 [![CRAN
@@ -11,6 +14,26 @@ status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.03822/status.svg)](https://doi.org/10.21105/joss.03822)
 
 <!-- [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116) -->
+
+## Contents
+
+- [Citation](#citation)
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Using cofad](#using-cofad)
+  - [Graphical user interface](#graphical-user-interface)
+  - [Between-subjects designs](#between-subjects-designs)
+- [Within-subjects designs](#within-subjects-designs)
+  - [Using participant L or r scores](#using-participant-l-or-r-scores)
+- [Mixed designs](#mixed-designs)
+- [Comparing two hypotheses](#comparing-two-hypotheses)
+- [Aggregated data](#aggregated-data)
+- [Testing](#testing)
+- [Browser-only webR version](#browser-only-webr-version)
+- [Issues and support](#issues-and-support)
+- [Contributing](#contributing)
+- [Acknowledgments](#acknowledgments)
+- [References](#references)
 
 ## Citation
 
@@ -27,12 +50,17 @@ contrast analysis. *Journal of Open Source Software, 6*(67), 3822.
 <https://doi.org/10.21105/joss.03822>
 
 R returns both entries (and their BibTeX forms) with
-`citation("cofad")`. The app also has buttons for copying both
-references as APA 7 plain text, HTML, or BibTeX. On GitHub, use the
-native copy button in the upper-right corner of any of the following
-code blocks.
+`citation("cofad")`. The app provides dedicated APA 7 plain-text, HTML,
+and BibTeX copy buttons. GitHub does not allow clipboard scripts inside
+a README, so the compact controls below open a code block with GitHub’s
+native copy button.
 
-### Plain text
+<details>
+
+<summary>
+
+Copy plain text
+</summary>
 
 ``` text
 Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for competing hypotheses: A tutorial using the R package cofad. Behavior Research Methods, 57, Article 326. https://doi.org/10.3758/s13428-025-02833-w
@@ -40,7 +68,14 @@ Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for competing h
 Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for contrast analysis. Journal of Open Source Software, 6(67), 3822. https://doi.org/10.21105/joss.03822
 ```
 
-### HTML
+</details>
+
+<details>
+
+<summary>
+
+Copy HTML
+</summary>
 
 ``` html
 <div class="csl-bib-body">
@@ -49,7 +84,14 @@ Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for contrast
 </div>
 ```
 
-### BibTeX
+</details>
+
+<details>
+
+<summary>
+
+Copy BibTeX
+</summary>
 
 ``` bibtex
 @article{henninger2025cofad,
@@ -74,6 +116,8 @@ Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for contrast
 }
 ```
 
+</details>
+
 ## Introduction
 
 Cofad is an R package for conducting COntrast analysis in FActorial
@@ -88,11 +132,18 @@ the evaluation of effects.
 
 This focus on effects is reflected in two key ways:
 
-1.  Contrast analysis offers three distinct effect size measures:
-    ![r\_\mathrm{effectsize}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D "r_\mathrm{effectsize}"),
+1.  Between-subjects and mixed analyses offer three distinct effect-size
+    measures:
+    ![r\_\mathrm{es}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bes%7D "r_\mathrm{es}"),
     ![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}"),
     and
     ![r\_\mathrm{alerting}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Balerting%7D "r_\mathrm{alerting}").
+    A pure within-subjects analysis instead reports
+    ![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}")
+    and
+    ![g\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?g_%5Cmathrm%7Bcontrast%7D "g_\mathrm{contrast}")
+    because the other two denominators require a between-group
+    partition.
 
 2.  These effect sizes describe different aspects of how closely the
     observed data align with the specified contrast.
@@ -167,14 +218,21 @@ weights in the corresponding lambda tables. The detector is
 conservative: it does not infer scientific intent from correlations and
 may leave ambiguous roles empty.
 
+[![The cofad Shiny app showing its editable model, F table, variance
+partition, and reproducible R
+code](man/figures/cofad-app.png)](https://cofad.titz.science)
+
+The screenshot shows the current app with the linear between-subjects
+example. Click it to open the server-backed app; a browser-only webR
+version is also available at <https://johannes-titz.github.io/cofad/>.
+
 To compare two competing contrasts, select **Compare two competing
 contrasts**. Each active weight table then shows **Favored** and
 **Rival** columns. Cofad standardizes both vectors before analyzing
 Favored minus Rival, as `lambda_diff()` does. Initially, Rival reverses
-Favored, preserving the current test until you
-edit the rival hypothesis. Clearing the checkbox removes the Rival
-columns and immediately restores the Favored weights as ordinary single
-contrasts.
+Favored, preserving the current test until you edit the rival
+hypothesis. Clearing the checkbox removes the Rival columns and
+immediately restores the Favored weights as ordinary single contrasts.
 
 As an example go to `https://cofad.titz.science/example` which will load
 a data set from Rosenthal et al. (2000) (Table 5.3). The cognitive
@@ -279,7 +337,7 @@ ca <- calc_contrast(dv = empathy, between = major,
                                        "business" = 0, "chemistry" = 0),
                     data = furr_p4)
 ca
-#> 
+#>
 #> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of t(16) = -2.481; p = 0.9877 and an effect magnitude of rₑₛ = -0.276. Attention: Contrast fits in the opposite direction!
 ```
 
@@ -289,25 +347,25 @@ in a publication. With the summary method some more details are shown:
 ``` r
 summary(ca)
 #> Contrast Analysis Between
-#> 
+#>
 #> Your contrast estimate is negative. This means that your data does not reflect the expected direction of your hypothesis specified by the contrast weights (lambdas).
-#> 
+#>
 #> $Lambdas
-#>   business  chemistry  education psychology 
-#>          0          0         -1          1 
-#> 
+#>   business  chemistry  education psychology
+#>          0          0         -1          1
+#>
 #> $tTable
 #>   L df      t p(t≥-2.481)①
 #>  -6 16 -2.481        0.988
-#> 
+#>
 #> ①The p-value refers to a one-tailed test.
-#> 
+#>
 #> $FTable
 #>            SS df     MS     F      p
 #> contrast   90  1 90.000 6.154 0.0246
-#> within    234 16 14.625             
-#> total    1179 19                    
-#> 
+#> within    234 16 14.625
+#> total    1179 19
+#>
 #> $Effects
 #>              effects
 #> r_effectsize  -0.276
@@ -339,14 +397,14 @@ ca <- calc_contrast(dv = empathy, between = major,
                                        "business" = 1, "chemistry" = -1),
                     data = furr_p4)
 ca
-#> 
+#>
 #> We ran a contrast analysis for the following between contrasts: business = 1; chemistry = -1; education = 0; psychology = 0. This resulted in statistics of t(16) = 0.827; p = 0.2102 and an effect magnitude of rₑₛ = 0.092.
 ca <- calc_contrast(dv = empathy, between = major,
                     lambda_between = c("psychology" = 1, "education" = 1,
                                        "business" = -1, "chemistry" = -1),
                     data = furr_p4)
 ca
-#> 
+#>
 #> We ran a contrast analysis for the following between contrasts: business = -1; chemistry = -1; education = 1; psychology = 1. This resulted in statistics of t(16) = 7.601; p = 5.349e-07 and an effect magnitude of rₑₛ = 0.847.
 ```
 
@@ -371,7 +429,7 @@ ca <- calc_contrast(dv = empathy, between = major,
                     data = furr_p4)
 #> lambdas are centered and rounded to 3 digits
 ca
-#> 
+#>
 #> We ran a contrast analysis for the following between contrasts: business = -4.75; chemistry = -17.75; education = 5.25; psychology = 17.25. This resulted in statistics of t(16) = 6.121; p = 7.375e-06 and an effect magnitude of rₑₛ = 0.682.
 ```
 
@@ -407,30 +465,30 @@ head(sedlmeier_p537)
 #> 5           30           5 without music
 #> 6           33           6 without music
 within <- calc_contrast(dv = reading_test, within = music,
-                        lambda_within = c("without music" = 1.25, 
+                        lambda_within = c("without music" = 1.25,
                                           "white noise" = 0.25,
                                           "classic" = -0.75,
                                           "jazz" = -0.75),
                         id = participant, data = sedlmeier_p537)
 summary(within)
 #> Contrast Analysis Within
-#> 
+#>
 #> $Lambdas
-#>       classic          jazz   white noise without music 
-#>         -0.75         -0.75          0.25          1.25 
-#> 
+#>       classic          jazz   white noise without music
+#>         -0.75         -0.75          0.25          1.25
+#>
 #> $tTable
 #>  mean of L    SE df     t p(t≥5.269)① 95%CI-lower 95%CI-upper
 #>      5.875 1.115  7 5.269    0.000581       3.238       8.512
-#> 
+#>
 #> ①The p-value refers to a one-tailed test.
-#> 
+#>
 #> $Effects
-#>                 
+#>
 #> r-contrast 0.894
 #> g-contrast 1.863
 within
-#> 
+#>
 #> We ran a within-subjects contrast analysis using participant-level L scores (weighted sums retaining response magnitude) for the following contrast weights: classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25. This resulted in t(7) = 5.269; p = 5.810e-04 and an effect magnitude of g_effectsize = 1.863.
 ```
 
@@ -443,19 +501,19 @@ because contrast analysis has always a specific hypothesis.) When
 conducting the analysis by hand, we can see why:
 
 For this within-subjects contrast,
-![r_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}")
+![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}")
 is the signed correlation-form effect derived from the same test,
-![r_\mathrm{contrast} = \operatorname{sign}(t)\sqrt{t^2/(t^2 + df_\mathrm{error})}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D%20%3D%20%5Coperatorname%7Bsign%7D%28t%29%5Csqrt%7Bt%5E2%2F%28t%5E2%20%2B%20df_%5Cmathrm%7Berror%7D%29%7D "r_\mathrm{contrast} = \operatorname{sign}(t)\sqrt{t^2/(t^2 + df_\mathrm{error})}").
+![r\_\mathrm{contrast} = \operatorname{sign}(t)\sqrt{t^2/(t^2 + df\_\mathrm{error})}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D%20%3D%20%5Coperatorname%7Bsign%7D%28t%29%5Csqrt%7Bt%5E2%2F%28t%5E2%20%2B%20df_%5Cmathrm%7Berror%7D%29%7D "r_\mathrm{contrast} = \operatorname{sign}(t)\sqrt{t^2/(t^2 + df_\mathrm{error})}").
 Consequently,
-![r_\mathrm{contrast}^2](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D%5E2 "r_\mathrm{contrast}^2")
+![r\_\mathrm{contrast}^2](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D%5E2 "r_\mathrm{contrast}^2")
 equals the contrast-specific
 ![\eta^2](https://latex.codecogs.com/png.latex?%5Ceta%5E2 "\eta^2") and
 partial
 ![\eta_p^2](https://latex.codecogs.com/png.latex?%5Ceta_p%5E2 "\eta_p^2")
 shown in the app. The between-design
-![r_\mathrm{es}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bes%7D "r_\mathrm{es}")
+![r\_\mathrm{es}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bes%7D "r_\mathrm{es}")
 and
-![r_\mathrm{alerting}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Balerting%7D "r_\mathrm{alerting}")
+![r\_\mathrm{alerting}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Balerting%7D "r_\mathrm{alerting}")
 are not defined by this pure within-subjects contrast partition.
 
 ``` r
@@ -463,16 +521,16 @@ mtr <- matrix(sedlmeier_p537$reading_test, ncol = 4)
 lambdas <- c(1.25, 0.25, -0.75, -0.75)
 lc1 <- mtr %*% lambdas
 t.test(lc1, alternative = "greater")
-#> 
+#>
 #>  One Sample t-test
-#> 
+#>
 #> data:  lc1
 #> t = 5.2689, df = 7, p-value = 0.000581
 #> alternative hypothesis: true mean is greater than 0
 #> 95 percent confidence interval:
 #>  3.762478      Inf
 #> sample estimates:
-#> mean of x 
+#> mean of x
 #>     5.875
 ```
 
@@ -482,7 +540,7 @@ weights for each participant is needed. With these values a normal
 conducted. While you can do this manually, using cofad is quicker and it
 also gives you more information, such as the different effect sizes.
 
-### Choosing participant L or r scores
+### Using participant L or r scores
 
 For a within contrast, `within_score = "L"` (the default) calculates
 each participant’s weighted sum. It retains the absolute magnitude of
@@ -518,17 +576,54 @@ calc_contrast(dv, within = within, lambda_within = weights, id = id,
 #> 0.56921 1.00000
 ```
 
+For a complete within-subjects analysis based on participant
+correlations, change only `within_score`:
+
+``` r
+within_r <- calc_contrast(
+  dv = reading_test,
+  within = music,
+  lambda_within = c(
+    "without music" = 1.25,
+    "white noise" = 0.25,
+    "classic" = -0.75,
+    "jazz" = -0.75
+  ),
+  id = participant,
+  data = sedlmeier_p537,
+  within_score = "r"
+)
+summary(within_r)
+#> Contrast Analysis Within
+#>
+#> $Lambdas
+#>       classic          jazz   white noise without music
+#>         -0.75         -0.75          0.25          1.25
+#>
+#> $tTable
+#>  mean of r    SE df      t p(t≥12.544)① 95%CI-lower 95%CI-upper
+#>       0.81 0.065  7 12.544   0.00000236       0.658       0.963
+#>
+#> ①The p-value refers to a one-tailed test.
+#>
+#> $Effects
+#>
+#> r-contrast 0.978
+#> g-contrast 4.435
+```
+
 The app exposes the same choice as **Participant-level within score**,
 with labels that distinguish magnitude (L) from pattern fit (r).
 
 ## Mixed Designs
 
-A mixed design combines between and within factors. In this case cofad
-first calculates the linear combination (*L*-Values) for the within
-factor. This new variable serves as the dependent variable for a between
-contrast analysis. We will again look at the example presented in
-Rosenthal et al. (2000) (see the section graphical user interface). The
-cognitive ability of nine children belonging to different age groups
+A mixed design combines between- and within-subjects factors. Cofad
+first calculates one participant-level score for the within contrast: a
+weighted sum (*L*) by default or a profile correlation (*r*) when
+`within_score = "r"`. That score becomes the dependent variable for the
+between-subjects contrast. We will again look at the example presented
+in Rosenthal et al. (2000) (see the graphical-user-interface section).
+The cognitive ability of nine children belonging to different age groups
 (between) was measured four times (within).
 
 There are two hypotheses:
@@ -553,42 +648,42 @@ head(rosenthal_tbl53)
 lambda_within <- c("1" = -3, "2" = -1, "3" = 1, "4" = 3)
 lambda_between <-c("age8" = -1, "age10" = 0, "age12" = 1)
 
-contr_mx <- calc_contrast(dv = dv, 
+contr_mx <- calc_contrast(dv = dv,
                           between = between,
                           lambda_between = lambda_between,
                           within = within,
                           lambda_within = lambda_within,
-                          id = id, 
+                          id = id,
                           data = rosenthal_tbl53)
 contr_mx
-#> 
+#>
 #> We ran a mixed contrast analysis using participant-level L scores (weighted sums retaining response magnitude) for the within-subjects contrast and the following between-subjects contrast weights: age10 = 0; age12 = 1; age8 = -1. This resulted in t(6) = 4.496; p = 0.002062 and an effect magnitude of rₑₛ = 0.871.
 ```
 
-The results look like a contrast analysis for between-subject designs.
-The summary gives some more details: The effect sizes, within group
-means and standard errors of the *L*-values.
+The results look like a between-subjects contrast analysis. The summary
+adds the effect sizes and the between-group means and standard errors of
+the selected participant-level score.
 
 ``` r
 summary(contr_mx)
 #> Contrast Analysis Mixed
-#> 
+#>
 #> $Lambdas
-#> age10 age12  age8 
-#>     0     1    -1 
-#> 
+#> age10 age12  age8
+#>     0     1    -1
+#>
 #> $tTable
 #>      L df     t p(t≥4.496)①
 #>  5.333  6 4.496     0.00206
-#> 
+#>
 #> ①The p-value refers to a one-tailed test.
-#> 
+#>
 #> $FTable
 #>              SS df     MS      F       p
 #> contrast 42.667  1 42.667 20.211 0.00412
-#> within   12.667  6  2.111               
-#> total    56.222  8                      
-#> 
+#> within   12.667  6  2.111
+#> total    56.222  8
+#>
 #> $Effects
 #>              effects
 #> r_effectsize   0.871
@@ -656,7 +751,7 @@ lambda1 <- c(-2, 3, -1)
 lambda2 <- c(-2, 1, 1)
 lambda <- lambda_diff(lambda1, lambda2, labels = c("KT", "JT", "MT"))
 lambda
-#>         JT         KT         MT 
+#>         JT         KT         MT
 #>  0.6816234  0.4883935 -1.1700168
 ```
 
@@ -676,30 +771,30 @@ ca_competing <- calc_contrast(
 #> lambdas are centered and rounded to 3 digits
 summary(ca_competing)
 #> Contrast Analysis Between
-#> 
+#>
 #> $Lambdas
-#>    JT    KT    MT 
-#>  0.68  0.49 -1.17 
-#> 
+#>    JT    KT    MT
+#>  0.68  0.49 -1.17
+#>
 #> $tTable
 #>      L df     t p(t≥1.136)①
 #>  0.582 12 1.136       0.139
-#> 
+#>
 #> ①The p-value refers to a one-tailed test.
-#> 
+#>
 #> $FTable
 #>              SS df    MS     F     p
 #> contrast  0.818  1 0.818 1.291 0.278
-#> within    7.600 12 0.633            
-#> total    11.733 14                  
-#> 
+#> within    7.600 12 0.633
+#> total    11.733 14
+#>
 #> $Effects
 #>              effects
 #> r_effectsize   0.264
 #> r_contrast     0.312
 #> r_alerting     0.445
 ca_competing
-#> 
+#>
 #> We ran a contrast analysis for the following between contrasts: JT = 0.68; KT = 0.49; MT = -1.17. This resulted in statistics of t(12) = 1.136; p = 0.139 and an effect magnitude of rₑₛ = 0.264.
 ```
 
@@ -768,7 +863,7 @@ lambda <- lambda_diff(lambda2, lambda1,
                       labels = c("without music", "white noise", "classic",
                                  "jazz"))
 lambda
-#>       classic          jazz   white noise without music 
+#>       classic          jazz   white noise without music
 #>     0.3271838     0.3271838    -0.8788616     0.2244941
 ```
 
@@ -789,25 +884,25 @@ contr_wi <- calc_contrast(
 #> lambdas are centered and rounded to 3 digits
 summary(contr_wi)
 #> Contrast Analysis Within
-#> 
+#>
 #> Your contrast estimate is negative. This means that your data does not reflect the expected direction of your hypothesis specified by the contrast weights (lambdas).
-#> 
+#>
 #> $Lambdas
-#>       classic          jazz   white noise without music 
-#>          0.33          0.33         -0.88          0.22 
-#> 
+#>       classic          jazz   white noise without music
+#>          0.33          0.33         -0.88          0.22
+#>
 #> $tTable
 #>  mean of L    SE df     t p(t≥-3.77)① 95%CI-lower 95%CI-upper
 #>       -2.2 0.584  7 -3.77       0.997       -3.58       -0.82
-#> 
+#>
 #> ①The p-value refers to a one-tailed test.
-#> 
+#>
 #> $Effects
-#>                  
-#> r-contrast -0.818
+#>
+#> r-contrast -0.819
 #> g-contrast -1.333
 contr_wi
-#> 
+#>
 #> We ran a within-subjects contrast analysis using participant-level L scores (weighted sums retaining response magnitude) for the following contrast weights: classic = 0.33; jazz = 0.33; white noise = -0.88; without music = 0.22. This resulted in t(7) = -3.77; p = 0.9965 and an effect magnitude of g_effectsize = -1.333. Attention: Contrast fits in the opposite direction!
 ```
 
@@ -840,7 +935,7 @@ furr_agg <- data.frame(
 )
 lambdas = c("psychology" = 1, "education" = -1, "business" = 0, "chemistry" = 0)
 calc_contrast_aggregated(mean, sd, n, major, lambdas, furr_agg)
-#> 
+#>
 #> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of t(16) = -2.481; p = 0.9877 and an effect magnitude of rₑₛ = -0.276. Attention: Contrast fits in the opposite direction!
 ```
 
@@ -853,7 +948,7 @@ ca <- calc_contrast(dv = empathy, between = major,
                                        "business" = 0, "chemistry" = 0),
                     data = furr_p4)
 ca
-#> 
+#>
 #> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of t(16) = -2.481; p = 0.9877 and an effect magnitude of rₑₛ = -0.276. Attention: Contrast fits in the opposite direction!
 ```
 
@@ -862,13 +957,14 @@ Note that this will only work for between-subjects designs.
 ## Testing
 
 The test suite includes unit, regression, example, summary-method,
-validation, in-process Shiny server, and browser integration tests. The
-server tests use `shiny::testServer()`, so ordinary
-`covr::package_coverage(type = "tests")` now measures the app logic
-without starting a browser process. As of August 2026, line coverage is
-92.9% overall. Browser tests remain as a thinner end-to-end layer and
-are skipped on CRAN and continuous integration because their timing has
-been unreliable on some runners.
+validation, in-process Shiny server, and browser integration tests.
+GitHub Actions runs both R CMD check and an in-process coverage workflow
+on every push and pull request. The server tests use
+`shiny::testServer()`, so `covr::package_coverage(type = "tests")`
+measures app logic without starting a browser process. As of August
+2026, line coverage is 93.27% overall. Browser tests remain a thinner
+end-to-end layer and are skipped on CRAN and continuous integration
+because their timing has been unreliable on some runners.
 
 ## Browser-only webR version
 
