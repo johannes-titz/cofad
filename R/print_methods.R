@@ -59,9 +59,9 @@ print.cofad_wi <- function(x, ...) {
     paste(names(lambda), "=", lambda, collapse = "; "),
     collapse = NULL
   )
-  g_effect <- round(x[[4]][2], 3)
+  r_contrast <- round(x[[4]][1], 3)
   opposite <- ifelse(
-    g_effect < 0,
+    r_contrast < 0,
     "Attention: Contrast fits in the opposite direction!",
     ""
   )
@@ -69,7 +69,7 @@ print.cofad_wi <- function(x, ...) {
       score_name, " scores (", score_explanation,
       ") for the following contrast weights: ", contr_1, ". ", sep = "")
   cat("This resulted in ", p,
-      " and an effect magnitude of g_effectsize = ", g_effect, ". ",
+      " and an effect magnitude of r_contrast = ", r_contrast, ". ",
       opposite, sep = "")
 }
 #' Output of a mixed design contrast analysis

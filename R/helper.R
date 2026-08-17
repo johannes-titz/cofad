@@ -610,6 +610,9 @@ cofad_report_tag <- function(report) {
   formatted <- gsub(
     "r\u2091\u209b", "<i>r</i><sub>es</sub>", escaped, fixed = TRUE
   )
+  formatted <- gsub(
+    "r_contrast", "<i>r</i><sub>contrast</sub>", formatted, fixed = TRUE
+  )
 
   shiny::HTML(paste0(
     '<div id="cofad-report-text" class="cofad-report">',

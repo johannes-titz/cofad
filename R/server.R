@@ -210,10 +210,27 @@ myserver <- shinyServer(function(input, output, session) {
         condition = "input.between_name != '' && input.within_name != ''",
         radioButtons(
           "mixed_effect", "Mixed-design contrast to test",
-          choices = c(
-            "Between \u00d7 within contrast" = "interaction",
-            "Within contrast averaged across groups" = "within"
+          choiceNames = list(
+            tags$span(
+              class = "cofad-help-tooltip",
+              title = paste(
+                "Tests the product of the planned between- and",
+                "within-subjects weights: whether the within-subject pattern",
+                "differs across groups as predicted by the between contrast."
+              ),
+              "Between \u00d7 within contrast"
+            ),
+            tags$span(
+              class = "cofad-help-tooltip",
+              title = paste(
+                "Tests the planned within-subjects contrast averaged across",
+                "groups. Between-subjects contrast weights are not used; the",
+                "between factor is retained for grouping and error pooling."
+              ),
+              "Within contrast averaged across groups"
+            )
           ),
+          choiceValues = c("interaction", "within"),
           selected = isolate(reactive$mixed_effect), inline = TRUE
         ),
         tags$p(

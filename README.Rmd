@@ -365,7 +365,7 @@ summary(within)
 within
 ```
 
-You can see that the significance test is just a $t$-test and the reported effect size is referring to a mean comparison ($g$). (The $t$-test is one-tailed, because contrast analysis has always a specific hypothesis.) When conducting the analysis by hand, we can see why:
+You can see that the significance test is a one-tailed $t$-test and the paper-ready report gives the signed effect-size correlation $r_\mathrm{contrast}$. When conducting the analysis by hand, we can see why:
 
 For this within-subjects contrast, $r_\mathrm{contrast}$ is the signed
 correlation-form effect derived from the same test,

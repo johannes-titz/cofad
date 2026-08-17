@@ -1,5 +1,7 @@
 # cofad (development version)
 
+* report signed `r_contrast`, rather than the inconsistently labeled
+  `g_effectsize`, in the within-only paper-ready report
 * remove redundant between/within contrast activation checkboxes; pure designs
   now follow the roles selected in the model table, while mixed designs offer an
   explicit choice between a between × within contrast and a within contrast

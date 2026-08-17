@@ -64,6 +64,24 @@ test_that("paper-ready reports explain participant L and r scores", {
   expect_false(grepl("resulted in F\\(", report_l))
 })
 
+test_that("within paper-ready reports use r contrast", {
+  data(sedlmeier_p537)
+  result <- calc_contrast(
+    dv = reading_test, within = music, id = participant,
+    lambda_within = c(
+      "without music" = 1.25, "white noise" = 0.25,
+      classic = -0.75, jazz = -0.75
+    ),
+    data = sedlmeier_p537
+  )
+  report <- trimws(paste(capture.output(print(result)), collapse = " "))
+  html <- as.character(cofad_report_tag(report))
+
+  expect_match(report, "r_contrast = 0.894", fixed = TRUE)
+  expect_false(grepl("g_effectsize", report, fixed = TRUE))
+  expect_match(html, "<i>r</i><sub>contrast</sub>", fixed = TRUE)
+})
+
 test_that("directional reports retain an opposite-direction warning", {
   data(furr_p4)
   result <- calc_contrast(

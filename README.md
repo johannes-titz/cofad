@@ -532,16 +532,14 @@ summary(within)
 #> g-contrast 1.863
 within
 #>
-#> We ran a within-subjects contrast analysis using participant-level L scores (weighted sums retaining response magnitude) for the following contrast weights: classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25. This resulted in t(7) = 5.269; p = 5.810e-04 and an effect magnitude of g_effectsize = 1.863.
+#> We ran a within-subjects contrast analysis using participant-level L scores (weighted sums retaining response magnitude) for the following contrast weights: classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25. This resulted in t(7) = 5.269; p = 5.810e-04 and an effect magnitude of r_contrast = 0.894.
 ```
 
-You can see that the significance test is just a
-![t](https://latex.codecogs.com/png.latex?t "t")-test and the reported
-effect size is referring to a mean comparison
-(![g](https://latex.codecogs.com/png.latex?g "g")). (The
-![t](https://latex.codecogs.com/png.latex?t "t")-test is one-tailed,
-because contrast analysis has always a specific hypothesis.) When
-conducting the analysis by hand, we can see why:
+You can see that the significance test is a one-tailed
+![t](https://latex.codecogs.com/png.latex?t "t")-test and the
+paper-ready report gives the signed effect-size correlation
+![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}").
+When conducting the analysis by hand, we can see why:
 
 For this within-subjects contrast,
 ![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}")
@@ -946,7 +944,7 @@ summary(contr_wi)
 #> g-contrast -1.333
 contr_wi
 #>
-#> We ran a within-subjects contrast analysis using participant-level L scores (weighted sums retaining response magnitude) for the following contrast weights: classic = 0.33; jazz = 0.33; white noise = -0.88; without music = 0.22. This resulted in t(7) = -3.77; p = 0.9965 and an effect magnitude of g_effectsize = -1.333. Attention: Contrast fits in the opposite direction!
+#> We ran a within-subjects contrast analysis using participant-level L scores (weighted sums retaining response magnitude) for the following contrast weights: classic = 0.33; jazz = 0.33; white noise = -0.88; without music = 0.22. This resulted in t(7) = -3.77; p = 0.9965 and an effect magnitude of r_contrast = -0.819. Attention: Contrast fits in the opposite direction!
 ```
 
 Sedlmeier & Renkewitz (2013) found a *t* value of -3.75 and a
