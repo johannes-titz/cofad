@@ -42,16 +42,33 @@ status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/
 If you use `cofad` and find it useful, please cite both the current
 tutorial and the software paper:
 
-Copy HTML:
-
-``` html
 <div class="csl-bib-body">
-  <div class="csl-entry">Henninger, M., Malejka, S., &amp; Titz, J. (2025). Contrast analysis for competing hypotheses: A tutorial using the R package cofad. <i>Behavior Research Methods, 57</i>, Article 326. <a href="https://doi.org/10.3758/s13428-025-02833-w">https://doi.org/10.3758/s13428-025-02833-w</a></div>
-  <div class="csl-entry">Titz, J., &amp; Burkhardt, M. (2021). cofad: An R package and Shiny app for contrast analysis. <i>Journal of Open Source Software, 6</i>(67), 3822. <a href="https://doi.org/10.21105/joss.03822">https://doi.org/10.21105/joss.03822</a></div>
-</div>
-```
 
-Copy Bibtex:
+<div class="csl-entry">
+
+Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for
+competing hypotheses: A tutorial using the R package cofad. <i>Behavior
+Research Methods, 57</i>, Article 326.
+<a href="https://doi.org/10.3758/s13428-025-02833-w">https://doi.org/10.3758/s13428-025-02833-w</a>
+
+</div>
+
+<div class="csl-entry">
+
+Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for
+contrast analysis. <i>Journal of Open Source Software, 6</i>(67), 3822.
+<a href="https://doi.org/10.21105/joss.03822">https://doi.org/10.21105/joss.03822</a>
+
+</div>
+
+</div>
+
+<details>
+
+<summary>
+
+Copy BibTeX
+</summary>
 
 ``` bibtex
 @article{henninger2025cofad,
