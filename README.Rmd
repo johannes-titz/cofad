@@ -2,7 +2,6 @@
 title: Cofad User Guide
 output:
   github_document:
-    pandoc_args: --webtex
     hard_line_breaks: TRUE
 bibliography: "clean_library.bib"
 csl: apa.csl
@@ -35,14 +34,14 @@ options(width = 80)
 #clean_bib("paper/paper.md", "library.bib", "paper/library_paper.bib")
 ```
 
-# <img src='logo/cover.png' align='right' height='100px'/>
+# <img src='logo/cover.png' alt='cofad package cover' title='cofad' align='right' height='100px'/>
 
-[![R-CMD-check](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml)
-[![test coverage](https://github.com/johannes-titz/cofad/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/johannes-titz/cofad/actions/workflows/test-coverage.yaml)
-[![codecov](https://codecov.io/gh/johannes-titz/cofad/graph/badge.svg)](https://app.codecov.io/gh/johannes-titz/cofad)
-[![webR app](https://github.com/johannes-titz/cofad/actions/workflows/deploy-shinylive.yaml/badge.svg)](https://johannes-titz.github.io/cofad/)
-[![CRAN status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/package=cofad)
-[![DOI](https://joss.theoj.org/papers/10.21105/joss.03822/status.svg)](https://doi.org/10.21105/joss.03822)
+[![R-CMD-check](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml/badge.svg "R CMD check status")](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml)
+[![test coverage](https://github.com/johannes-titz/cofad/actions/workflows/test-coverage.yaml/badge.svg "Test coverage status")](https://github.com/johannes-titz/cofad/actions/workflows/test-coverage.yaml)
+[![codecov](https://codecov.io/gh/johannes-titz/cofad/graph/badge.svg "Codecov coverage report")](https://app.codecov.io/gh/johannes-titz/cofad)
+[![webR app](https://github.com/johannes-titz/cofad/actions/workflows/deploy-shinylive.yaml/badge.svg "webR app deployment status")](https://johannes-titz.github.io/cofad/)
+[![CRAN status](https://www.r-pkg.org/badges/version/cofad "Current CRAN version")](https://CRAN.R-project.org/package=cofad)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.03822/status.svg "JOSS paper DOI")](https://doi.org/10.21105/joss.03822)
 
 <!-- [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116) -->
 
@@ -176,10 +175,13 @@ between, within, or mixed. At startup, both the server-backed and browser-only
 webR interfaces load Rosenthal et al.'s Table 5.3 mixed-design example with its
 linear between- and within-subjects contrasts.
 
-<p>
-  <a href="man/figures/cofad-gui-data-upload.png"><img src="man/figures/cofad-gui-data-upload.png" width="230" alt="Controls for uploading a CSV or SPSS data file"></a>
-  <a href="man/figures/cofad-gui-example-data.png"><img src="man/figures/cofad-gui-example-data.png" width="230" alt="Categorized example-data selector"></a>
-</p>
+**Load a data file**
+
+<p><a href="man/figures/cofad-gui-data-upload.png"><img src="man/figures/cofad-gui-data-upload.png" width="300" title="Load a data file" alt="Controls for uploading a CSV or SPSS data file"></a></p>
+
+**Select an example data set**
+
+<p><a href="man/figures/cofad-gui-example-data.png"><img src="man/figures/cofad-gui-example-data.png" width="300" title="Select an example data set" alt="Selector for categorized example data sets"></a></p>
 
 cofad automatically examines replication and nesting to
 suggest the dependent variable, between-subjects factor, within-subjects factor,
@@ -189,14 +191,18 @@ of variables or the intended hypothesis from correlations alone. Packaged
 examples therefore use the roles and planned weights documented in their books
 or papers, while still displaying the structural-detection result.
 
-<a href="https://cofad.titz.science"><img src="man/figures/cofad-auto-detection.png" width="558" alt="Automatic design detection showing the inferred roles for the default mixed example"></a>
+**Automatically detected design**
+
+<p><a href="man/figures/cofad-auto-detection.png"><img src="man/figures/cofad-auto-detection.png" width="700" title="Automatically detected design" alt="Automatic design detection showing the inferred roles for the default mixed example"></a></p>
 
 If detection is inconclusive or cannot run, the app does not force a structure.
 It retains a suggested dependent variable where possible, leaves uncertain
 roles as `NONE`, and asks you to choose the design manually in the same table.
 This fallback is available for between-, within-, and mixed-subjects designs.
 
-<img src="man/figures/cofad-manual-design.png" width="438" alt="Inconclusive automatic detection showing unresolved roles for manual selection">
+**Manual design selection after inconclusive detection**
+
+<p><a href="man/figures/cofad-manual-design.png"><img src="man/figures/cofad-manual-design.png" width="620" title="Manual design selection after inconclusive detection" alt="Inconclusive automatic detection showing unresolved roles for manual selection"></a></p>
 
 You can inspect the automatic suggestion from R with
 `detect_design(your_data)`. It reports structural diagnostics and a confidence
@@ -210,11 +216,17 @@ test the **Between × within contrast** or the **Within contrast averaged across
 groups**. New mixed designs default to the former, as in Rosenthal et al.'s
 Table 5.3; packaged examples retain the analysis used by their source.
 
-<p>
-  <a href="man/figures/cofad-gui-analysis-choices.png"><img src="man/figures/cofad-gui-analysis-choices.png" width="325" alt="Controls for competing contrasts and the mixed-design contrast to test"></a>
-  <a href="man/figures/cofad-gui-between-contrast.png"><img src="man/figures/cofad-gui-between-contrast.png" width="300" alt="Between-subjects contrast-weight table"></a>
-  <a href="man/figures/cofad-gui-within-contrast.png"><img src="man/figures/cofad-gui-within-contrast.png" width="300" alt="Within-subjects contrast-weight table"></a>
-</p>
+**Select the contrast analysis**
+
+<p><a href="man/figures/cofad-gui-analysis-choices.png"><img src="man/figures/cofad-gui-analysis-choices.png" width="650" title="Select the contrast analysis" alt="Controls for competing contrasts and the mixed-design contrast to test"></a></p>
+
+**Specify the between-subjects contrast**
+
+<p><a href="man/figures/cofad-gui-between-contrast.png"><img src="man/figures/cofad-gui-between-contrast.png" width="650" title="Specify the between-subjects contrast" alt="Table for specifying between-subjects contrast weights"></a></p>
+
+**Specify the within-subjects contrast**
+
+<p><a href="man/figures/cofad-gui-within-contrast.png"><img src="man/figures/cofad-gui-within-contrast.png" width="650" title="Specify the within-subjects contrast" alt="Table for specifying within-subjects contrast weights"></a></p>
 
 The default example comes from @rosenthal2000 (Table 5.3). The cognitive ability
 of nine children belonging to different age groups (between) was measured four
@@ -229,11 +241,17 @@ There are two hypotheses:
 
 Select the variables in the compact model table and edit the default contrast weights in the lambda tables. The app reports the contrast, a detailed variance decomposition with ordinary $\eta^2$ for each SS component (including the descriptive within-group/error share) and partial eta squared for tested components, plus an interactive Plotly chart comparing total, between-group, and contrast-plus-error denominators. Its legend labels Contrast, Other between-group, and Within-group/error above the bars. Hovering over a segment shows its SS numerator and denominator. Small *p* values are shown numerically in scientific notation rather than as threshold statements. For mixed designs, this is explicitly a partition of participants' derived within-contrast scores, not of the raw repeated outcome variance. The paper-ready report is copyable, while the F table can be exported as aligned plain text, rich HTML, or DOCX; numeric table columns are right-aligned. The Help and citation panel beneath the model contains the package references, README, and GitHub issue tracker.
 
-<p>
-  <a href="man/figures/cofad-gui-report-output.png"><img src="man/figures/cofad-gui-report-output.png" width="300" alt="Copyable paper-ready report"></a>
-  <a href="man/figures/cofad-gui-f-table-output.png"><img src="man/figures/cofad-gui-f-table-output.png" width="300" alt="Variance-decomposition F table and export controls"></a>
-  <a href="man/figures/cofad-gui-variance-output.png"><img src="man/figures/cofad-gui-variance-output.png" width="300" alt="Interactive partition of total variation"></a>
-</p>
+**Copy the paper-ready report**
+
+<p><a href="man/figures/cofad-gui-report-output.png"><img src="man/figures/cofad-gui-report-output.png" width="800" title="Copy the paper-ready report" alt="Copyable paper-ready contrast-analysis report"></a></p>
+
+**Inspect and export the F table**
+
+<p><a href="man/figures/cofad-gui-f-table-output.png"><img src="man/figures/cofad-gui-f-table-output.png" width="900" title="Inspect and export the F table" alt="Variance-decomposition F table with plain-text, HTML, and DOCX export controls"></a></p>
+
+**Explore the partition of total variation**
+
+<p><a href="man/figures/cofad-gui-variance-output.png"><img src="man/figures/cofad-gui-variance-output.png" width="900" title="Explore the partition of total variation" alt="Interactive chart showing the partition of total variation and alternative denominators"></a></p>
 
 A mixed design is ideal for trying the cofad app. You can construct a separate within-subjects model by setting the between-subjects factor to `NONE`. Likewise, set the within-subjects factor and participant ID to `NONE` to obtain a between-subjects model.
 
@@ -510,7 +528,7 @@ summary(ca_competing)
 ca_competing
 ```
 
-Here, we rounded the contrast weights so that the results closely match those reported in @sedlmeier2013, who found $t = 1.137$ and $r_\mathrm{effectsize} = 0.26$. The effect size is identical. For the $t4 statistic, we take the signed square root of the $F$ value, 1.291, which gives `r round(sqrt(1.291), 3)`. The remaining difference from the reported value of 1.137 is due to rounding.
+Here, we rounded the contrast weights so that the results closely match those reported in @sedlmeier2013, who found $t = 1.137$ and $r_\mathrm{effectsize} = 0.26$. The effect size is identical. For the $t$ statistic, we take the signed square root of the $F$ value, 1.291, which gives `r round(sqrt(1.291), 3)`. The remaining difference from the reported value of 1.137 is due to rounding.
 
 The same approach also works for within-subjects designs. We can use the reading-comprehension data from above as an example, in which reading ability was assessed for eight participants under four different conditions:
 

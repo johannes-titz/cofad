@@ -1,17 +1,17 @@
 Cofad User Guide
 ================
 
-# <img src='logo/cover.png' align='right' height='100px'/>
+# <img src='logo/cover.png' alt='cofad package cover' title='cofad' align='right' height='100px'/>
 
-[![R-CMD-check](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml/badge.svg "R CMD check status")](https://github.com/johannes-titz/cofad/actions/workflows/R-CMD-check.yaml)
 [![test
-coverage](https://github.com/johannes-titz/cofad/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/johannes-titz/cofad/actions/workflows/test-coverage.yaml)
-[![codecov](https://codecov.io/gh/johannes-titz/cofad/graph/badge.svg)](https://app.codecov.io/gh/johannes-titz/cofad)
+coverage](https://github.com/johannes-titz/cofad/actions/workflows/test-coverage.yaml/badge.svg "Test coverage status")](https://github.com/johannes-titz/cofad/actions/workflows/test-coverage.yaml)
+[![codecov](https://codecov.io/gh/johannes-titz/cofad/graph/badge.svg "Codecov coverage report")](https://app.codecov.io/gh/johannes-titz/cofad)
 [![webR
-app](https://github.com/johannes-titz/cofad/actions/workflows/deploy-shinylive.yaml/badge.svg)](https://johannes-titz.github.io/cofad/)
+app](https://github.com/johannes-titz/cofad/actions/workflows/deploy-shinylive.yaml/badge.svg "webR app deployment status")](https://johannes-titz.github.io/cofad/)
 [![CRAN
-status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/package=cofad)
-[![DOI](https://joss.theoj.org/papers/10.21105/joss.03822/status.svg)](https://doi.org/10.21105/joss.03822)
+status](https://www.r-pkg.org/badges/version/cofad "Current CRAN version")](https://CRAN.R-project.org/package=cofad)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.03822/status.svg "JOSS paper DOI")](https://doi.org/10.21105/joss.03822)
 
 <!-- [![DOI](https://joss.theoj.org/papers/10.21105/joss.02116/status.svg)](https://doi.org/10.21105/joss.02116) -->
 
@@ -111,16 +111,10 @@ expected pattern and magnitude.
 This focus on effects is reflected in two key ways:
 
 1.  Between-subjects and mixed analyses provide three distinct
-    effect-size measures:
-    ![r\_\mathrm{es}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bes%7D "r_\mathrm{es}"),
-    ![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}"),
-    and
-    ![r\_\mathrm{alerting}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Balerting%7D "r_\mathrm{alerting}").
-    Pure within-subjects analyses instead report
-    ![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}")
-    and
-    ![g\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?g_%5Cmathrm%7Bcontrast%7D "g_\mathrm{contrast}"),
-    because the other two measures rely on a between-group partition.
+    effect-size measures: $r_\mathrm{es}$, $r_\mathrm{contrast}$, and
+    $r_\mathrm{alerting}$. Pure within-subjects analyses instead report
+    $r_\mathrm{contrast}$ and $g_\mathrm{contrast}$, because the other
+    two measures rely on a between-group partition.
 2.  These effect sizes capture different aspects of how closely the
     observed data conform to the specified contrast.
 
@@ -206,10 +200,18 @@ and browser-only webR interfaces load Rosenthal et al.’s Table 5.3
 mixed-design example with its linear between- and within-subjects
 contrasts.
 
+**Load a data file**
+
 <p>
 
-<a href="man/figures/cofad-gui-data-upload.png"><img src="man/figures/cofad-gui-data-upload.png" width="230" alt="Controls for uploading a CSV or SPSS data file"></a>
-<a href="man/figures/cofad-gui-example-data.png"><img src="man/figures/cofad-gui-example-data.png" width="230" alt="Categorized example-data selector"></a>
+<a href="man/figures/cofad-gui-data-upload.png"><img src="man/figures/cofad-gui-data-upload.png" width="300" title="Load a data file" alt="Controls for uploading a CSV or SPSS data file"></a>
+</p>
+
+**Select an example data set**
+
+<p>
+
+<a href="man/figures/cofad-gui-example-data.png"><img src="man/figures/cofad-gui-example-data.png" width="300" title="Select an example data set" alt="Selector for categorized example data sets"></a>
 </p>
 
 cofad automatically examines replication and nesting to suggest the
@@ -221,7 +223,12 @@ correlations alone. Packaged examples therefore use the roles and
 planned weights documented in their books or papers, while still
 displaying the structural-detection result.
 
-<a href="https://cofad.titz.science"><img src="man/figures/cofad-auto-detection.png" width="558" alt="Automatic design detection showing the inferred roles for the default mixed example"></a>
+**Automatically detected design**
+
+<p>
+
+<a href="man/figures/cofad-auto-detection.png"><img src="man/figures/cofad-auto-detection.png" width="700" title="Automatically detected design" alt="Automatic design detection showing the inferred roles for the default mixed example"></a>
+</p>
 
 If detection is inconclusive or cannot run, the app does not force a
 structure. It retains a suggested dependent variable where possible,
@@ -229,7 +236,12 @@ leaves uncertain roles as `NONE`, and asks you to choose the design
 manually in the same table. This fallback is available for between-,
 within-, and mixed-subjects designs.
 
-<img src="man/figures/cofad-manual-design.png" width="438" alt="Inconclusive automatic detection showing unresolved roles for manual selection">
+**Manual design selection after inconclusive detection**
+
+<p>
+
+<a href="man/figures/cofad-manual-design.png"><img src="man/figures/cofad-manual-design.png" width="620" title="Manual design selection after inconclusive detection" alt="Inconclusive automatic detection showing unresolved roles for manual selection"></a>
+</p>
 
 You can inspect the automatic suggestion from R with
 `detect_design(your_data)`. It reports structural diagnostics and a
@@ -244,11 +256,25 @@ contrast averaged across groups**. New mixed designs default to the
 former, as in Rosenthal et al.’s Table 5.3; packaged examples retain the
 analysis used by their source.
 
+**Select the contrast analysis**
+
 <p>
 
-<a href="man/figures/cofad-gui-analysis-choices.png"><img src="man/figures/cofad-gui-analysis-choices.png" width="325" alt="Controls for competing contrasts and the mixed-design contrast to test"></a>
-<a href="man/figures/cofad-gui-between-contrast.png"><img src="man/figures/cofad-gui-between-contrast.png" width="300" alt="Between-subjects contrast-weight table"></a>
-<a href="man/figures/cofad-gui-within-contrast.png"><img src="man/figures/cofad-gui-within-contrast.png" width="300" alt="Within-subjects contrast-weight table"></a>
+<a href="man/figures/cofad-gui-analysis-choices.png"><img src="man/figures/cofad-gui-analysis-choices.png" width="650" title="Select the contrast analysis" alt="Controls for competing contrasts and the mixed-design contrast to test"></a>
+</p>
+
+**Specify the between-subjects contrast**
+
+<p>
+
+<a href="man/figures/cofad-gui-between-contrast.png"><img src="man/figures/cofad-gui-between-contrast.png" width="650" title="Specify the between-subjects contrast" alt="Table for specifying between-subjects contrast weights"></a>
+</p>
+
+**Specify the within-subjects contrast**
+
+<p>
+
+<a href="man/figures/cofad-gui-within-contrast.png"><img src="man/figures/cofad-gui-within-contrast.png" width="650" title="Specify the within-subjects contrast" alt="Table for specifying within-subjects contrast weights"></a>
 </p>
 
 The default example comes from Rosenthal et al. (2000) (Table 5.3). The
@@ -258,17 +284,16 @@ cognitive ability of nine children belonging to different age groups
 There are two hypotheses:
 
 1.  cognitive ability linearly increases over time (within)
-    (![\lambda\_\mathrm{1} = -3, \lambda\_\mathrm{2} = -1, \lambda\_\mathrm{3} = 1, \lambda\_\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3"))
+    ($\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3$)
 2.  cognitive ability linearly increases over age groups (between)
-    (![\lambda\_\mathrm{Age 8} = -1, \lambda\_\mathrm{Age 10} = 0, \lambda\_\mathrm{Age12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge12%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1"))
+    ($\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1$)
 
 Select the variables in the compact model table and edit the default
 contrast weights in the lambda tables. The app reports the contrast, a
-detailed variance decomposition with ordinary
-![\eta^2](https://latex.codecogs.com/png.latex?%5Ceta%5E2 "\eta^2") for
-each SS component (including the descriptive within-group/error share)
-and partial eta squared for tested components, plus an interactive
-Plotly chart comparing total, between-group, and contrast-plus-error
+detailed variance decomposition with ordinary $\eta^2$ for each SS
+component (including the descriptive within-group/error share) and
+partial eta squared for tested components, plus an interactive Plotly
+chart comparing total, between-group, and contrast-plus-error
 denominators. Its legend labels Contrast, Other between-group, and
 Within-group/error above the bars. Hovering over a segment shows its SS
 numerator and denominator. Small *p* values are shown numerically in
@@ -280,11 +305,25 @@ aligned plain text, rich HTML, or DOCX; numeric table columns are
 right-aligned. The Help and citation panel beneath the model contains
 the package references, README, and GitHub issue tracker.
 
+**Copy the paper-ready report**
+
 <p>
 
-<a href="man/figures/cofad-gui-report-output.png"><img src="man/figures/cofad-gui-report-output.png" width="300" alt="Copyable paper-ready report"></a>
-<a href="man/figures/cofad-gui-f-table-output.png"><img src="man/figures/cofad-gui-f-table-output.png" width="300" alt="Variance-decomposition F table and export controls"></a>
-<a href="man/figures/cofad-gui-variance-output.png"><img src="man/figures/cofad-gui-variance-output.png" width="300" alt="Interactive partition of total variation"></a>
+<a href="man/figures/cofad-gui-report-output.png"><img src="man/figures/cofad-gui-report-output.png" width="800" title="Copy the paper-ready report" alt="Copyable paper-ready contrast-analysis report"></a>
+</p>
+
+**Inspect and export the F table**
+
+<p>
+
+<a href="man/figures/cofad-gui-f-table-output.png"><img src="man/figures/cofad-gui-f-table-output.png" width="900" title="Inspect and export the F table" alt="Variance-decomposition F table with plain-text, HTML, and DOCX export controls"></a>
+</p>
+
+**Explore the partition of total variation**
+
+<p>
+
+<a href="man/figures/cofad-gui-variance-output.png"><img src="man/figures/cofad-gui-variance-output.png" width="900" title="Explore the partition of total variation" alt="Interactive chart showing the partition of total variation and alternative denominators"></a>
 </p>
 
 A mixed design is ideal for trying the cofad app. You can construct a
@@ -346,13 +385,12 @@ Furr proposes three hypotheses:
 
 - Contrast A: Psychology majors have higher empathy scores than
   Education majors
-  (![\lambda\_\mathrm{psych} = 1, \lambda\_\mathrm{edu} = -1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7Bpsych%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bedu%7D%20%3D%20-1 "\lambda_\mathrm{psych} = 1, \lambda_\mathrm{edu} = -1")).
+  ($\lambda_\mathrm{psych} = 1, \lambda_\mathrm{edu} = -1$).
 - Contrast B: Business majors have higher empathy scores than Chemistry
-  majors
-  (![\lambda\_\mathrm{bus} = 1, \lambda\_\mathrm{chem} = -1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7Bbus%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bchem%7D%20%3D%20-1 "\lambda_\mathrm{bus} = 1, \lambda_\mathrm{chem} = -1")).
+  majors ($\lambda_\mathrm{bus} = 1, \lambda_\mathrm{chem} = -1$).
 - Contrast C: On average, Psychology and Education majors have higher
   empathy scores than Business and Chemistry majors
-  (![\lambda\_\mathrm{psych} = 1, \lambda\_\mathrm{edu} = 1, \lambda\_\mathrm{bus} = -1, \lambda\_\mathrm{chem} = -1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7Bpsych%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bedu%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bbus%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7Bchem%7D%20%3D%20-1 "\lambda_\mathrm{psych} = 1, \lambda_\mathrm{edu} = 1, \lambda_\mathrm{bus} = -1, \lambda_\mathrm{chem} = -1")).
+  ($\lambda_\mathrm{psych} = 1, \lambda_\mathrm{edu} = 1, \lambda_\mathrm{bus} = -1, \lambda_\mathrm{chem} = -1$).
 
 These hypotheses involve simple mean comparisons, making them a good
 starting point. Let us use cofad to conduct the contrast analysis:
@@ -399,12 +437,10 @@ summary(ca)
 #> r_alerting    -0.309
 ```
 
-From this table,
-![r\_\mathrm{effectsize}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D "r_\mathrm{effectsize}")
-is probably the most useful statistic. It is simply the correlation
-between the contrast weights
-(![\lambda](https://latex.codecogs.com/png.latex?%5Clambda "\lambda"))
-and the dependent variable, which can also be calculated by hand:
+From this table, $r_\mathrm{effectsize}$ is probably the most useful
+statistic. It is simply the correlation between the contrast weights
+($\lambda$) and the dependent variable, which can also be calculated by
+hand:
 
 ``` r
 lambdas <- rep(c(1, -1, 0, 0), each = 5)
@@ -442,8 +478,7 @@ because the direction of the contrast is specified in advance. A
 contrast hypothesis should not be treated as interchangeable with its
 reverse direction. The *F* test itself is non-directional; for a single
 contrast, the corresponding directional test uses the signed *t*
-statistic, with
-![\|t\| = \sqrt{F}](https://latex.codecogs.com/png.latex?%7Ct%7C%20%3D%20%5Csqrt%7BF%7D "|t| = \sqrt{F}").
+statistic, with $|t| = \sqrt{F}$.
 
 Now, imagine a more interesting hypothesis that goes beyond simple mean
 differences. Suppose an elaborate theory predicts means of 73, 61, 51,
@@ -521,26 +556,17 @@ within
 #> We ran a within-subjects contrast analysis using participant-level L scores (weighted sums retaining response magnitude) for the following contrast weights: classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25. This resulted in t(7) = 5.269; p = 5.810e-04 and an effect magnitude of r_contrast = 0.894.
 ```
 
-As you can see, the significance test is a one-tailed
-![t](https://latex.codecogs.com/png.latex?t "t")-test, and the
+As you can see, the significance test is a one-tailed $t$-test, and the
 paper-ready report provides the signed effect-size correlation
-![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}").
+$r_\mathrm{contrast}$.
 
-For this within-subjects contrast,
-![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}")
-is the signed correlation-form effect derived from the same test,
-![r\_\mathrm{contrast} = \operatorname{sign}(t)\sqrt{t^2/(t^2 + df\_\mathrm{error})}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D%20%3D%20%5Coperatorname%7Bsign%7D%28t%29%5Csqrt%7Bt%5E2%2F%28t%5E2%20%2B%20df_%5Cmathrm%7Berror%7D%29%7D "r_\mathrm{contrast} = \operatorname{sign}(t)\sqrt{t^2/(t^2 + df_\mathrm{error})}").
-Consequently,
-![r\_\mathrm{contrast}^2](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D%5E2 "r_\mathrm{contrast}^2")
-equals the contrast-specific
-![\eta^2](https://latex.codecogs.com/png.latex?%5Ceta%5E2 "\eta^2") and
-partial
-![\eta_p^2](https://latex.codecogs.com/png.latex?%5Ceta_p%5E2 "\eta_p^2").
-The between-design
-![r\_\mathrm{es}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bes%7D "r_\mathrm{es}")
-and
-![r\_\mathrm{alerting}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Balerting%7D "r_\mathrm{alerting}")
-are not defined by this pure within-subjects contrast partition.
+For this within-subjects contrast, $r_\mathrm{contrast}$ is the signed
+correlation-form effect derived from the same test,
+$r_\mathrm{contrast} = \operatorname{sign}(t)\sqrt{t^2/(t^2 + df_\mathrm{error})}$.
+Consequently, $r_\mathrm{contrast}^2$ equals the contrast-specific
+$\eta^2$ and partial $\eta_p^2$. The between-design $r_\mathrm{es}$ and
+$r_\mathrm{alerting}$ are not defined by this pure within-subjects
+contrast partition.
 
 We can verify the result by hand relatively easily:
 
@@ -564,9 +590,8 @@ t.test(lc1, alternative = "greater")
 
 All that is needed is the linear combination of the dependent variable
 and the contrast weights for each participant. These values are then
-tested against zero using a standard
-![t](https://latex.codecogs.com/png.latex?t "t")-test. Although this can
-be done manually, `cofad` is faster and provides additional information.
+tested against zero using a standard $t$-test. Although this can be done
+manually, `cofad` is faster and provides additional information.
 
 #### Using participant L or r scores
 
@@ -659,10 +684,10 @@ measured at four time points (within-subjects factor).
 There are two hypotheses:
 
 1.  Cognitive ability increases linearly over time (within subjects):
-    (![\lambda\_\mathrm{1} = -3, \lambda\_\mathrm{2} = -1, \lambda\_\mathrm{3} = 1, \lambda\_\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3")).
+    ($\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3$).
 2.  Cognitive ability increases linearly across age groups (between
     subjects):
-    (![\lambda\_\mathrm{Age 8} = -1, \lambda\_\mathrm{Age 10} = 0, \lambda\_\mathrm{Age 12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge%2012%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age 12} = 1")).
+    ($\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age 12} = 1$).
 
 Let us have a look at the data and the corresponding calculations:
 
@@ -833,14 +858,11 @@ ca_competing
 ```
 
 Here, we rounded the contrast weights so that the results closely match
-those reported in Sedlmeier & Renkewitz (2013), who found
-![t = 1.137](https://latex.codecogs.com/png.latex?t%20%3D%201.137 "t = 1.137")
-and
-![r\_\mathrm{effectsize} = 0.26](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D%20%3D%200.26 "r_\mathrm{effectsize} = 0.26").
-The effect size is identical. For the \$t4 statistic, we take the signed
-square root of the ![F](https://latex.codecogs.com/png.latex?F "F")
-value, 1.291, which gives 1.136. The remaining difference from the
-reported value of 1.137 is due to rounding.
+those reported in Sedlmeier & Renkewitz (2013), who found $t = 1.137$
+and $r_\mathrm{effectsize} = 0.26$. The effect size is identical. For
+the $t$ statistic, we take the signed square root of the $F$ value,
+1.291, which gives 1.136. The remaining difference from the reported
+value of 1.137 is due to rounding.
 
 The same approach also works for within-subjects designs. We can use the
 reading-comprehension data from above as an example, in which reading
@@ -886,11 +908,11 @@ sedlmeier_p537
 
 There are two competing hypotheses:
 
-- ![1.25, 0.25, -0.75, -0.75](https://latex.codecogs.com/png.latex?1.25%2C%200.25%2C%20-0.75%2C%20-0.75 "1.25, 0.25, -0.75, -0.75"):
-  Reading performance is highest without music, lower with white noise,
-  and lowest with music, regardless of music type.
-- ![3, -1, -1, -1](https://latex.codecogs.com/png.latex?3%2C%20-1%2C%20-1%2C%20-1 "3, -1, -1, -1"):
-  Any kind of noise reduces reading performance to the same extent.
+- $1.25, 0.25, -0.75, -0.75$: Reading performance is highest without
+  music, lower with white noise, and lowest with music, regardless of
+  music type.
+- $3, -1, -1, -1$: Any kind of noise reduces reading performance to the
+  same extent.
 
 Again, we first need to calculate the difference contrast weights:
 
@@ -944,16 +966,12 @@ contr_wi
 #> We ran a within-subjects contrast analysis using participant-level L scores (weighted sums retaining response magnitude) for the following contrast weights: classic = 0.33; jazz = 0.33; white noise = -0.88; without music = 0.22. This resulted in t(7) = -3.77; p = 0.9965 and an effect magnitude of r_contrast = -0.819. Attention: Contrast fits in the opposite direction!
 ```
 
-Sedlmeier & Renkewitz (2013) reported a
-![t](https://latex.codecogs.com/png.latex?t "t") value of
-![-3.75](https://latex.codecogs.com/png.latex?-3.75 "-3.75") and a
-![g\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?g_%5Cmathrm%7Bcontrast%7D "g_\mathrm{contrast}")
-of ![-1.33](https://latex.codecogs.com/png.latex?-1.33 "-1.33"). Again,
-the slight difference in the
-![t](https://latex.codecogs.com/png.latex?t "t") value compared with our
-calculation is due to rounding. Because the difference contrast was
-defined as hypothesis 2 minus hypothesis 1, the negative test statistic
-and effect size indicate that hypothesis 1 provides the better fit.
+Sedlmeier & Renkewitz (2013) reported a $t$ value of $-3.75$ and a
+$g_\mathrm{contrast}$ of $-1.33$. Again, the slight difference in the
+$t$ value compared with our calculation is due to rounding. Because the
+difference contrast was defined as hypothesis 2 minus hypothesis 1, the
+negative test statistic and effect size indicate that hypothesis 1
+provides the better fit.
 
 ## Aggregated Data
 
