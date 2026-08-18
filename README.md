@@ -204,14 +204,14 @@ contrasts.
 
 <p>
 
-<a href="man/figures/cofad-gui-data-upload.png"><img src="man/figures/cofad-gui-data-upload.png" width="300" title="Load a data file" alt="Controls for uploading a CSV or SPSS data file"></a>
+<a href="man/figures/cofad-gui-data-upload.png"><img src="man/figures/cofad-gui-data-upload.png" width="210" title="Load a data file" alt="Controls for uploading a CSV or SPSS data file"></a>
 </p>
 
 **Select an example data set**
 
 <p>
 
-<a href="man/figures/cofad-gui-example-data.png"><img src="man/figures/cofad-gui-example-data.png" width="300" title="Select an example data set" alt="Selector for categorized example data sets"></a>
+<a href="man/figures/cofad-gui-example-data.png"><img src="man/figures/cofad-gui-example-data.png" width="210" title="Select an example data set" alt="Selector for categorized example data sets"></a>
 </p>
 
 cofad automatically examines replication and nesting to suggest the
@@ -227,7 +227,7 @@ displaying the structural-detection result.
 
 <p>
 
-<a href="man/figures/cofad-auto-detection.png"><img src="man/figures/cofad-auto-detection.png" width="700" title="Automatically detected design" alt="Automatic design detection showing the inferred roles for the default mixed example"></a>
+<a href="man/figures/cofad-auto-detection.png"><img src="man/figures/cofad-auto-detection.png" width="490" title="Automatically detected design" alt="Automatic design detection showing the inferred roles for the default mixed example"></a>
 </p>
 
 If detection is inconclusive or cannot run, the app does not force a
@@ -240,7 +240,7 @@ within-, and mixed-subjects designs.
 
 <p>
 
-<a href="man/figures/cofad-manual-design.png"><img src="man/figures/cofad-manual-design.png" width="620" title="Manual design selection after inconclusive detection" alt="Inconclusive automatic detection showing unresolved roles for manual selection"></a>
+<a href="man/figures/cofad-manual-design.png"><img src="man/figures/cofad-manual-design.png" width="434" title="Manual design selection after inconclusive detection" alt="Inconclusive automatic detection showing unresolved roles for manual selection"></a>
 </p>
 
 You can inspect the automatic suggestion from R with
@@ -260,21 +260,21 @@ analysis used by their source.
 
 <p>
 
-<a href="man/figures/cofad-gui-analysis-choices.png"><img src="man/figures/cofad-gui-analysis-choices.png" width="650" title="Select the contrast analysis" alt="Controls for competing contrasts and the mixed-design contrast to test"></a>
+<a href="man/figures/cofad-gui-analysis-choices.png"><img src="man/figures/cofad-gui-analysis-choices.png" width="455" title="Select the contrast analysis" alt="Controls for competing contrasts and the mixed-design contrast to test"></a>
 </p>
 
 **Specify the between-subjects contrast**
 
 <p>
 
-<a href="man/figures/cofad-gui-between-contrast.png"><img src="man/figures/cofad-gui-between-contrast.png" width="650" title="Specify the between-subjects contrast" alt="Table for specifying between-subjects contrast weights"></a>
+<a href="man/figures/cofad-gui-between-contrast.png"><img src="man/figures/cofad-gui-between-contrast.png" width="455" title="Specify the between-subjects contrast" alt="Table for specifying between-subjects contrast weights"></a>
 </p>
 
 **Specify the within-subjects contrast**
 
 <p>
 
-<a href="man/figures/cofad-gui-within-contrast.png"><img src="man/figures/cofad-gui-within-contrast.png" width="650" title="Specify the within-subjects contrast" alt="Table for specifying within-subjects contrast weights"></a>
+<a href="man/figures/cofad-gui-within-contrast.png"><img src="man/figures/cofad-gui-within-contrast.png" width="455" title="Specify the within-subjects contrast" alt="Table for specifying within-subjects contrast weights"></a>
 </p>
 
 The default example comes from Rosenthal et al. (2000) (Table 5.3). The
@@ -309,21 +309,21 @@ the package references, README, and GitHub issue tracker.
 
 <p>
 
-<a href="man/figures/cofad-gui-report-output.png"><img src="man/figures/cofad-gui-report-output.png" width="800" title="Copy the paper-ready report" alt="Copyable paper-ready contrast-analysis report"></a>
+<a href="man/figures/cofad-gui-report-output.png"><img src="man/figures/cofad-gui-report-output.png" width="560" title="Copy the paper-ready report" alt="Copyable paper-ready contrast-analysis report"></a>
 </p>
 
 **Inspect and export the F table**
 
 <p>
 
-<a href="man/figures/cofad-gui-f-table-output.png"><img src="man/figures/cofad-gui-f-table-output.png" width="900" title="Inspect and export the F table" alt="Variance-decomposition F table with plain-text, HTML, and DOCX export controls"></a>
+<a href="man/figures/cofad-gui-f-table-output.png"><img src="man/figures/cofad-gui-f-table-output.png" width="630" title="Inspect and export the F table" alt="Variance-decomposition F table with plain-text, HTML, and DOCX export controls"></a>
 </p>
 
 **Explore the partition of total variation**
 
 <p>
 
-<a href="man/figures/cofad-gui-variance-output.png"><img src="man/figures/cofad-gui-variance-output.png" width="900" title="Explore the partition of total variation" alt="Interactive chart showing the partition of total variation and alternative denominators"></a>
+<a href="man/figures/cofad-gui-variance-output.png"><img src="man/figures/cofad-gui-variance-output.png" width="630" title="Explore the partition of total variation" alt="Interactive chart showing the partition of total variation and alternative denominators"></a>
 </p>
 
 A mixed design is ideal for trying the cofad app. You can construct a
