@@ -198,9 +198,9 @@ correlations alone. Packaged examples therefore use the roles and
 planned weights documented in their books or papers, while still
 displaying the structural-detection result.
 
-[![Automatic design detection in the cofad app, showing the loaded
-default mixed example and editable model
-table](man/figures/cofad-auto-detection.png)](https://cofad.titz.science)
+[![Automatic design detection showing the inferred roles for the default
+mixed
+example](man/figures/cofad-auto-detection.png)](https://cofad.titz.science)
 
 If detection is inconclusive or cannot run, the app does not force a
 structure. It retains a suggested dependent variable where possible,
@@ -210,9 +210,9 @@ within-, and mixed-subjects designs.
 
 <figure>
 <img src="man/figures/cofad-manual-design.png"
-alt="Manual design selection after an inconclusive automatic detection" />
-<figcaption aria-hidden="true">Manual design selection after an
-inconclusive automatic detection</figcaption>
+alt="Inconclusive automatic detection showing unresolved roles for manual selection" />
+<figcaption aria-hidden="true">Inconclusive automatic detection showing
+unresolved roles for manual selection</figcaption>
 </figure>
 
 You can inspect the automatic suggestion from R with
@@ -1027,7 +1027,7 @@ data-entry-spacing="0" data-line-spacing="2">
 <div id="ref-furr2004" class="csl-entry">
 
 Furr, R. M. (2004). Interpreting effect sizes in contrast analysis.
-*Understanding Statistics*, *3*, 1–25.
+*Understanding Statistics*, *3*(1), 1–25.
 <https://doi.org/10.1207/s15328031us0301_1>
 
 </div>
@@ -1036,7 +1036,7 @@ Furr, R. M. (2004). Interpreting effect sizes in contrast analysis.
 
 Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for
 competing hypotheses: A tutorial using the r package cofad. *Behavior
-Research Methods*, *57*, 326.
+Research Methods*, *57*(12), 326.
 <https://doi.org/10.3758/s13428-025-02833-w>
 
 </div>
@@ -1053,7 +1053,8 @@ University Press.
 
 Rosenthal, R., Rosnow, R. L., & Rubin, D. B. (2000). *Contrasts and
 Effect Sizes in Behavioral Research: A Correlational Approach*.
-Cambridge University Press.
+Cambridge, England: Cambridge University Press.
+<https://doi.org/10.1017/CBO9780511804403>
 
 </div>
 

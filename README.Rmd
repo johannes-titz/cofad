@@ -185,15 +185,15 @@ of variables or the intended hypothesis from correlations alone. Packaged
 examples therefore use the roles and planned weights documented in their books
 or papers, while still displaying the structural-detection result.
 
-[![Automatic design detection in the cofad app, showing the loaded default mixed
-example and editable model table](man/figures/cofad-auto-detection.png)](https://cofad.titz.science)
+[![Automatic design detection showing the inferred roles for the default mixed
+example](man/figures/cofad-auto-detection.png)](https://cofad.titz.science)
 
 If detection is inconclusive or cannot run, the app does not force a structure.
 It retains a suggested dependent variable where possible, leaves uncertain
 roles as `NONE`, and asks you to choose the design manually in the same table.
 This fallback is available for between-, within-, and mixed-subjects designs.
 
-![Manual design selection after an inconclusive automatic detection](man/figures/cofad-manual-design.png)
+![Inconclusive automatic detection showing unresolved roles for manual selection](man/figures/cofad-manual-design.png)
 
 You can inspect the automatic suggestion from R with
 `detect_design(your_data)`. It reports structural diagnostics and a confidence
