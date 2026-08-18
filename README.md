@@ -39,45 +39,10 @@ status](https://www.r-pkg.org/badges/version/cofad)](https://CRAN.R-project.org/
 
 ## Citation
 
-If you use `cofad`, please cite both the current tutorial and the
-software paper:
+If you use `cofad` and find it useful, please cite both the current
+tutorial and the software paper:
 
-Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for
-competing hypotheses: A tutorial using the R package cofad. *Behavior
-Research Methods, 57*, Article 326.
-<https://doi.org/10.3758/s13428-025-02833-w>
-
-Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for
-contrast analysis. *Journal of Open Source Software, 6*(67), 3822.
-<https://doi.org/10.21105/joss.03822>
-
-R returns both entries (and their BibTeX forms) with
-`citation("cofad")`. The app provides dedicated APA 7 plain-text, HTML,
-and BibTeX copy buttons. GitHub does not allow clipboard scripts inside
-a README, so the compact controls below open a code block with GitHub’s
-native copy button.
-
-<details>
-
-<summary>
-
-Copy plain text
-</summary>
-
-``` text
-Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for competing hypotheses: A tutorial using the R package cofad. Behavior Research Methods, 57, Article 326. https://doi.org/10.3758/s13428-025-02833-w
-
-Titz, J., & Burkhardt, M. (2021). cofad: An R package and Shiny app for contrast analysis. Journal of Open Source Software, 6(67), 3822. https://doi.org/10.21105/joss.03822
-```
-
-</details>
-
-<details>
-
-<summary>
-
-Copy HTML
-</summary>
+Copy HTML:
 
 ``` html
 <div class="csl-bib-body">
@@ -86,14 +51,7 @@ Copy HTML
 </div>
 ```
 
-</details>
-
-<details>
-
-<summary>
-
-Copy BibTeX
-</summary>
+Copy Bibtex:
 
 ``` bibtex
 @article{henninger2025cofad,
@@ -123,60 +81,59 @@ Copy BibTeX
 ## Introduction
 
 Cofad is an R package for conducting COntrast analysis in FActorial
-Designs, such as ANOVAs. If contrast analysis were to win an award, it
-might be for the most underestimated and underused statistical
-technique. This is unfortunate, because contrast analysis is at least as
-informative as ANOVA—and often more so. Rather than testing an
-unspecific omnibus hypothesis like “there are differences somewhere”,
-contrast analysis allows you to test a precise, numerically specified
-hypothesis. It also shifts the focus from mere significance testing to
-the evaluation of effects.
+Designs. If contrast analysis were to win an award, it might be for the
+most underestimated and underused statistical technique. This is
+unfortunate, because contrast analysis is at least as informative as
+ANOVA—and often considerably more so. Instead of testing an unspecific
+omnibus hypothesis such as “there are differences somewhere,” contrast
+analysis allows you to formulate and test precise, numerically specified
+hypotheses about the effects of interest. In doing so, it shifts the
+emphasis from merely asking whether an effect exists to evaluating its
+expected pattern and magnitude.
 
 This focus on effects is reflected in two key ways:
 
-1.  Between-subjects and mixed analyses offer three distinct effect-size
-    measures:
+1.  Between-subjects and mixed analyses provide three distinct
+    effect-size measures:
     ![r\_\mathrm{es}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bes%7D "r_\mathrm{es}"),
     ![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}"),
     and
     ![r\_\mathrm{alerting}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Balerting%7D "r_\mathrm{alerting}").
-    A pure within-subjects analysis instead reports
+    Pure within-subjects analyses instead report
     ![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}")
     and
-    ![g\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?g_%5Cmathrm%7Bcontrast%7D "g_\mathrm{contrast}")
-    because the other two denominators require a between-group
-    partition.
+    ![g\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?g_%5Cmathrm%7Bcontrast%7D "g_\mathrm{contrast}"),
+    because the other two measures rely on a between-group partition.
+2.  These effect sizes capture different aspects of how closely the
+    observed data conform to the specified contrast.
 
-2.  These effect sizes describe different aspects of how closely the
-    observed data align with the specified contrast.
-
-Cofad also makes it possible to compare two competing hypotheses
-directly (experimentum crucis) by examining the effect sizes associated
-with each.
+Cofad also allows you to compare two competing hypotheses directly
+(*experimentum crucis*) by constructing a difference contrast.
 
 Sounds interesting? Then take a look at some introductory literature,
-such as Furr (2004), Rosenthal & Rosnow (1985), Rosenthal, Rosnow, &
-Rubin (2000), or—for German-speaking readers— Sedlmeier & Renkewitz
-(2018). Contrast analysis is relatively easy to grasp if you’re already
-familiar with ANOVA and correlation.
+such as Henninger, Malejka, & Titz (2025), Furr (2004), Rosenthal &
+Rosnow (1985), Rosenthal, Rosnow, & Rubin (2000), or—for German-speaking
+<readers---@sedlmeier2018>. Contrast analysis is relatively easy to
+grasp if you are already familiar with ANOVA and correlation.
 
-In this vignette, we assume you have a basic understanding of contrast
-analysis and are ready to apply it to a specific dataset. We begin by
-showing how to install cofad and use its graphical user interface. Then,
-we walk through several example analyses for between-subjects,
-within-subjects, and mixed designs using R.
+In this vignette, we assume a basic understanding of contrast analysis
+and focus on its practical application to a specific dataset. We first
+show how to install cofad and use its graphical user interface. We then
+work through several example analyses for between-subjects,
+within-subjects, and mixed designs in R.
 
 ## Installation
 
-Cofad has two components: the R package and a Shiny app that offers a
+Cofad has two components: the R package and a Shiny app that provides a
 graphical user interface.
 
-If you just want to use the cofad app, you do not need to install it. Go
-to <https://cofad.titz.science> and use the categorized example chooser
-or upload your own data.
+If you only want to use the cofad app, no installation is required.
+Simply go to <https://cofad.titz.science>, where you can select from
+categorized example datasets or upload your own data. A webR version is
+also available at <https://johannes-titz.github.io/cofad/>.
 
-If you prefer the command line interface or want to use the cofad-app
-locally, install it from CRAN:
+If you prefer the command-line interface or want to run the cofad app
+locally, install the package from CRAN:
 
 ``` r
 install.packages("cofad")
@@ -186,13 +143,13 @@ Alternatively, you can install the development version from GitHub (you
 need the `remotes` package for this):
 
 ``` r
-# install.packages("remotes") # uncomment if you do not have devtools installed
+# install.packages("remotes") # uncomment if you do not have remotes installed
 remotes::install_github("johannes-titz/cofad")
 ```
 
-Now you can load cofad and use it in your R scripts.
+Now you can load cofad and use it directly in your R scripts.
 
-You can also run the app:
+You can also launch the app locally:
 
 ``` r
 cofad::run_app()
@@ -219,10 +176,10 @@ example `docker build --build-arg R_VERSION=4.5.3 -t cofad .`.
 
 ## Using cofad
 
-Before you start, your data must be in long format (also referred to as
-narrow or tidy format). If you do not know what this means, see the
-short description in the Wikipedia article:
-<https://en.wikipedia.org/wiki/Wide_and_narrow_data>
+Before you start, your data must be in long format (also called narrow
+or tidy format). If you are unfamiliar with this format, see the short
+explanation in the Wikipedia article:
+<https://en.wikipedia.org/wiki/Wide_and_narrow_data>.
 
 ### Graphical user interface
 
@@ -232,14 +189,14 @@ and browser-only webR interfaces load Rosenthal et al.’s Table 5.3
 mixed-design example with its linear between- and within-subjects
 contrasts.
 
-For uploaded data, cofad automatically examines replication and nesting
-to suggest the dependent variable, between-subjects factor,
-within-subjects factor, and participant ID. Every suggestion remains
-editable in the model table. The detector is deliberately conservative:
-it cannot infer the scientific meaning of variables or the intended
-hypothesis from correlations alone. Packaged examples therefore use the
-roles and planned weights documented in their books or papers, while
-still displaying the structural-detection result.
+cofad automatically examines replication and nesting to suggest the
+dependent variable, between-subjects factor, within-subjects factor, and
+participant ID. Every suggestion remains editable in the model table.
+The detector is deliberately conservative: it cannot infer the
+scientific meaning of variables or the intended hypothesis from
+correlations alone. Packaged examples therefore use the roles and
+planned weights documented in their books or papers, while still
+displaying the structural-detection result.
 
 [![Automatic design detection in the cofad app, showing the loaded
 default mixed example and editable model
@@ -258,17 +215,11 @@ alt="Manual design selection after an inconclusive automatic detection" />
 inconclusive automatic detection</figcaption>
 </figure>
 
-Click the first screenshot to open the server-backed app. The
-browser-only webR version is available at
-<https://johannes-titz.github.io/cofad/>.
-
-To compare two competing contrasts, select **Compare two competing
-contrasts**. Each active weight table then shows **Favored** and
-**Rival** columns. Cofad standardizes both vectors before analyzing
-Favored minus Rival, as `lambda_diff()` does. Initially, Rival reverses
-Favored, preserving the current test until you edit the rival
-hypothesis. Clearing the checkbox removes the Rival columns and
-immediately restores the Favored weights as ordinary single contrasts.
+You can inspect the automatic suggestion from R with
+`detect_design(your_data)`. It reports structural diagnostics and a
+confidence score, but its result should always be checked against the
+documented study design. In the app, manual role selection remains
+available regardless of the confidence score.
 
 Between- and within-subjects contrast tables are activated automatically
 from the roles selected in the model table. For a mixed design, choose
@@ -311,27 +262,29 @@ separate within-subjects model by setting the between-subjects factor to
 `NONE`. Likewise, set the within-subjects factor and participant ID to
 `NONE` to obtain a between-subjects model.
 
-You can inspect the automatic suggestion from R with
-`detect_design(your_data)`. It reports structural diagnostics and a
-confidence score, but its result should always be checked against the
-documented study design. In the app, manual role selection remains
-available regardless of the confidence score.
+To compare two competing contrasts, select **Compare two competing
+contrasts**. Each active weight table then shows **Favored** and
+**Rival** columns. Cofad standardizes both vectors before analyzing
+Favored minus Rival, as `lambda_diff()` does. Initially, Rival reverses
+Favored, preserving the current test until you edit the rival
+hypothesis. Clearing the checkbox removes the Rival columns and
+immediately restores the Favored weights as ordinary single contrasts.
 
-The graphical user interface will suffice for most users, but some will
+The graphical user interface will suffice for many users, but some will
 prefer to use the scripting capabilities of R. In the next sections we
 will look at several script examples for different designs.
 
 ### Between-Subjects Designs
 
-Let us first load the package:
+First, load the package:
 
 ``` r
 library(cofad)
 ```
 
-Now we need some data and hypotheses. We can simply take the data from
-Furr (2004), where we have different empathy ratings of students from
-different majors. This data set is available in the cofad package:
+Now we need some data and hypotheses. We use the data from Furr (2004),
+which contain empathy ratings of students from different majors. The
+dataset is included in the cofad package:
 
 ``` r
 data("furr_p4")
@@ -359,7 +312,7 @@ furr_p4
 #> 20      41  chemistry
 ```
 
-Furr states three hypotheses:
+Furr proposes three hypotheses:
 
 - Contrast A: Psychology majors have higher empathy scores than
   Education majors
@@ -371,8 +324,8 @@ Furr states three hypotheses:
   empathy scores than Business and Chemistry majors
   (![\lambda\_\mathrm{psych} = 1, \lambda\_\mathrm{edu} = 1, \lambda\_\mathrm{bus} = -1, \lambda\_\mathrm{chem} = -1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7Bpsych%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bedu%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7Bbus%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7Bchem%7D%20%3D%20-1 "\lambda_\mathrm{psych} = 1, \lambda_\mathrm{edu} = 1, \lambda_\mathrm{bus} = -1, \lambda_\mathrm{chem} = -1")).
 
-These hypotheses are only mean comparisons, but this is a good way to
-start. Let’s use cofad to conduct the contrast analysis:
+These hypotheses involve simple mean comparisons, making them a good
+starting point. Let us use cofad to conduct the contrast analysis:
 
 ``` r
 ca <- calc_contrast(dv = empathy, between = major,
@@ -384,8 +337,8 @@ ca
 #> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of t(16) = -2.481; p = 0.9877 and an effect magnitude of rₑₛ = -0.276. Attention: Contrast fits in the opposite direction!
 ```
 
-The print method shows some basic information that can be directly used
-in a publication. With the summary method some more details are shown:
+The print method provides basic information that can be used directly in
+a publication. The summary method provides additional details:
 
 ``` r
 summary(ca)
@@ -418,9 +371,10 @@ summary(ca)
 
 From this table,
 ![r\_\mathrm{effectsize}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D "r_\mathrm{effectsize}")
-is probably the most useful statistic. It is just the correlation
-between the lambdas and the dependent variable, which can also be
-calculated by hand:
+is probably the most useful statistic. It is simply the correlation
+between the contrast weights
+(![\lambda](https://latex.codecogs.com/png.latex?%5Clambda "\lambda"))
+and the dependent variable, which can also be calculated by hand:
 
 ``` r
 lambdas <- rep(c(1, -1, 0, 0), each = 5)
@@ -428,11 +382,12 @@ cor(furr_p4$empathy, lambdas)
 #> [1] -0.2762895
 ```
 
-As you can see, the effect is negative and `cofad` also warns the user
-that the contrast fits in the opposite direction. This is a big failure
-for the hypothesis and indicates substantial problems in theorizing.
+As you can see, the effect is negative, and `cofad` also warns that the
+observed contrast runs in the opposite direction to the hypothesis. This
+constitutes a clear failure of the hypothesis and points to substantial
+problems with the underlying theory.
 
-The other two hypotheses can be tested accordingly:
+The other two hypotheses can be tested in the same way.
 
 ``` r
 ca <- calc_contrast(dv = empathy, between = major,
@@ -451,19 +406,20 @@ ca
 #> We ran a contrast analysis for the following between contrasts: business = -1; chemistry = -1; education = 1; psychology = 1. This resulted in statistics of t(16) = 7.601; p = 5.349e-07 and an effect magnitude of rₑₛ = 0.847.
 ```
 
-When you compare the numbers with those presented in Furr (2004), you
-will find the same result, except that Furr (2004) uses a *t* statistic
-and a directional, one-sided *p* value. A one-sided test is appropriate
-when the direction was specified in advance. The *F* test itself is
-non-directional; for a single contrast, the corresponding directional
-test uses the signed value of
-![t = \sqrt{F}](https://latex.codecogs.com/png.latex?t%20%3D%20%5Csqrt%7BF%7D "t = \sqrt{F}").
+When you compare these results with those reported in Furr (2004), you
+will find the same pattern. Note that a one-sided test is appropriate
+because the direction of the contrast is specified in advance. A
+contrast hypothesis should not be treated as interchangeable with its
+reverse direction. The *F* test itself is non-directional; for a single
+contrast, the corresponding directional test uses the signed *t*
+statistic, with
+![\|t\| = \sqrt{F}](https://latex.codecogs.com/png.latex?%7Ct%7C%20%3D%20%5Csqrt%7BF%7D "|t| = \sqrt{F}").
 
-Now, imagine we have a more fun hypothesis and not just mean
-differences. From an elaborate theory we could derive that the means
-should be 73, 61, 51 and 38. We can test this with cofad directly
-because cofad will center the lambdas (the mean of the lambdas has to be
-0):
+Now, imagine a more interesting hypothesis that goes beyond simple mean
+differences. Suppose an elaborate theory predicts means of 73, 61, 51,
+and 38 for the four groups. We can test this pattern directly with
+`cofad`, because the package automatically centers the contrast weights
+so that their mean is zero:
 
 ``` r
 ca <- calc_contrast(dv = empathy, between = major,
@@ -476,7 +432,7 @@ ca
 #> We ran a contrast analysis for the following between contrasts: business = -4.75; chemistry = -17.75; education = 5.25; psychology = 17.25. This resulted in statistics of t(16) = 6.121; p = 7.375e-06 and an effect magnitude of rₑₛ = 0.682.
 ```
 
-The manual test gives the same effect size:
+The manual calculation yields the same effect size:
 
 ``` r
 lambdas <- rep(c(73, 61, 51, 38), each = 5)
@@ -484,18 +440,18 @@ cor(furr_p4$empathy, lambdas)
 #> [1] 0.6817294
 ```
 
-Let us now run an analysis for within-subjects designs.
+Let us now turn to contrast analysis for within-subjects designs.
 
 ### Within-Subjects Designs
 
-For within designs the calculations are quite different, but cofad takes
-care of the details. We just have to use the within parameters *within*
-and *lambda_within* instead of the between equivalents. As an example we
-use Table 16.5 from Sedlmeier & Renkewitz (2018). Reading ability was
-assessed for eight participants under four different conditions. The
-hypothesis is that you can read best without music, white noise reduces
-your reading ability and music (independently of type) reduces it even
-further.
+For within-subjects designs, the calculations differ substantially, but
+`cofad` takes care of the details. We only need to use the
+within-subject parameters *within* and *lambda_within* instead of their
+between-subjects counterparts. As an example, we use Table 16.5 from
+Sedlmeier & Renkewitz (2018), in which reading ability was assessed for
+eight participants under four different conditions. The hypothesis is
+that reading performance is best without music, lower under white noise,
+and lowest with music, regardless of the type of music.
 
 ``` r
 data("sedlmeier_p537")
@@ -535,11 +491,10 @@ within
 #> We ran a within-subjects contrast analysis using participant-level L scores (weighted sums retaining response magnitude) for the following contrast weights: classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25. This resulted in t(7) = 5.269; p = 5.810e-04 and an effect magnitude of r_contrast = 0.894.
 ```
 
-You can see that the significance test is a one-tailed
-![t](https://latex.codecogs.com/png.latex?t "t")-test and the
-paper-ready report gives the signed effect-size correlation
+As you can see, the significance test is a one-tailed
+![t](https://latex.codecogs.com/png.latex?t "t")-test, and the
+paper-ready report provides the signed effect-size correlation
 ![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}").
-When conducting the analysis by hand, we can see why:
 
 For this within-subjects contrast,
 ![r\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bcontrast%7D "r_\mathrm{contrast}")
@@ -550,12 +505,14 @@ Consequently,
 equals the contrast-specific
 ![\eta^2](https://latex.codecogs.com/png.latex?%5Ceta%5E2 "\eta^2") and
 partial
-![\eta_p^2](https://latex.codecogs.com/png.latex?%5Ceta_p%5E2 "\eta_p^2")
-shown in the app. The between-design
+![\eta_p^2](https://latex.codecogs.com/png.latex?%5Ceta_p%5E2 "\eta_p^2").
+The between-design
 ![r\_\mathrm{es}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Bes%7D "r_\mathrm{es}")
 and
 ![r\_\mathrm{alerting}](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Balerting%7D "r_\mathrm{alerting}")
 are not defined by this pure within-subjects contrast partition.
+
+We can verify the result by hand relatively easily:
 
 ``` r
 mtr <- matrix(sedlmeier_p537$reading_test, ncol = 4)
@@ -575,11 +532,11 @@ t.test(lc1, alternative = "greater")
 #>     5.875
 ```
 
-Only the linear combination of the dependent variable and the contrast
-weights for each participant is needed. With these values a normal
-![t](https://latex.codecogs.com/png.latex?t "t")-test against 0 is
-conducted. While you can do this manually, using cofad is quicker and it
-also gives you more information, such as the different effect sizes.
+All that is needed is the linear combination of the dependent variable
+and the contrast weights for each participant. These values are then
+tested against zero using a standard
+![t](https://latex.codecogs.com/png.latex?t "t")-test. Although this can
+be done manually, `cofad` is faster and provides additional information.
 
 #### Using participant L or r scores
 
@@ -591,7 +548,7 @@ correlates each participant’s response profile with the contrast
 weights. It measures pattern agreement and is unchanged by adding a
 constant or multiplying a profile by a positive constant. Choose r when
 adherence to the predicted shape matters more than amplitude, especially
-when there are several repeated conditions.
+when there are many repeated conditions.
 
 The choice should follow the research question and be made before
 comparing the results. With only two repeated levels, a defined r score
@@ -662,19 +619,22 @@ A mixed design combines between- and within-subjects factors. Cofad
 first calculates one participant-level score for the within contrast: a
 weighted sum (*L*) by default or a profile correlation (*r*) when
 `within_score = "r"`. That score becomes the dependent variable for the
-between-subjects contrast. We will again look at the example presented
-in Rosenthal et al. (2000) (see the graphical-user-interface section).
-The cognitive ability of nine children belonging to different age groups
-(between) was measured four times (within).
+between-subjects contrast.
+
+We will again use the example from Rosenthal et al. (2000) (see the
+graphical-user-interface section). The cognitive ability of nine
+children from three different age groups (between-subjects factor) was
+measured at four time points (within-subjects factor).
 
 There are two hypotheses:
 
-1.  cognitive ability linearly increases over time (within)
-    (![\lambda\_\mathrm{1} = -3, \lambda\_\mathrm{2} = -1, \lambda\_\mathrm{3} = 1, \lambda\_\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3"))
-2.  cognitive ability linearly increases over age groups (between)
-    (![\lambda\_\mathrm{Age 8} = -1, \lambda\_\mathrm{Age 10} = 0, \lambda\_\mathrm{Age12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge12%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age12} = 1"))
+1.  Cognitive ability increases linearly over time (within subjects):
+    (![\lambda\_\mathrm{1} = -3, \lambda\_\mathrm{2} = -1, \lambda\_\mathrm{3} = 1, \lambda\_\mathrm{4} = 3](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7B1%7D%20%3D%20-3%2C%20%5Clambda_%5Cmathrm%7B2%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7B3%7D%20%3D%201%2C%20%5Clambda_%5Cmathrm%7B4%7D%20%3D%203 "\lambda_\mathrm{1} = -3, \lambda_\mathrm{2} = -1, \lambda_\mathrm{3} = 1, \lambda_\mathrm{4} = 3")).
+2.  Cognitive ability increases linearly across age groups (between
+    subjects):
+    (![\lambda\_\mathrm{Age 8} = -1, \lambda\_\mathrm{Age 10} = 0, \lambda\_\mathrm{Age 12} = 1](https://latex.codecogs.com/png.latex?%5Clambda_%5Cmathrm%7BAge%208%7D%20%3D%20-1%2C%20%5Clambda_%5Cmathrm%7BAge%2010%7D%20%3D%200%2C%20%5Clambda_%5Cmathrm%7BAge%2012%7D%20%3D%201 "\lambda_\mathrm{Age 8} = -1, \lambda_\mathrm{Age 10} = 0, \lambda_\mathrm{Age 12} = 1")).
 
-Let’s have a look at the data and calculation:
+Let us have a look at the data and the corresponding calculations:
 
 ``` r
 data("rosenthal_tbl53")
@@ -701,9 +661,10 @@ contr_mx
 #> We ran a mixed contrast analysis using participant-level L scores (weighted sums retaining response magnitude) for the within-subjects contrast and the following between-subjects contrast weights: age10 = 0; age12 = 1; age8 = -1. This resulted in t(6) = 4.496; p = 0.002062 and an effect magnitude of rₑₛ = 0.871.
 ```
 
-The results look like a between-subjects contrast analysis. The summary
-adds the effect sizes and the between-group means and standard errors of
-the selected participant-level score.
+The results resemble those from a between-subjects contrast analysis.
+The summary additionally reports the effect sizes, along with the
+between-group means and standard errors of the selected
+participant-level score.
 
 ``` r
 summary(contr_mx)
@@ -753,9 +714,10 @@ contr_mx_r$participant_scores
 
 ## Comparing two hypotheses
 
-With `cofad` you can also compare two competing hypotheses. As an
-example Sedlmeier & Renkewitz (2013) use a fictitious data set on
-problem solving skills of boys:
+With `cofad`, you can also compare two competing hypotheses directly. A
+useful introduction to this logic is provided by Henninger et al.
+(2025). As an example, Sedlmeier & Renkewitz (2013) use a fictitious
+data set on the problem-solving skills of boys:
 
 ``` r
 sedlmeier_p525
@@ -796,11 +758,12 @@ lambda
 #>  0.6816234  0.4883935 -1.1700168
 ```
 
-Note that you cannot just subtract the lambdas because their variance
-can differ, which has an effect on the test. Instead, you need to
-standardize the lambdas first. `lambda_diff` takes care of this for you.
+Note that you cannot simply subtract the contrast weights, because the
+two sets of weights may differ in variance, which affects the
+comparison. Instead, the weights must first be standardized.
+`lambda_diff` takes care of this automatically.
 
-Now you can run a normal contrast analysis:
+Now you can run a standard contrast analysis:
 
 ``` r
 ca_competing <- calc_contrast(
@@ -839,17 +802,20 @@ ca_competing
 #> We ran a contrast analysis for the following between contrasts: JT = 0.68; KT = 0.49; MT = -1.17. This resulted in statistics of t(12) = 1.136; p = 0.139 and an effect magnitude of rₑₛ = 0.264.
 ```
 
-Here, we rounded the lambdas so that the result is similar to the one in
-Sedlmeier & Renkewitz (2013), who found *t* = 1.137 and
+Here, we rounded the contrast weights so that the results closely match
+those reported in Sedlmeier & Renkewitz (2013), who found
+![t = 1.137](https://latex.codecogs.com/png.latex?t%20%3D%201.137 "t = 1.137")
+and
 ![r\_\mathrm{effectsize} = 0.26](https://latex.codecogs.com/png.latex?r_%5Cmathrm%7Beffectsize%7D%20%3D%200.26 "r_\mathrm{effectsize} = 0.26").
-The effect size is the same. For the *t* value, we take the signed
-square root of the *F* value, 1.291, which is 1.136. There is still a
-slight difference from the original result of 1.137, which is likely due
-to rounding errors.
+The effect size is identical. For the \$t4 statistic, we take the signed
+square root of the ![F](https://latex.codecogs.com/png.latex?F "F")
+value, 1.291, which gives 1.136. The remaining difference from the
+reported value of 1.137 is due to rounding.
 
-The same also works for within-designs. The reading comprehension data
-from above can serve as an example. Reading ability was assessed for
-eight participants under four different conditions:
+The same approach also works for within-subjects designs. We can use the
+reading-comprehension data from above as an example, in which reading
+ability was assessed for eight participants under four different
+conditions:
 
 ``` r
 sedlmeier_p537
@@ -888,14 +854,15 @@ sedlmeier_p537
 #> 32           32           8          jazz
 ```
 
-There are two hypotheses:
+There are two competing hypotheses:
 
-- 1.25, 0.25, -0.75, -0.75: You can read best without music, white noise
-  reduces your reading ability and music (independently of type) reduces
-  it even further.
-- 3, -1, -1, -1: Noise of any kind reduces reading ability.
+- ![1.25, 0.25, -0.75, -0.75](https://latex.codecogs.com/png.latex?1.25%2C%200.25%2C%20-0.75%2C%20-0.75 "1.25, 0.25, -0.75, -0.75"):
+  Reading performance is highest without music, lower with white noise,
+  and lowest with music, regardless of music type.
+- ![3, -1, -1, -1](https://latex.codecogs.com/png.latex?3%2C%20-1%2C%20-1%2C%20-1 "3, -1, -1, -1"):
+  Any kind of noise reduces reading performance to the same extent.
 
-Again, we need to calculate the difference lambdas first:
+Again, we first need to calculate the difference contrast weights:
 
 ``` r
 lambda1 <- c(1.25, 0.25, -0.75, -0.75)
@@ -908,11 +875,11 @@ lambda
 #>     0.3271838     0.3271838    -0.8788616     0.2244941
 ```
 
-Note that we use lambda2 as the first entry into `lambda_diff` because
-this is how Sedlmeier & Renkewitz (2013) calculated it
-(hypothesis2-hypothesis1).
+Note that we use `lambda2` as the first argument to `lambda_diff`,
+because this follows the calculation in Sedlmeier & Renkewitz (2013),
+where the difference is defined as hypothesis 2 minus hypothesis 1.
 
-And now the contrast analysis:
+Now we can run the contrast analysis:
 
 ``` r
 contr_wi <- calc_contrast(
@@ -947,21 +914,25 @@ contr_wi
 #> We ran a within-subjects contrast analysis using participant-level L scores (weighted sums retaining response magnitude) for the following contrast weights: classic = 0.33; jazz = 0.33; white noise = -0.88; without music = 0.22. This resulted in t(7) = -3.77; p = 0.9965 and an effect magnitude of r_contrast = -0.819. Attention: Contrast fits in the opposite direction!
 ```
 
-Sedlmeier & Renkewitz (2013) found a *t* value of -3.75 and a
+Sedlmeier & Renkewitz (2013) reported a
+![t](https://latex.codecogs.com/png.latex?t "t") value of
+![-3.75](https://latex.codecogs.com/png.latex?-3.75 "-3.75") and a
 ![g\_\mathrm{contrast}](https://latex.codecogs.com/png.latex?g_%5Cmathrm%7Bcontrast%7D "g_\mathrm{contrast}")
-of -1.33. Again, there is a slight difference in the *t* value compared
-with our calculation, likely due to rounding errors. The negative
-statistic and effect indicate that hypothesis 1 fits better, given that
-the difference contrast above was defined as hypothesis 2 minus
-hypothesis 1.
+of ![-1.33](https://latex.codecogs.com/png.latex?-1.33 "-1.33"). Again,
+the slight difference in the
+![t](https://latex.codecogs.com/png.latex?t "t") value compared with our
+calculation is due to rounding. Because the difference contrast was
+defined as hypothesis 2 minus hypothesis 1, the negative test statistic
+and effect size indicate that hypothesis 1 provides the better fit.
 
 ## Aggregated Data
 
-Sometimes you would like to run a contrast analysis on aggregated data
-(e.g. when no raw data is available). If you have the means, standard
-deviations and sample sizes for every condition, you can do this with
-cofad. For instance, if we take our first example and aggregate it, we
-can still run the contrast analysis:
+Sometimes, you may want to run a contrast analysis on aggregated data,
+for example when the raw data are unavailable. If you have the means,
+standard deviations, and sample sizes for each condition, you can still
+perform the analysis with `cofad`. For instance, if we aggregate the
+data from our first example, we can reproduce the contrast analysis from
+the summary statistics alone:
 
 ``` r
 furr_agg <- aggregate(
@@ -980,8 +951,7 @@ calc_contrast_aggregated(mean, sd, n, major, lambdas, furr_agg)
 #> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of t(16) = -2.481; p = 0.9877 and an effect magnitude of rₑₛ = -0.276. Attention: Contrast fits in the opposite direction!
 ```
 
-And the result is indeed the same when compared to the analysis with the
-raw data:
+And indeed, the result is identical to that obtained from the raw data:
 
 ``` r
 ca <- calc_contrast(dv = empathy, between = major,
@@ -993,7 +963,7 @@ ca
 #> We ran a contrast analysis for the following between contrasts: business = 0; chemistry = 0; education = -1; psychology = 1. This resulted in statistics of t(16) = -2.481; p = 0.9877 and an effect magnitude of rₑₛ = -0.276. Attention: Contrast fits in the opposite direction!
 ```
 
-Note that this will only work for between-subjects designs.
+Note that this approach is limited to between-subjects designs.
 
 ## Testing
 
@@ -1002,19 +972,16 @@ validation, in-process Shiny server, and browser integration tests.
 GitHub Actions runs both R CMD check and an in-process coverage workflow
 on every push and pull request. The server tests use
 `shiny::testServer()`, so `covr::package_coverage(type = "tests")`
-measures app logic without starting a browser process. As of August
-2026, line coverage is 93.33% overall. Browser tests remain a thinner
-end-to-end layer and are skipped on CRAN and continuous integration
-because their timing has been unreliable on some runners.
+measures app logic without starting a browser process. Browser tests
+remain a thinner end-to-end layer and are skipped on CRAN and continuous
+integration because their timing has been unreliable on some runners.
 
 ## Browser-only webR version
 
 A static Shinylive build can run cofad entirely in the browser through
 webR, without a Shiny server. It is published to
 <https://johannes-titz.github.io/cofad/> by the `deploy-shinylive`
-GitHub Actions workflow on every push to the main branch. GitHub Pages
-must be configured to use **GitHub Actions** as its source in the
-repository settings.
+GitHub Actions workflow on every push to the main branch.
 
 For a local build, run `source("tools/build-shinylive.R")` from the
 repository root; the generated `docs/` directory can be served by any
@@ -1037,32 +1004,40 @@ johannes at titz.science or johannes.titz at gmail.com
 
 ## Contributing
 
-Comments and feedback of any kind are very welcome! We will thoroughly
-consider every suggestion on how to improve the code, the documentation,
-and the presented examples. Even minor things, such as suggestions for
-better wording or improving grammar in any part of the package, are more
-than welcome.
+Comments and feedback of any kind are very welcome! We carefully
+consider every suggestion for improving the code, documentation, and
+examples. Even small contributions, such as clearer wording or grammar
+corrections, are greatly appreciated.
 
-If you want to make a pull request, please check that you can still
-build the package without any errors, warnings, or notes. Overall,
-simply stick to the R packages book: <https://r-pkgs.org/> and follow
-the code style described here: <https://style.tidyverse.org/>
+If you would like to submit a pull request, please make sure that the
+package still builds without errors, warnings, or notes. In general,
+follow the recommendations in the R Packages book: <https://r-pkgs.org/>
+and the tidyverse style guide: <https://style.tidyverse.org/>.
 
 ## Acknowledgments
 
-We want to thank Thomas Schäfer and Isabell Winkler for testing cofad
-and giving helpful feedback.
+We would like to thank Thomas Schäfer and Isabell Winkler for testing
+`cofad` and providing valuable feedback.
 
 ## References
 
 <div id="refs" class="references csl-bib-body hanging-indent"
-entry-spacing="0" line-spacing="2">
+data-entry-spacing="0" data-line-spacing="2">
 
 <div id="ref-furr2004" class="csl-entry">
 
 Furr, R. M. (2004). Interpreting effect sizes in contrast analysis.
 *Understanding Statistics*, *3*, 1–25.
 <https://doi.org/10.1207/s15328031us0301_1>
+
+</div>
+
+<div id="ref-henninger2025" class="csl-entry">
+
+Henninger, M., Malejka, S., & Titz, J. (2025). Contrast analysis for
+competing hypotheses: A tutorial using the r package cofad. *Behavior
+Research Methods*, *57*, 326.
+<https://doi.org/10.3758/s13428-025-02833-w>
 
 </div>
 
