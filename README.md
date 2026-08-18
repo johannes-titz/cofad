@@ -206,6 +206,12 @@ and browser-only webR interfaces load Rosenthal et al.’s Table 5.3
 mixed-design example with its linear between- and within-subjects
 contrasts.
 
+<p>
+
+<a href="man/figures/cofad-gui-data-upload.png"><img src="man/figures/cofad-gui-data-upload.png" width="230" alt="Controls for uploading a CSV or SPSS data file"></a>
+<a href="man/figures/cofad-gui-example-data.png"><img src="man/figures/cofad-gui-example-data.png" width="230" alt="Categorized example-data selector"></a>
+</p>
+
 cofad automatically examines replication and nesting to suggest the
 dependent variable, between-subjects factor, within-subjects factor, and
 participant ID. Every suggestion remains editable in the model table.
@@ -215,9 +221,7 @@ correlations alone. Packaged examples therefore use the roles and
 planned weights documented in their books or papers, while still
 displaying the structural-detection result.
 
-[![Automatic design detection showing the inferred roles for the default
-mixed
-example](man/figures/cofad-auto-detection.png)](https://cofad.titz.science)
+<a href="https://cofad.titz.science"><img src="man/figures/cofad-auto-detection.png" width="558" alt="Automatic design detection showing the inferred roles for the default mixed example"></a>
 
 If detection is inconclusive or cannot run, the app does not force a
 structure. It retains a suggested dependent variable where possible,
@@ -225,12 +229,7 @@ leaves uncertain roles as `NONE`, and asks you to choose the design
 manually in the same table. This fallback is available for between-,
 within-, and mixed-subjects designs.
 
-<figure>
-<img src="man/figures/cofad-manual-design.png"
-alt="Inconclusive automatic detection showing unresolved roles for manual selection" />
-<figcaption aria-hidden="true">Inconclusive automatic detection showing
-unresolved roles for manual selection</figcaption>
-</figure>
+<img src="man/figures/cofad-manual-design.png" width="438" alt="Inconclusive automatic detection showing unresolved roles for manual selection">
 
 You can inspect the automatic suggestion from R with
 `detect_design(your_data)`. It reports structural diagnostics and a
@@ -244,6 +243,13 @@ whether to test the **Between × within contrast** or the **Within
 contrast averaged across groups**. New mixed designs default to the
 former, as in Rosenthal et al.’s Table 5.3; packaged examples retain the
 analysis used by their source.
+
+<p>
+
+<a href="man/figures/cofad-gui-analysis-choices.png"><img src="man/figures/cofad-gui-analysis-choices.png" width="325" alt="Controls for competing contrasts and the mixed-design contrast to test"></a>
+<a href="man/figures/cofad-gui-between-contrast.png"><img src="man/figures/cofad-gui-between-contrast.png" width="300" alt="Between-subjects contrast-weight table"></a>
+<a href="man/figures/cofad-gui-within-contrast.png"><img src="man/figures/cofad-gui-within-contrast.png" width="300" alt="Within-subjects contrast-weight table"></a>
+</p>
 
 The default example comes from Rosenthal et al. (2000) (Table 5.3). The
 cognitive ability of nine children belonging to different age groups
@@ -273,6 +279,13 @@ paper-ready report is copyable, while the F table can be exported as
 aligned plain text, rich HTML, or DOCX; numeric table columns are
 right-aligned. The Help and citation panel beneath the model contains
 the package references, README, and GitHub issue tracker.
+
+<p>
+
+<a href="man/figures/cofad-gui-report-output.png"><img src="man/figures/cofad-gui-report-output.png" width="300" alt="Copyable paper-ready report"></a>
+<a href="man/figures/cofad-gui-f-table-output.png"><img src="man/figures/cofad-gui-f-table-output.png" width="300" alt="Variance-decomposition F table and export controls"></a>
+<a href="man/figures/cofad-gui-variance-output.png"><img src="man/figures/cofad-gui-variance-output.png" width="300" alt="Interactive partition of total variation"></a>
+</p>
 
 A mixed design is ideal for trying the cofad app. You can construct a
 separate within-subjects model by setting the between-subjects factor to
