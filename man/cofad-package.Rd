@@ -12,6 +12,7 @@ Contrast analysis for factorial designs provides an alternative to the tradition
 Useful links:
 \itemize{
   \item \url{https://github.com/johannes-titz/cofad}
+  \item Report bugs at \url{https://github.com/johannes-titz/cofad/issues}
 }
 
 }

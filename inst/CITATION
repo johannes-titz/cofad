@@ -1,12 +1,12 @@
 citHeader("Please cite both the cofad tutorial and software paper:")
 
-citEntry(
-  entry = "Article",
+bibentry(
+  bibtype = "Article",
   title = "Contrast analysis for competing hypotheses: A tutorial using the R package cofad",
-  author = personList(
-    as.person("Mirka Henninger"),
-    as.person("Simone Malejka"),
-    as.person("Johannes Titz")
+  author = c(
+    person("Mirka", "Henninger"),
+    person("Simone", "Malejka"),
+    person("Johannes", "Titz")
   ),
   journal = "Behavior Research Methods",
   year = "2025",
@@ -21,12 +21,12 @@ citEntry(
   )
 )
 
-citEntry(
-  entry = "Article",
+bibentry(
+  bibtype = "Article",
   title = "cofad: An R package and Shiny app for contrast analysis",
-  author = personList(
-    as.person("Johannes Titz"),
-    as.person("Markus Burkhardt")
+  author = c(
+    person("Johannes", "Titz"),
+    person("Markus", "Burkhardt")
   ),
   journal = "Journal of Open Source Software",
   year = "2021",

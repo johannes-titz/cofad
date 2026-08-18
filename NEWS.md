@@ -1,103 +1,68 @@
-# cofad (development version)
+# cofad 0.4.0
 
-* report signed `r_contrast`, rather than the inconsistently labeled
-  `g_effectsize`, in the within-only paper-ready report
-* remove redundant between/within contrast activation checkboxes; pure designs
-  now follow the roles selected in the model table, while mixed designs offer an
-  explicit choice between a between × within contrast and a within contrast
-  averaged across groups
-* correct within-only `r_contrast` to use the denominator degrees of freedom
-  of its own contrast test, and identify its squared value with the
-  contrast-specific eta-squared measures in the app
-* render every model/contrast-table column immediately and preserve its natural
-  width inside a horizontally scrollable wrapper, avoiding initially blank
-  lambda and N columns in narrow or newly revealed panels
-* copy the paper-ready report as rich HTML by default, preserving italic and
-  subscripted mathematical notation while retaining a plain-text clipboard
-  fallback
-* preload every app example with its source-defined model roles and planned
-  weights; examples with published rival hypotheses now open in competing mode,
-  while nonsubstantive mixed-design grouping factors remain available for error
-  pooling without receiving invented contrasts
-* italicize the statistical symbols *F* and *p* in the app F table and its DOCX
-  export
-* add an opt-in Shiny control for comparing favored and rival contrasts;
-  enabling it adds rival weight columns and analyzes standardized differences
-  (favored minus rival), while disabling it restores the ordinary single
-  contrast
-* add fixed-width plain-text, rich-HTML, and dependency-free DOCX export for
-  the app F table, use uniform light-gray copy controls, show the sidebar
-  copyright in white, and use the colorblind-friendly ColorBrewer Set2 palette
-  for the interactive variance chart
-* add partial eta squared to the app F table, with calculation tooltips and a
-  dotted underline identifying every tooltipped table value
-* place app copy controls beside their report, table, or citation content,
-  remove the redundant second effect-size table from between/mixed output,
-  keep the F-table explanation directly below its table, clarify panel-versus-
-  section heading sizes, and remove the duplicate example description below
-  the selector while retaining its option tooltips
-* add ordinary eta squared to the app F table, including the within-group/error
-  SS share and calculation tooltips, display small p values rather than
-  replacing them with a threshold, and use regular-weight Help and citation
-  typography
-* compare the total, between-group, and contrast-plus-error SS denominators in
-  an interactive Plotly variance chart, with the component legend above the
-  bars, labeled squared r effect-size measures, and hover details for every
-  component
-* show the package/webR build version in the app title, make every main panel
-  collapsible, use a compact development commit label, start with the linear
-  Rosenthal Table 3.1 example, and open Help and citation information by default
-* use regular proportional type for the paper-ready report, switch very small
-  report p values to scientific notation, report the effect as copy-safe rₑₛ,
-  and document the guaranteed and conditional ordering of the three contrast
-  effect-size magnitudes
-* shorten the displayed squared-effect column heading to r² and attribute the
-  app copyright to Johannes Titz et al.
-* add GitHub-native copyable plain-text, HTML, and BibTeX citation blocks to the
-  README
-* make the Shiny report text, F table, and effect-size table directly copyable;
-  reports now state whether repeated measures use magnitude-sensitive L scores
-  or pattern-fit r scores, use signed t statistics with directional p values,
-  and retain the opposite-direction warning in copied text
-* use compact, content-sized model and result tables with right-aligned numeric
-  output and booktabs styling, hide contrast tables for factors absent from the
-  model, add example-data tooltips identifying real versus illustrative data,
-  and consolidate documentation, issue links, and citation tools beneath the
-  left model panel
-* add participant-level `r` scores for within and mixed contrasts via
-  `within_score = "r"`, alongside the default magnitude-sensitive L scores,
-  with Rosenthal Table 5.3/5.4 examples and regression tests
-* add a categorized example-data chooser to the Shiny and webR apps
-* add APA 7 plain-text, HTML, and BibTeX citation-copy buttons to the app;
-  `citation("cofad")` supplies both the tutorial and software references
-* add corrected mixed-design data as `rosenthal_tbl68_mixed`, while retaining
-  the historically packaged `rosenthal_tbl68` object for compatibility
-* add the 2025 Behavior Research Methods tutorial as the primary citation,
-  alongside the JOSS software paper
-* replace radio-button model specification in the Shiny app with a stable,
-  table-based interface
-* add a detailed variance-decomposition table, squared effect-size measures,
-  and a variance-partition figure to between-subjects and mixed-design app
-  results; mixed output now clearly describes variation in derived
-  within-contrast scores rather than raw repeated outcome variance
-* correct sums of squares, pooled error variance, and effect sizes for
-  between-subjects designs with unequal group sizes; raw and aggregated input
-  now use the same formulas; aggregated input no longer requires an explicit
-  `data = NULL`, and effect-size conversions preserve contrast direction
-* improve file-import validation, example-data loading security, wording, and
-  documentation
-* add conservative automatic design suggestions based on replication, crossing,
-  and nesting structure, with editable results in the Shiny model table
-* add an optional Shinylive/webR static build, automatic GitHub Pages
-  deployment, and in-process Shiny server tests
-* make inconclusive automatic design detection explicitly fall back to the
-  editable manual model table
-* modernize GitHub Actions and add Dependabot updates for workflow actions
-* reduce hard dependencies by replacing small uses of `dplyr`, `Hmisc`,
+## Analysis and API
+
+* Added participant-level `r` scores for within-subjects and mixed contrasts via
+  `within_score = "r"`. The existing `L` score remains the default: use `L`
+  when response magnitude matters and `r` when agreement with the predicted
+  pattern matters.
+* Corrected sums of squares, pooled error variance, and effect sizes for
+  between-subjects designs with unequal group sizes. Raw and aggregated input
+  now use the same formulas, and effect-size conversions preserve contrast
+  direction.
+* Corrected the within-only `r_contrast` calculation to use the denominator
+  degrees of freedom from its contrast test. The paper-ready report now uses
+  the signed `r_contrast` consistently and relates its square to the
+  contrast-specific eta-squared measures.
+* Extended competing-contrast support to the app. Favored and rival weights are
+  standardized before their difference is analyzed, matching `lambda_diff()`.
+* Added conservative `detect_design()` suggestions based on replication,
+  crossing, and nesting. Ambiguous data deliberately fall back to manual model
+  selection.
+* `calc_contrast_aggregated()` no longer requires an explicit `data = NULL`.
+* Added the corrected mixed-design data set `rosenthal_tbl68_mixed`; the
+  historical `rosenthal_tbl68` object remains available for compatibility.
+* Reduced hard dependencies by replacing small uses of `dplyr`, `Hmisc`,
   `lifecycle`, `readr`, `rlang`, `stringr`, and `tibble` with base R or
-  `foreign`; the pipe remains available for backwards compatibility
-* verify from the books that Rosenthal, Rosnow, and Rubin was first published
-  in 2000 and clarify Sedlmeier and Renkewitz's Table 16.1/16.2 distinction
+  `foreign`. The pipe remains available for backward compatibility.
+
+## Shiny app
+
+* Restored stable, editable table-based model and contrast inputs. The model
+  table shows automatic design suggestions but always permits manual changes.
+* Added categorized between-subjects, within-subjects, and mixed examples. Each
+  example loads the model roles and planned weights documented in its source;
+  examples with published rival hypotheses open in competing mode.
+* Mixed designs now explicitly offer either a between × within contrast or a
+  within contrast averaged across groups. Pure designs follow the roles in the
+  model table without redundant activation controls.
+* Added detailed variance-decomposition F tables with ordinary and partial eta
+  squared, calculation tooltips, directional paper-ready reports, and
+  interactive Plotly partitions of variation. Mixed output is explicitly based
+  on participants' derived within-contrast scores rather than raw repeated
+  outcomes.
+* Reports can be copied as rich HTML with a plain-text fallback. F tables can be
+  copied as aligned text or HTML and downloaded as dependency-free DOCX files.
+* Added APA 7 citation-copy controls for the tutorial and software paper. The
+  package-level `citation("cofad")` command now returns both references.
+* Improved file validation, example-loading security, small-p-value formatting,
+  table sizing and alignment, tooltips, collapsible panels, accessible colors,
+  version display, and responsive copy controls.
+
+## Documentation, deployment, and testing
+
+* Added the 2025 *Behavior Research Methods* tutorial as the primary citation,
+  alongside the JOSS software paper.
+* Expanded the README with current R, app, Docker, and webR examples; equations
+  now use GitHub's native mathematical notation.
+* Added a browser-only Shinylive/webR build with automatic GitHub Pages
+  deployment and a containerized Shiny deployment through `Dockerfile`.
+* Expanded numerical, validation, design-detection, example-preset, citation,
+  export, and in-process Shiny server tests. GitHub Actions now check multiple R
+  versions and platforms and publish test coverage.
+* Verified the publication year and DOI metadata for Rosenthal, Rosnow, and
+  Rubin (2000) and clarified the Sedlmeier and Renkewitz Table 16.1/16.2
+  distinction.
 
 # cofad 0.3.3
 

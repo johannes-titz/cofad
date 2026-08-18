@@ -364,7 +364,8 @@ summary(within)
 within
 ```
 
-As you can see, the significance test is a one-tailed $t$-test, and the paper-ready report provides the signed effect-size correlation $r_\mathrm{contrast}$.
+The significance test is one-tailed, and the paper-ready report provides the
+signed effect-size correlation $r_\mathrm{contrast}$.
 
 For this within-subjects contrast, $r_\mathrm{contrast}$ is the signed
 correlation-form effect derived from the same test,

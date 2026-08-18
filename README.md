@@ -556,9 +556,8 @@ within
 #> We ran a within-subjects contrast analysis using participant-level L scores (weighted sums retaining response magnitude) for the following contrast weights: classic = -0.75; jazz = -0.75; white noise = 0.25; without music = 1.25. This resulted in t(7) = 5.269; p = 5.810e-04 and an effect magnitude of r_contrast = 0.894.
 ```
 
-As you can see, the significance test is a one-tailed $t$-test, and the
-paper-ready report provides the signed effect-size correlation
-$r_\mathrm{contrast}$.
+The significance test is one-tailed, and the paper-ready report provides
+the signed effect-size correlation $r_\mathrm{contrast}$.
 
 For this within-subjects contrast, $r_\mathrm{contrast}$ is the signed
 correlation-form effect derived from the same test,
@@ -655,7 +654,7 @@ summary(within_r)
 #>
 #> $tTable
 #>  mean of r    SE df      t p(t≥12.544)① 95%CI-lower 95%CI-upper
-#>       0.81 0.065  7 12.544   0.00000236       0.658       0.963
+#>       0.81 0.065  7 12.544     2.36e-06       0.658       0.963
 #>
 #> ①The p-value refers to a one-tailed test.
 #>
