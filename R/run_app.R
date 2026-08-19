@@ -5,6 +5,7 @@
 run_app <- function() {
   shinyApp(
     ui = myui(),
-    server = myserver
+    server = myserver,
+    options = list(port = 3838)
   )
 }
