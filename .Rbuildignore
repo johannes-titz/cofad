@@ -33,3 +33,7 @@
 ^_shinylive_app$
 ^Dockerfile$
 ^\.dockerignore$
+^application\.yml$
+^application\.yml\.bak\.
+^shinyproxyconfig\.ya?ml$
+^scripts$
