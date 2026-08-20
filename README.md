@@ -138,10 +138,11 @@ within-subjects, and mixed designs in R.
 Cofad has two components: the R package and a Shiny app that provides a
 graphical user interface.
 
-If you only want to use the cofad app, no installation is required.
-Simply go to <https://cofad.titz.science>, where you can select from
-categorized example datasets or upload your own data. A webR version is
-also available at <https://johannes-titz.github.io/cofad/>.
+If you only want to use the cofad app, no installation is required. A
+browser-only webR version is available at
+<https://johannes-titz.github.io/cofad/>. For the server-backed version,
+open `cofad.titz.science` in your browser; there you can select from
+categorized example datasets or upload your own data.
 
 If you prefer the command-line interface or want to run the cofad app
 locally, install the package from CRAN:
@@ -176,10 +177,10 @@ docker build -t cofad .
 docker run --rm -p 3838:3838 cofad
 ```
 
-Then open <http://localhost:3838>. The image uses R 4.6.1, runs the app
-as a non-root user, and includes a container health check. To use
-another available Rocker Shiny version, override the build argument, for
-example `docker build --build-arg R_VERSION=4.5.3 -t cofad .`.
+Then open `localhost:3838` in your browser. The image uses R 4.6.1, runs
+the app as a non-root user, and includes a container health check. To
+use another available Rocker Shiny version, override the build argument,
+for example `docker build --build-arg R_VERSION=4.5.3 -t cofad .`.
 
 <!-- If you have any problems installing cofad, check that your R version is up to date (currently R version 4.6.1 (2026-06-24)). If you are using Windows, enable TLS 1.2 in the Internet Options Advanced tab (see https://github.com/r-lib/remotes/issues/130#issuecomment-423830669). Under Windows, you will also need Rtools to build the package: https://cran.r-project.org/bin/windows/Rtools/. -->
 
